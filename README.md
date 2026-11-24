@@ -89,8 +89,12 @@ Known engine limits: HTTP/2 SETTINGS order and pseudo-header order are fixed by 
 | E3: bot score for wire-perfect clients | Needs Enterprise Bot Management; Free has no bot score, JA3/JA4 or detection IDs | An Enterprise zone |
 | Cookie lifetime vs Challenge Passage | Not varied in E1 | Repeat E1 at two Challenge Passage settings |
 
+## Recreating the setups
+
+`lab/README.md` rebuilds everything from a fresh clone: pinned sources, lab certificates, images, the L1 and L2 local labs, the zone lab for E1 and E2, and the engine. The zone lab is two commands, `scripts/zone/up.sh` and `scripts/zone/down.sh`, tested in a full cycle on 2026-11-24. Copy `.env.example` to `.env` first.
+
 ## Open items
 
-- The zone Worker `cflab-echo` and the WAF Managed Challenge rule on `lab.riddlelab.dev/c/*` are still live. Keep them for Phase 7 and 9, or tear down.
+- The zone lab (echo Worker and Managed Challenge rule on `lab.riddlelab.dev`) is **down** since 2026-11-24. `scripts/zone/up.sh` brings it back for Phase 7 and 9.
 - `scripts/fingerprint-analysis/summarize_l1.py` is superseded by `cfprobe baselines` (identical output apart from escaped `|`). Delete once agreed.
 - Captures are scrubbed of client IP, location and ISP (`<removed>`); keep it that way for anything added to this public repo.

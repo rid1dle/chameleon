@@ -7,11 +7,12 @@
 set -u
 FS_JSON=$1; OUT=$2; mkdir -p "$OUT"
 ROOT=${0:A:h:h:h}
-URL=https://lab.riddlelab.dev/c/echo
+URL=https://${LAB_HOST:-lab.riddlelab.dev}/c/echo
 UA=$(jq -r '.solution.userAgent' "$FS_JSON")
 COOKIE="cf_clearance=$(jq -r '.solution.cookies[] | select(.name=="cf_clearance") | .value' "$FS_JSON")"
 OTHER_UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
-REDACT='del(.cf.city,.cf.postalCode,.cf.latitude,.cf.longitude,.cf.region,.cf.regionCode,.cf.timezone,.cf.tlsClientRandom,.cf.tlsExportedAuthenticator,.headers["cf-connecting-ip"],.headers["x-real-ip"],.headers["x-forwarded-for"])'
+# Location, network owner and client IP never reach a capture (this repo is public).
+REDACT='del(.cf.city,.cf.postalCode,.cf.latitude,.cf.longitude,.cf.region,.cf.regionCode,.cf.timezone,.cf.metroCode,.cf.country,.cf.isEUCountry,.cf.continent,.cf.colo,.cf.asn,.cf.asOrganization,.cf.tlsClientRandom,.cf.tlsExportedAuthenticator,.headers["cf-connecting-ip"],.headers["cf-ipcountry"],.headers["x-real-ip"],.headers["x-forwarded-for"])'
 
 # Runs curl-impersonate chrome152 in the same container setup as L1.
 ci() {
