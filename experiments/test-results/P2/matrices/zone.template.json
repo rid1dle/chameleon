@@ -1,0 +1,512 @@
+{
+ "name": "P2 controlled zone (lab.riddlelab.dev, Free plan), runner defaults: redirects 5, cookie jar, 3 attempts with backoff and Retry-After; circuit breaker only in the breaker-* cases (the matrix fails on purpose)",
+ "delay_ms": 1500,
+ "clients": [
+  {
+   "name": "cfprobe",
+   "kind": "cfprobe"
+  },
+  {
+   "name": "cfprobe-h1-titlecase",
+   "kind": "cfprobe",
+   "config": {
+    "tls": {
+     "alpn": [
+      "http/1.1"
+     ]
+    },
+    "h1": {
+     "title_case_headers": true
+    }
+   }
+  },
+  {
+   "name": "curl",
+   "kind": "curl"
+  }
+ ],
+ "cases": [
+  {
+   "id": "echo",
+   "category": "normal",
+   "description": "Worker echo JSON, no rule",
+   "url": "https://lab.riddlelab.dev/echo",
+   "expect": {
+    "status": 200,
+    "verdict": "NORMAL_PAGE"
+   }
+  },
+  {
+   "id": "echo-html",
+   "category": "normal",
+   "description": "Worker echo as an HTML page (where JS Detections would be injected)",
+   "url": "https://lab.riddlelab.dev/echo?html=1",
+   "headers": [
+    [
+     "accept",
+     "text/html"
+    ]
+   ],
+   "expect": {
+    "status": 200,
+    "verdict": "NORMAL_PAGE"
+   }
+  },
+  {
+   "id": "echo-compressed",
+   "category": "normal",
+   "description": "Echo with a browser accept-encoding: the edge compresses, the client must decode",
+   "url": "https://lab.riddlelab.dev/echo",
+   "headers": [
+    [
+     "accept-encoding",
+     "gzip, deflate, br, zstd"
+    ]
+   ],
+   "expect": {
+    "status": 200,
+    "verdict": "NORMAL_PAGE"
+   }
+  },
+  {
+   "id": "managed",
+   "category": "challenge",
+   "description": "Managed Challenge rule on /c/",
+   "url": "https://lab.riddlelab.dev/c/echo",
+   "expect": {
+    "status": 403,
+    "verdict": "CONFIRMED_CHALLENGE_RESPONSE"
+   }
+  },
+  {
+   "id": "managed-browser-headers",
+   "category": "challenge",
+   "description": "Managed Challenge with Chrome 152 headers and br/zstd encoding",
+   "url": "https://lab.riddlelab.dev/c/echo",
+   "headers": [
+    [
+     "user-agent",
+     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+    ],
+    [
+     "accept",
+     "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8"
+    ],
+    [
+     "accept-encoding",
+     "gzip, deflate, br, zstd"
+    ],
+    [
+     "accept-language",
+     "en-US,en;q=0.9"
+    ]
+   ],
+   "expect": {
+    "status": 403,
+    "verdict": "CONFIRMED_CHALLENGE_RESPONSE"
+   }
+  },
+  {
+   "id": "managed-head",
+   "category": "challenge",
+   "description": "HEAD on the Managed Challenge path: header only, no page",
+   "url": "https://lab.riddlelab.dev/c/echo",
+   "method": "HEAD",
+   "expect": {
+    "status": 403,
+    "verdict": "CONFIRMED_CHALLENGE_RESPONSE"
+   }
+  },
+  {
+   "id": "js-challenge",
+   "category": "challenge",
+   "description": "JS Challenge rule on /j/",
+   "url": "https://lab.riddlelab.dev/j/echo",
+   "expect": {
+    "status": 403,
+    "verdict": "CONFIRMED_CHALLENGE_RESPONSE"
+   }
+  },
+  {
+   "id": "interactive",
+   "category": "challenge",
+   "description": "Interactive Challenge rule on /i/",
+   "url": "https://lab.riddlelab.dev/i/echo",
+   "expect": {
+    "status": 403,
+    "verdict": "CONFIRMED_CHALLENGE_RESPONSE"
+   }
+  },
+  {
+   "id": "waf-block",
+   "category": "waf",
+   "description": "Block rule on /b/",
+   "url": "https://lab.riddlelab.dev/b/echo",
+   "expect": {
+    "status": 403,
+    "verdict": "ACCESS_DENIED"
+   }
+  },
+  {
+   "id": "rate-limit",
+   "category": "rate-limit",
+   "description": "Rate limit rule, 2 per 10 s: third request in a row, retries off so the 429 is the result",
+   "url": "https://lab.riddlelab.dev/r/echo",
+   "repeat": 3,
+   "clients": [
+    "cfprobe",
+    "cfprobe-h1-titlecase"
+   ],
+   "expect": {
+    "status": 429,
+    "verdict": "RATE_LIMITED"
+   },
+   "policy": {
+    "retry": {
+     "max_attempts": 1
+    }
+   }
+  },
+  {
+   "id": "rate-limit-backoff",
+   "category": "rate-limit",
+   "description": "Third request in a row hits the rate limit; Retry-After is honoured until the retry succeeds (attempt statuses recorded)",
+   "url": "https://lab.riddlelab.dev/r/echo",
+   "repeat": 3,
+   "clients": [
+    "cfprobe",
+    "cfprobe-h1-titlecase"
+   ],
+   "expect": {
+    "status": 200,
+    "verdict": "NORMAL_PAGE"
+   }
+  },
+  {
+   "id": "direct-ip",
+   "category": "waf",
+   "description": "Plain HTTP to the edge address with no zone hostname (error 1003)",
+   "url": "http://{{EDGE_IP}}/",
+   "expect": {
+    "status": 403,
+    "verdict": "ACCESS_DENIED"
+   }
+  },
+  {
+   "id": "turnstile-embed",
+   "category": "turnstile",
+   "description": "Origin page with an embedded Turnstile widget (test sitekey, managed-style interactive)",
+   "url": "https://lab.riddlelab.dev/p2/turnstile?mode=interactive",
+   "headers": [
+    [
+     "accept",
+     "text/html"
+    ]
+   ],
+   "expect": {
+    "status": 200,
+    "verdict": "NORMAL_PAGE"
+   }
+  },
+  {
+   "id": "turnstile-verify-no-token",
+   "category": "turnstile",
+   "description": "Submitting the Turnstile form without solving it: the origin's siteverify refuses",
+   "url": "https://lab.riddlelab.dev/p2/turnstile/verify",
+   "method": "POST",
+   "headers": [
+    [
+     "content-type",
+     "application/x-www-form-urlencoded"
+    ]
+   ],
+   "expect": {
+    "status": 403,
+    "verdict": "ACCESS_DENIED"
+   }
+  },
+  {
+   "id": "auth-required",
+   "category": "auth",
+   "description": "Origin 401 with WWW-Authenticate",
+   "url": "https://lab.riddlelab.dev/p2/auth",
+   "expect": {
+    "status": 401,
+    "verdict": "ACCESS_DENIED"
+   }
+  },
+  {
+   "id": "origin-forbidden",
+   "category": "auth",
+   "description": "Origin's own HTML 403: must not be read as a Cloudflare block",
+   "url": "https://lab.riddlelab.dev/p2/forbidden",
+   "expect": {
+    "status": 403,
+    "verdict": "ACCESS_DENIED"
+   }
+  },
+  {
+   "id": "json",
+   "category": "json",
+   "description": "Origin JSON",
+   "url": "https://lab.riddlelab.dev/p2/json",
+   "expect": {
+    "status": 200,
+    "verdict": "NORMAL_PAGE"
+   }
+  },
+  {
+   "id": "static",
+   "category": "static",
+   "description": "Cacheable CSS",
+   "url": "https://lab.riddlelab.dev/p2/static.css",
+   "expect": {
+    "status": 200,
+    "verdict": "NORMAL_PAGE"
+   }
+  },
+  {
+   "id": "redirect",
+   "category": "redirect",
+   "description": "302 to /echo, followed (runner default)",
+   "url": "https://lab.riddlelab.dev/p2/redirect",
+   "expect": {
+    "status": 200,
+    "verdict": "NORMAL_PAGE",
+    "attempt_statuses": [
+     302,
+     200
+    ]
+   }
+  },
+  {
+   "id": "redirect-no-follow",
+   "category": "redirect",
+   "description": "302 to /echo with redirect following off",
+   "url": "https://lab.riddlelab.dev/p2/redirect",
+   "policy": {
+    "max_redirects": 0
+   },
+   "expect": {
+    "status": 302,
+    "verdict": "REDIRECT"
+   }
+  },
+  {
+   "id": "redirect-loop",
+   "category": "redirect",
+   "description": "302 to itself: the loop is detected before re-requesting",
+   "url": "https://lab.riddlelab.dev/p2/redirect-loop",
+   "expect": {
+    "status": 302,
+    "verdict": "REDIRECT",
+    "fetch_outcome": "redirect_loop"
+   }
+  },
+  {
+   "id": "origin-503",
+   "category": "origin-failure",
+   "description": "Origin 503 with Retry-After 120: above the 60 s cap, so not retried",
+   "url": "https://lab.riddlelab.dev/p2/unavailable",
+   "expect": {
+    "status": 503,
+    "verdict": "ORIGIN_UNAVAILABLE",
+    "attempt_statuses": [
+     503
+    ]
+   }
+  },
+  {
+   "id": "origin-429",
+   "category": "rate-limit",
+   "description": "Origin's own 429 with Retry-After 30, cap set to 10 s for this case: not retried",
+   "url": "https://lab.riddlelab.dev/p2/ratelimit-origin",
+   "expect": {
+    "status": 429,
+    "verdict": "RATE_LIMITED",
+    "attempt_statuses": [
+     429
+    ]
+   },
+   "policy": {
+    "retry": {
+     "max_retry_after_ms": 10000
+    }
+   }
+  },
+  {
+   "id": "origin-502",
+   "category": "origin-failure",
+   "description": "Origin's own HTML 502: transient, retried with backoff, 3 attempts",
+   "url": "https://lab.riddlelab.dev/p2/origin-502",
+   "expect": {
+    "status": 502,
+    "verdict": "ORIGIN_UNAVAILABLE",
+    "attempt_statuses": [
+     502,
+     502,
+     502
+    ]
+   }
+  },
+  {
+   "id": "worker-throws",
+   "category": "origin-failure",
+   "description": "Worker throws: Cloudflare error 1101",
+   "url": "https://lab.riddlelab.dev/p2/throw",
+   "headers": [
+    [
+     "accept",
+     "text/html"
+    ]
+   ],
+   "expect": {
+    "status": 500,
+    "verdict": "ORIGIN_UNAVAILABLE",
+    "attempt_statuses": [
+     500,
+     500,
+     500
+    ]
+   }
+  },
+  {
+   "id": "cookies",
+   "category": "cookies",
+   "description": "Four Set-Cookie headers with different attributes",
+   "url": "https://lab.riddlelab.dev/p2/cookies",
+   "expect": {
+    "status": 200,
+    "verdict": "NORMAL_PAGE"
+   }
+  },
+  {
+   "id": "cookie-continuity",
+   "category": "cookies",
+   "description": "After /p2/cookies, /echo must receive the cookies the jar kept (path /, unexpired)",
+   "url": "https://lab.riddlelab.dev/echo",
+   "expect": {
+    "status": 200,
+    "verdict": "NORMAL_PAGE",
+    "body_contains": "\"lab_session\""
+   }
+  },
+  {
+   "id": "many-headers",
+   "category": "http",
+   "description": "120 response headers (above hyper's default of 100)",
+   "url": "https://lab.riddlelab.dev/p2/many-headers"
+  },
+  {
+   "id": "slow-2s",
+   "category": "http",
+   "description": "Origin answers after 2 s",
+   "url": "https://lab.riddlelab.dev/p2/slow?ms=2000",
+   "expect": {
+    "status": 200,
+    "verdict": "NORMAL_PAGE"
+   }
+  },
+  {
+   "id": "cut-body",
+   "category": "http",
+   "description": "Worker errors its body stream after 1000 bytes",
+   "url": "https://lab.riddlelab.dev/p2/cut"
+  },
+  {
+   "id": "breaker-1",
+   "category": "resilience",
+   "description": "Circuit breaker on (3 failures open it): failing request 1 of 3 to /p2/unavailable",
+   "url": "https://lab.riddlelab.dev/p2/unavailable",
+   "policy": {
+    "circuit": {
+     "failures_to_open": 3,
+     "open_ms": 60000
+    },
+    "retry": {
+     "max_attempts": 1
+    }
+   },
+   "expect": {
+    "status": 503,
+    "verdict": "ORIGIN_UNAVAILABLE"
+   },
+   "clients": [
+    "cfprobe",
+    "cfprobe-h1-titlecase"
+   ]
+  },
+  {
+   "id": "breaker-2",
+   "category": "resilience",
+   "description": "Circuit breaker on (3 failures open it): failing request 2 of 3 to /p2/unavailable",
+   "url": "https://lab.riddlelab.dev/p2/unavailable",
+   "policy": {
+    "circuit": {
+     "failures_to_open": 3,
+     "open_ms": 60000
+    },
+    "retry": {
+     "max_attempts": 1
+    }
+   },
+   "expect": {
+    "status": 503,
+    "verdict": "ORIGIN_UNAVAILABLE"
+   },
+   "clients": [
+    "cfprobe",
+    "cfprobe-h1-titlecase"
+   ]
+  },
+  {
+   "id": "breaker-3",
+   "category": "resilience",
+   "description": "Circuit breaker on (3 failures open it): failing request 3 of 3 to /p2/unavailable",
+   "url": "https://lab.riddlelab.dev/p2/unavailable",
+   "policy": {
+    "circuit": {
+     "failures_to_open": 3,
+     "open_ms": 60000
+    },
+    "retry": {
+     "max_attempts": 1
+    }
+   },
+   "expect": {
+    "status": 503,
+    "verdict": "ORIGIN_UNAVAILABLE"
+   },
+   "clients": [
+    "cfprobe",
+    "cfprobe-h1-titlecase"
+   ]
+  },
+  {
+   "id": "breaker-open",
+   "category": "resilience",
+   "description": "Fourth request with the breaker open: refused locally, not sent",
+   "url": "https://lab.riddlelab.dev/p2/json",
+   "policy": {
+    "circuit": {
+     "failures_to_open": 3,
+     "open_ms": 60000
+    },
+    "retry": {
+     "max_attempts": 1
+    }
+   },
+   "expect": {
+    "fetch_outcome": "circuit_open"
+   },
+   "clients": [
+    "cfprobe",
+    "cfprobe-h1-titlecase"
+   ]
+  }
+ ],
+ "seed": 20261124,
+ "policy": {
+  "circuit": null
+ }
+}

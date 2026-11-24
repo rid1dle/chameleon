@@ -1,0 +1,86 @@
+{
+  "configured_h2": null,
+  "configured_tls": null,
+  "connection": {
+    "id": 1,
+    "protocol": "http/1.1",
+    "remote_addr": "<removed>",
+    "request_number": 1,
+    "reused": false
+  },
+  "request": {
+    "headers": [
+      {
+        "name": "host",
+        "value": "<removed>"
+      },
+      {
+        "name": "user-agent",
+        "value": "cfprobe/0.1.0"
+      },
+      {
+        "name": "accept",
+        "value": "*/*"
+      }
+    ],
+    "method": "GET",
+    "url": "http://<removed>/"
+  },
+  "response": {
+    "body": "error code: 1003\n",
+    "body_len": 17,
+    "headers": [
+      {
+        "name": "date",
+        "value": "Tue, 24 Nov 2026 15:01:04 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "text/plain; charset=UTF-8"
+      },
+      {
+        "name": "content-length",
+        "value": "17"
+      },
+      {
+        "name": "connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "cache-control",
+        "value": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0"
+      },
+      {
+        "name": "expires",
+        "value": "Thu, 01 Jan 1970 00:00:01 GMT"
+      },
+      {
+        "name": "referrer-policy",
+        "value": "same-origin"
+      },
+      {
+        "name": "x-frame-options",
+        "value": "SAMEORIGIN"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9496e4e5a2b45-<removed>"
+      }
+    ],
+    "http_version": "HTTP/1.1",
+    "set_cookies": [],
+    "status": 403
+  },
+  "timings": {
+    "connect_ms": 1.694032,
+    "dns_ms": 0.015799,
+    "tls_ms": null,
+    "total_ms": 4.947362,
+    "ttfb_ms": 4.931121999999999
+  },
+  "tls": null
+}

@@ -1,0 +1,60 @@
+{
+  "source": {
+    "url": "https://lab.riddlelab.dev/p2/redirect-loop",
+    "captured_by": "cfprobe inspect --show-body",
+    "raw_file": "experiments/test-results/P2/zone raw run 2026-11-24 (local only)"
+  },
+  "note": "Excerpt of a third-party page: title and windows around classifier markers only.",
+  "response": {
+    "status": 522,
+    "http_version": "HTTP/2",
+    "headers": [
+      {
+        "name": "date",
+        "value": "Tue, 24 Nov 2026 15:32:48 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "text/html; charset=UTF-8"
+      },
+      {
+        "name": "content-length",
+        "value": "7254"
+      },
+      {
+        "name": "retry-after",
+        "value": "120"
+      },
+      {
+        "name": "cache-control",
+        "value": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0"
+      },
+      {
+        "name": "expires",
+        "value": "Thu, 01 Jan 1970 00:00:01 GMT"
+      },
+      {
+        "name": "referrer-policy",
+        "value": "same-origin"
+      },
+      {
+        "name": "x-frame-options",
+        "value": "SAMEORIGIN"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f977e8bc735ef9-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "body_len_full": 7254,
+    "body": "<title>riddlelab.dev | 522: Connection timed out</title>\n<!-- excerpt gap -->\nml; charset=UTF-8\" />\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\" />\n<meta name=\"robots\" content=\"noindex, nofollow\" />\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\" />\n<link rel=\"stylesheet\" id=\"cf_styles-css\" href=\"/cdn-cgi/styles/main.css\" />\n</head>\n<body>\n<div id=\"cf-wrapper\">\n    <div id=\"cf-error-details\" class=\"p-0\">\n        <header class=\"mx-auto pt-10 lg:pt-6 lg:px-8 w-240 lg:w-full mb-8\">\n            <h1 class=\"inline-block sm:block sm:mb-2 font-light text-60 lg:text-4xl text-black-dark leading-tight mr-2\">\n                <span class=\"inline-block\">Connection timed out</span>\n                <span class=\"code-label\">Error code 522</span>\n            </h1>\n            <div>\n                Visit <a href=\"https://www.cloudflare.com/5xx-error-landing?utm_source=errorcode_522&<removed>\" target=\"_blank\" rel=\"noopener noreferrer\">cloudflare.com</a> for more information.\n            </div>\n     \n<!-- excerpt gap -->\n</span> <a rel=\"noopener noreferrer\" href=\"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-522/\">Additional troubleshooting information here.</a></p>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"cf-error-footer cf-wrapper w-240 lg:w-full py-10 sm:py-4 sm:px-8 mx-auto text-center sm:text-left border-solid border-0 border-t border-gray-300\">\n    <p class=\"text-13\">\n      <span class=\"cf-footer-item sm:block sm:mb-1\">Cloudflare Ray ID: <strong class=\"font-semibold\">a5f977e8bc735ef9</strong></span>\n      <span class=\"cf"
+  }
+}

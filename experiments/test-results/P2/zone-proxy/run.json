@@ -1,0 +1,19 @@
+{
+  "matrix": "P2 controlled zone (lab.riddlelab.dev, Free plan), runner defaults: redirects 5, cookie jar, 3 attempts with backoff and Retry-After; circuit breaker only in the breaker-* cases (the matrix fails on purpose)",
+  "proxy_preflight": {
+    "connect_ms": 0.203992,
+    "destination": "lab.riddlelab.dev:443",
+    "negotiate_ms": 3.3371999999999997,
+    "ok": true,
+    "proxy": "env:CFPROBE_PROXY",
+    "scheme": "http"
+  },
+  "route": {
+    "id": "env:CFPROBE_PROXY",
+    "kind": "proxy",
+    "scheme": "http"
+  },
+  "route_description": "routing every connection through proxy \"env:CFPROBE_PROXY\" (Http <removed>:18080)",
+  "seed": 20261124,
+  "started": "2026-11-24T17:07:30Z"
+}

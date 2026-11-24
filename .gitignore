@@ -2,3 +2,6 @@ vendor/
 lab/bin/
 **/key.pem
 .env
+experiments/test-results/P2/raw/third-party/
+experiments/test-results/P2/**/raw/
+__pycache__/

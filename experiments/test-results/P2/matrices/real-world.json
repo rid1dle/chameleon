@@ -1,0 +1,128 @@
+{
+ "name": "P2 real-world passive observations (one GET per URL, 2-4 s jittered pacing, shuffled order, runner defaults: redirects 5, cookie jar per site, retries only on transient failures, circuit breaker)",
+ "delay_ms": 2000,
+ "clients": [
+  {
+   "name": "cfprobe",
+   "kind": "cfprobe"
+  }
+ ],
+ "cases": [
+  {
+   "id": "asura-home",
+   "category": "landing",
+   "description": "AsuraScans homepage",
+   "url": "https://asurascans.com/"
+  },
+  {
+   "id": "asura-browse",
+   "category": "search",
+   "description": "AsuraScans browse listing filtered by genre (linked from the homepage)",
+   "url": "https://asurascans.com/browse?genres=action"
+  },
+  {
+   "id": "asura-css",
+   "category": "static",
+   "description": "AsuraScans stylesheet referenced by the homepage",
+   "url": "https://asurascans.com/_astro/global.C145GP2_.css"
+  },
+  {
+   "id": "asura-cdn-image",
+   "category": "static",
+   "description": "AsuraScans CDN image referenced by the homepage",
+   "url": "https://cdn.asurascans.com/asura-images/announcements/launch-chat.ba97c2.webp"
+  },
+  {
+   "id": "asura-api-root",
+   "category": "json",
+   "description": "AsuraScans API host root (referenced by the homepage)",
+   "url": "https://api.asurascans.com/"
+  },
+  {
+   "id": "asuracomic-home",
+   "category": "redirect",
+   "description": "asuracomic.net homepage (old domain)",
+   "url": "https://asuracomic.net/"
+  },
+  {
+   "id": "bms-home",
+   "category": "landing",
+   "description": "BookMyShow India homepage",
+   "url": "https://in.bookmyshow.com/"
+  },
+  {
+   "id": "bms-explore",
+   "category": "search",
+   "description": "BookMyShow listing page linked from the homepage",
+   "url": "https://in.bookmyshow.com/explore/action-movies"
+  },
+  {
+   "id": "bms-cdn-image",
+   "category": "static",
+   "description": "BookMyShow CDN icon referenced by the homepage",
+   "url": "https://assets-in.bmscdn.com/m6/images/icons/apple-launch-1125x2436.png"
+  },
+  {
+   "id": "discord-home",
+   "category": "landing",
+   "description": "Discord homepage",
+   "url": "https://discord.com/"
+  },
+  {
+   "id": "discord-docs",
+   "category": "docs",
+   "description": "Discord developer documentation",
+   "url": "https://discord.com/developers/docs/intro"
+  },
+  {
+   "id": "discord-json",
+   "category": "json",
+   "description": "Discord discovery categories API (robots.txt allows /api/v*/discovery)",
+   "url": "https://discord.com/api/v9/discovery/categories"
+  },
+  {
+   "id": "discord-http",
+   "category": "redirect",
+   "description": "Discord over plain HTTP",
+   "url": "http://discord.com/"
+  },
+  {
+   "id": "cf-home",
+   "category": "landing",
+   "description": "Cloudflare homepage (mentions Turnstile in its menu)",
+   "url": "https://www.cloudflare.com/"
+  },
+  {
+   "id": "cf-docs-turnstile",
+   "category": "docs",
+   "description": "Cloudflare Turnstile documentation (talks about Turnstile throughout)",
+   "url": "https://developers.cloudflare.com/turnstile/"
+  },
+  {
+   "id": "cf-apex",
+   "category": "redirect",
+   "description": "cloudflare.com apex",
+   "url": "https://cloudflare.com/"
+  },
+  {
+   "id": "cf-api-ips",
+   "category": "json",
+   "description": "Cloudflare public API: IP ranges (no auth)",
+   "url": "https://api.cloudflare.com/client/v4/ips"
+  },
+  {
+   "id": "cf-api-user",
+   "category": "auth",
+   "description": "Cloudflare API endpoint that needs a token, called without one",
+   "url": "https://api.cloudflare.com/client/v4/user"
+  },
+  {
+   "id": "nowsecure-home",
+   "category": "landing",
+   "description": "nowsecure.nl homepage (a bot-detection test page)",
+   "url": "https://nowsecure.nl/"
+  }
+ ],
+ "max_delay_ms": 4000,
+ "shuffle": true
+}

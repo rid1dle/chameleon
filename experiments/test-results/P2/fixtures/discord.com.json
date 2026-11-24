@@ -1,0 +1,116 @@
+{
+  "source": {
+    "url": "https://discord.com/",
+    "captured_by": "cfprobe inspect --show-body",
+    "raw_file": "experiments/test-results/P2/raw/third-party/discord.com.json"
+  },
+  "note": "Excerpt of a third-party page: title and windows around classifier markers only.",
+  "response": {
+    "status": 200,
+    "http_version": "HTTP/2",
+    "headers": [
+      {
+        "name": "date",
+        "value": "Tue, 24 Nov 2026 15:11:55 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "text/html; charset=utf-8"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f959520c8cb089-<removed>"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "HIT"
+      },
+      {
+        "name": "cache-control",
+        "value": "no-cache"
+      },
+      {
+        "name": "last-modified",
+        "value": "Tue, 24 Nov 2026 08:23:21 GMT"
+      },
+      {
+        "name": "link",
+        "value": "<https://cdn.prod.website-files.com>; rel=preconnect; crossorigin, <https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/css/<removed>>; rel=preload; as=style; crossorigin; integrity=\"sha384-qFU5iuyGOrcssbAdX/<removed>\", <https://fonts.googleapis.com>; rel=preconnect, <https://fonts.gstatic.com>; rel=preconnect; crossorigin"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 140 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 205 bytes>"
+      },
+      {
+        "name": "strict-transport-security",
+        "value": "max-age=31536000; includeSubDomains; preload"
+      },
+      {
+        "name": "vary",
+        "value": "accept-encoding"
+      },
+      {
+        "name": "reporting-endpoints",
+        "value": "csp-sentry=\"https://o64374.ingest.sentry.io/api/5441894/security/?<removed>&sentry_environment=stable\""
+      },
+      {
+        "name": "content-security-policy",
+        "value": "default-src 'self'; script-src 'self' 'unsafe-inline' '<removed>' https://discord.com https://www.googletagmanager.com https://connect.facebook.net https://www.google-analytics.com https://ssl.google-analytics.com https://www.gstatic.com/recaptcha/ https://www.google.com/recaptcha/ https://recaptcha.net/recaptcha/ https://hcaptcha.com https://*.hcaptcha.com https://challenges.cloudflare.com https://s.ytimg.com/yts/jsbin/ https://www.youtube.com/iframe_api https://www.youtube.com/s/player/ https://geolocation.onetrust.com/cookieconsentpub/v1/geo/location https://script.crazyegg.com https://*.website-files.com https://uploads-ssl.webflow.com https://global.localizecdn.com https://cdn.localizeapi.com https://d3e54v103j8qbb.cloudfront.net https://gist.github.com https://unpkg.com/@splinetool/runtime/build/runtime.js https://*.twitter.com https://platform.x.com https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js https://boards-api.greenhouse.io https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js https://cdn.finsweet.com/files/fscalendar/calendar-invite-v1.0.min.js https://www.redditstatic.com https://ads.reddit.com https://cdn.jsdelivr.net/npm/@finsweet/attributes-selectcustom@1.7.2/selectcustom.js https://embed.bsky.app/static/embed.js https://hubspotonwebflow.com/assets/js/form-124.js '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>' '<removed>/j/hFOUnE=' '<removed>' 'sha256-mjdgHR9aXy+6OwAGlNS/XgNcYG1Uhd2U4pl8vi7+XCY=' 'sha256-jY/7jWrddtNUb+Y4CFKWaH+R2lrqgm/LAX72E8SLqKw=' '<removed>' 'sha256-/cdQbTQzcfSt2/<removed>' '<removed>' 'sha256-gqG2LEZaHDwOL3S/CXJTuk/f3LimTEyruhOc/U0/QUY=' '<removed>' '<removed>/qF7Qt8TYwY=' '<removed>/ZP5EDPY=' 'sha256-7JHgDILwD7i/<removed>' '<removed>'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.hcaptcha.com https://hcaptcha.com https://*.website-files.com https://uploads-ssl.webflow.com https://*.githubassets.com https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css; img-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.facebook.com https://cdn.discordapp.com https://safety.discord.com https://<removed> https://<removed> data: https://*.website-files.com https://uploads-ssl.webflow.com https://global.localizecdn.com https://cdn.localizeapi.com https://*.ytimg.com https://uploads-ssl.webflow.com https://alb.reddit.com; font-src 'self' https://fonts.gstatic.com https://fonts.gstatic.com https://*.website-files.com https://uploads-ssl.webflow.com https://www.redditstatic.com; connect-src 'self' https://discordapp.com https://discord.com https://connect.facebook.net https://api.greenhouse.io https://api.github.com https://*.sentry.io https://www.google-analytics.com https://*.hcaptcha.com https://hcaptcha.com https://geolocation.onetrust.com/cookieconsentpub/v1/geo/location ws://<removed>:* http://<removed>:* https://global.localizecdn.com https://cdn.localizeapi.com https://*.website-files.com https://uploads-ssl.webflow.com https://webflow.com/api/ https://script.crazyegg.com https://assets-tracking.crazyegg.com https://<removed> https://tracking.crazyegg.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://redditstatic.com https://ads.reddit.com https://hubspotonwebflow.com/api/forms/blockList https://hubspotonwebflow.com/assets/js/blockedDomains.json https://hubspotonwebflow.com/api/forms/<removed> https://hubspotonwebflow.com/api/forms/<removed>; media-src 'self' https://cdn.discordapp.com/assets/ https://cdn.discordapp.com/promotions/premium-marketing/ https://*.website-files.com https://uploads-ssl.webflow.com; frame-src https://discordapp.com/domain-migration https://www.google.com/recaptcha/ https://recaptcha.net/recaptcha/ https://*.hcaptcha.com https://hcaptcha.com https://challenges.cloudflare.com https://www.youtube.com/embed/ https://10851314.fls.doubleclick.net/ https://*.twitter.com https://platform.x.com https://syndication.x.com https://*.vimeo.com https://embed.bsky.app;"
+      },
+      {
+        "name": "nel",
+        "value": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+      },
+      {
+        "name": "permissions-policy",
+        "value": "interest-cohort=()"
+      },
+      {
+        "name": "report-to",
+        "value": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?<removed>\"}]}"
+      },
+      {
+        "name": "x-content-type-options",
+        "value": "nosniff"
+      },
+      {
+        "name": "x-forwarded-for",
+        "value": "<removed>"
+      },
+      {
+        "name": "x-frame-options",
+        "value": "DENY"
+      },
+      {
+        "name": "x-xss-protection",
+        "value": "1; mode=block"
+      },
+      {
+        "name": "o2o-cache-status",
+        "value": "HIT"
+      },
+      {
+        "name": "surrogate-control",
+        "value": "max-age=2147483647"
+      },
+      {
+        "name": "surrogate-key",
+        "value": "prod-wf1.discord.com 6257adef93867e50d84d30e2 pageId:6a8c9adf8a1eca12fbe9eabf sp:<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "body_len_full": 160937,
+    "body": "<title>Discord - Group Chat That’s All Fun &amp; Games</title>\n<!-- excerpt gap -->\n(b){var d=b.createElement('script');d.nonce='<removed>';d.innerHTML=\"window.__CF$cv$params={r:'a5f959520c8cb089',t:'MTc5NTUzMzExNQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5f959520c8cb089',a=document.createElement('script');a.nonce='<removed>';a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createE"
+  }
+}

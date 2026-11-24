@@ -1,0 +1,18 @@
+{
+  "arm": "L2-cookie-cfprobe-ua",
+  "status": 403,
+  "http_version": "HTTP/2",
+  "sent_cookie": [
+    "<redacted 445 bytes>"
+  ],
+  "verdict": "CONFIRMED_CHALLENGE_RESPONSE",
+  "confidence": "high",
+  "issued_by": "cloudflare_edge",
+  "challenge_kind": "managed",
+  "evidence": [
+    "cf-ray present",
+    "cf-mitigated: challenge",
+    "body is the challenge page (_cf_chl_opt or orchestrate script)",
+    "body cType 'managed'"
+  ]
+}

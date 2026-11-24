@@ -1,129 +1,13 @@
 //! Networking foundation, proven against a local BoringSSL + hyper server with a throwaway certificate.
 //! The server counts TCP accepts (connection reuse) and echoes the header names it received, in order.
 
-use std::convert::Infallible;
-use std::io::Write;
-use std::net::SocketAddr;
-use std::sync::Arc;
-use std::sync::atomic::{AtomicUsize, Ordering};
+mod common;
 
-use boring::asn1::Asn1Time;
-use boring::bn::BigNum;
-use boring::ec::{EcGroup, EcKey};
-use boring::hash::MessageDigest;
-use boring::nid::Nid;
-use boring::pkey::{PKey, Private};
-use boring::ssl::{AlpnError, SslAcceptor, SslMethod, select_next_proto};
-use boring::x509::extension::SubjectAlternativeName;
-use boring::x509::{X509, X509NameBuilder};
-use bytes::Bytes;
 use cfprobe::networking::Protocol;
 use cfprobe::tls::TlsVersion;
 use cfprobe::{CFProbe, Config, Error, Stage, Target};
-use http_body_util::Full;
-use hyper::body::Incoming;
-use hyper::service::service_fn;
-use hyper::{Request, Response};
-use hyper_util::rt::{TokioExecutor, TokioIo};
+use common::*;
 use tokio::net::TcpListener;
-
-const H2_AND_H1: &[u8] = b"\x02h2\x08http/1.1";
-const H1_ONLY: &[u8] = b"\x08http/1.1";
-
-fn self_signed() -> (X509, PKey<Private>) {
-    let group = EcGroup::from_curve_name(Nid::X9_62_PRIME256V1).unwrap();
-    let key = PKey::from_ec_key(EcKey::generate(&group).unwrap()).unwrap();
-    let mut name = X509NameBuilder::new().unwrap();
-    name.append_entry_by_text("CN", "localhost").unwrap();
-    let name = name.build();
-    let mut b = X509::builder().unwrap();
-    b.set_version(2).unwrap();
-    b.set_serial_number(&BigNum::from_u32(1).unwrap().to_asn1_integer().unwrap()).unwrap();
-    b.set_subject_name(&name).unwrap();
-    b.set_issuer_name(&name).unwrap();
-    b.set_pubkey(&key).unwrap();
-    b.set_not_before(&Asn1Time::days_from_now(0).unwrap()).unwrap();
-    b.set_not_after(&Asn1Time::days_from_now(1).unwrap()).unwrap();
-    let san = SubjectAlternativeName::new().dns("localhost").build(&b.x509v3_context(None, None)).unwrap();
-    b.append_extension(&san).unwrap();
-    b.sign(&key, MessageDigest::sha256()).unwrap();
-    (b.build(), key)
-}
-
-struct Lab {
-    addr: SocketAddr,
-    accepts: Arc<AtomicUsize>,
-    ca: tempfile::NamedTempFile,
-}
-
-impl Lab {
-    async fn start(server_alpn: &'static [u8]) -> Lab {
-        let (cert, key) = self_signed();
-        let mut ca = tempfile::NamedTempFile::new().unwrap();
-        ca.write_all(&cert.to_pem().unwrap()).unwrap();
-
-        let mut acc = SslAcceptor::mozilla_intermediate_v5(SslMethod::tls()).unwrap();
-        acc.set_private_key(&key).unwrap();
-        acc.set_certificate(&cert).unwrap();
-        acc.set_alpn_select_callback(move |_, client| select_next_proto(server_alpn, client).ok_or(AlpnError::NOACK));
-        let acceptor = Arc::new(acc.build());
-
-        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
-        let addr = listener.local_addr().unwrap();
-        let accepts = Arc::new(AtomicUsize::new(0));
-        let counter = accepts.clone();
-        tokio::spawn(async move {
-            loop {
-                let (tcp, _) = listener.accept().await.unwrap();
-                counter.fetch_add(1, Ordering::SeqCst);
-                let acceptor = acceptor.clone();
-                tokio::spawn(async move {
-                    let Ok(tls) = tokio_boring::accept(&acceptor, tcp).await else { return };
-                    let h2 = tls.ssl().selected_alpn_protocol() == Some(b"h2");
-                    let io = TokioIo::new(tls);
-                    if h2 {
-                        let _ = hyper::server::conn::http2::Builder::new(TokioExecutor::new())
-                            .serve_connection(io, service_fn(echo))
-                            .await;
-                    } else {
-                        let _ = hyper::server::conn::http1::Builder::new().serve_connection(io, service_fn(echo)).await;
-                    }
-                });
-            }
-        });
-        Lab { addr, accepts, ca }
-    }
-
-    fn config(&self) -> Config {
-        let mut c = Config::default();
-        c.resolve.insert(format!("localhost:{}", self.addr.port()), self.addr);
-        c.tls.ca_file = Some(self.ca.path().to_path_buf());
-        c
-    }
-
-    fn url(&self, path: &str) -> Target {
-        Target::get(&format!("https://localhost:{}{path}", self.addr.port())).unwrap()
-    }
-
-    fn accepts(&self) -> usize {
-        self.accepts.load(Ordering::SeqCst)
-    }
-}
-
-async fn echo(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, Infallible> {
-    let names: Vec<&str> = req.headers().keys().map(|k| k.as_str()).collect();
-    let body = if req.uri().path() == "/big" { vec![b'x'; 4096] } else { b"ok".to_vec() };
-    Ok(Response::builder()
-        .header("x-seen-order", names.join(","))
-        .header("x-seen-version", format!("{:?}", req.version()))
-        .header("set-cookie", "sid=secretvalue; Path=/; HttpOnly")
-        .body(Full::new(Bytes::from(body)))
-        .unwrap())
-}
-
-fn header<'a>(ex: &'a cfprobe::Exchange, name: &str) -> &'a str {
-    &ex.response.headers.iter().find(|h| h.name == name).unwrap().value
-}
 
 #[tokio::test]
 async fn h2_is_negotiated_and_the_handshake_is_observed() {
@@ -146,6 +30,11 @@ async fn h2_is_negotiated_and_the_handshake_is_observed() {
     assert_eq!(tls.peer_chain[0].subject, "CN=localhost");
     assert!(ex.configured_h2.is_some());
     assert!(ex.timings.tls_ms.is_some());
+    // The address came from config.resolve, so no lookup ran: not done, which is not 0 ms.
+    assert_eq!(ex.timings.dns_ms, None);
+    // A real response that never passed through Cloudflare.
+    let a = cfprobe::cloudflare::analyze_exchange(&ex);
+    assert_eq!((a.verdict, a.cloudflare_present), (cfprobe::cloudflare::Verdict::NormalPage, false));
 }
 
 #[tokio::test]

@@ -1,0 +1,182 @@
+{
+  "configured_h2": {
+    "header_table_size": null,
+    "initial_connection_window_size": null,
+    "initial_stream_window_size": null,
+    "max_concurrent_streams": null,
+    "max_frame_size": null,
+    "max_header_list_size": null
+  },
+  "configured_tls": {
+    "alpn": [
+      "h2",
+      "http/1.1"
+    ],
+    "ca_file": null,
+    "cipher_list": null,
+    "curves": null,
+    "grease": null,
+    "max_version": null,
+    "min_version": null,
+    "ocsp_stapling": false,
+    "permute_extensions": null,
+    "sigalgs": null,
+    "signed_cert_timestamps": false,
+    "verify": true
+  },
+  "connection": {
+    "id": 1,
+    "protocol": "h2",
+    "remote_addr": "<removed>",
+    "request_number": 1,
+    "reused": false
+  },
+  "request": {
+    "headers": [
+      {
+        "name": "user-agent",
+        "value": "cfprobe/0.1.0"
+      },
+      {
+        "name": "accept",
+        "value": "*/*"
+      }
+    ],
+    "method": "GET",
+    "url": "https://lab.riddlelab.dev/i/echo"
+  },
+  "response": {
+    "body": "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><meta http-equiv=\"content-security-policy\" content=\"default-src &#39;none&#39;; script-src &#39;nonce-kOK5XtcEKFa5Zs8dSZcSrJ&#39; &#39;unsafe-eval&#39; https://challenges.cloudflare.com; script-src-attr &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src &#39;self&#39; https://challenges.cloudflare.com; connect-src &#39;self&#39; https://challenges.cloudflare.com; frame-src &#39;self&#39; https://challenges.cloudflare.com blob:; child-src &#39;self&#39; https://challenges.cloudflare.com blob:; worker-src blob:; form-action http: https:; base-uri &#39;self&#39;\"><style>*{box-sizing:border-box;margin:0;padding:0}html{line-height:1.15;-webkit-text-size-adjust:100%;color:#313131;font-family:system-ui,-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,\"Noto Sans\",sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\"}body{display:flex;flex-direction:column;height:100vh;min-height:100vh}.main-content{margin:8rem auto;padding-left:1.5rem;max-width:60rem}@media (width <= 720px){.main-content{margin-top:4rem}}#challenge-error-text{background-image:url(\"data:image/svg+xml;base64,<removed>\");background-repeat:no-repeat;background-size:contain;padding-left:34px}</style><meta http-equiv=\"refresh\" content=\"360\"></head><body><div class=\"main-wrapper\" role=\"main\"><div class=\"main-content\"><noscript><div class=\"h2\"><span id=\"challenge-error-text\">Enable JavaScript and cookies to continue</span></div></noscript></div></div><script nonce=\"kOK5XtcEKFa5Zs8dSZcSrJ\">(function(){window._cf_chl_opt = {cFPWv: 'b',cH: '<removed>',cITimeS: '1795532453',cN: 'kOK5XtcEKFa5Zs8dSZcSrJ',cRay: 'a5f94928a9842e8a',cTplC:0,cTplO:0,cTplV:5,cType: 'interactive',cUPMDTk:\"/i/echo?<removed>\",cvId: '3',cZone: 'lab.riddlelab.dev',fa:\"/i/echo?<removed>\",md: '<removed>',mdrd: '<removed>',};var a = document.createElement('script');a.nonce = 'kOK5XtcEKFa5Zs8dSZcSrJ';a.src = '/cdn-cgi/challenge-platform/h/b/orchestrate/chl_page/v1?ray=a5f94928a9842e8a';window._cf_chl_opt.cOgUHash = location.hash === '' && location.href.indexOf('#') !== -1 ? '#' : location.hash;window._cf_chl_opt.cOgUQuery = location.search === '' && location.href.slice(0, location.href.length - window._cf_chl_opt.cOgUHash.length).indexOf('?') !== -1 ? '?' : location.search;if (window.history && window.history.replaceState) {var ogU = location.pathname + window._cf_chl_opt.cOgUQuery + window._cf_chl_opt.cOgUHash;history.replaceState(null, null,\"/i/echo?<removed>\"+ window._cf_chl_opt.cOgUHash);a.onload = function() {history.replaceState(null, null, ogU);}}document.getElementsByTagName('head')[0].appendChild(a);}());</script></body></html>",
+    "body_len": 5397,
+    "headers": [
+      {
+        "name": "date",
+        "value": "Tue, 24 Nov 2026 15:00:53 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "text/html; charset=UTF-8"
+      },
+      {
+        "name": "content-length",
+        "value": "5397"
+      },
+      {
+        "name": "accept-ch",
+        "value": "Sec-CH-UA-Bitness, Sec-CH-UA-Arch, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Platform, Sec-CH-UA, UA-Bitness, UA-Arch, UA-Full-Version, UA-Mobile, UA-Model, UA-Platform-Version, UA-Platform, UA"
+      },
+      {
+        "name": "cf-mitigated",
+        "value": "challenge"
+      },
+      {
+        "name": "content-security-policy",
+        "value": "default-src 'none'; script-src 'nonce-kOK5XtcEKFa5Zs8dSZcSrJ' 'unsafe-eval' https://challenges.cloudflare.com; script-src-attr 'none'; style-src 'unsafe-inline'; img-src 'self' https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; frame-src 'self' https://challenges.cloudflare.com blob:; child-src 'self' https://challenges.cloudflare.com blob:; worker-src blob:; form-action http: https:; base-uri 'self'"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "critical-ch",
+        "value": "Sec-CH-UA-Bitness, Sec-CH-UA-Arch, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Platform, Sec-CH-UA, UA-Bitness, UA-Arch, UA-Full-Version, UA-Mobile, UA-Model, UA-Platform-Version, UA-Platform, UA"
+      },
+      {
+        "name": "cross-origin-embedder-policy",
+        "value": "require-corp"
+      },
+      {
+        "name": "cross-origin-opener-policy",
+        "value": "same-origin"
+      },
+      {
+        "name": "cross-origin-resource-policy",
+        "value": "same-origin"
+      },
+      {
+        "name": "origin-agent-cluster",
+        "value": "?1"
+      },
+      {
+        "name": "permissions-policy",
+        "value": "accelerometer=(),camera=(),clipboard-read=(),clipboard-write=(),geolocation=(),gyroscope=(),hid=(),magnetometer=(),microphone=(),payment=(),publickey-credentials-get=(),screen-wake-lock=(),serial=(),sync-xhr=(),usb=(),xr-spatial-tracking=*"
+      },
+      {
+        "name": "referrer-policy",
+        "value": "same-origin"
+      },
+      {
+        "name": "server-timing",
+        "value": "chlray;desc=\"a5f94928a9842e8a\""
+      },
+      {
+        "name": "x-content-type-options",
+        "value": "nosniff"
+      },
+      {
+        "name": "x-frame-options",
+        "value": "SAMEORIGIN"
+      },
+      {
+        "name": "report-to",
+        "value": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?<removed>\"}]}"
+      },
+      {
+        "name": "nel",
+        "value": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f94928a9842e8a-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "http_version": "HTTP/2",
+    "set_cookies": [],
+    "status": 403
+  },
+  "timings": {
+    "connect_ms": 2.0525629999999997,
+    "dns_ms": 0.006753,
+    "tls_ms": 7.227861000000001,
+    "total_ms": 15.261452,
+    "ttfb_ms": 15.224302
+  },
+  "tls": {
+    "alpn": "h2",
+    "cipher": {
+      "iana": "TLS_AES_128_GCM_SHA256",
+      "openssl": "TLS_AES_128_GCM_SHA256"
+    },
+    "client_random": "<removed>",
+    "peer_chain": [
+      {
+        "issuer": "C=US, O=Google Trust Services, CN=WE1",
+        "not_after": "Feb 22 14:57:32 2027 GMT",
+        "not_before": "Nov 24 13:57:36 2026 GMT",
+        "sha256": "0d298917aacd4b36d7c3d7c2aa4c02905189b1af7a607e05fabb4106a297baf3",
+        "subject": "CN=riddlelab.dev"
+      },
+      {
+        "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+        "not_after": "Feb 20 14:00:00 2029 GMT",
+        "not_before": "Dec 13 09:00:00 2023 GMT",
+        "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+        "subject": "C=US, O=Google Trust Services, CN=WE1"
+      },
+      {
+        "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+        "not_after": "Jan 28 00:00:42 2028 GMT",
+        "not_before": "Nov 15 03:43:21 2023 GMT",
+        "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+        "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+      }
+    ],
+    "session_reused": false,
+    "sni": "lab.riddlelab.dev",
+    "version": "TLSv1.3"
+  }
+}

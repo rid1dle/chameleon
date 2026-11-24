@@ -5,7 +5,8 @@ use serde::{Deserialize, Serialize};
 use url::Url;
 
 use super::error::{Error, Result};
-use crate::http::H2Settings;
+use crate::http::{H1Settings, H2Settings};
+use crate::proxy::ProxyConfig;
 use crate::tls::TlsSettings;
 
 /// Engine configuration. Every field has a default, so a config file only names what it changes.
@@ -25,7 +26,11 @@ pub struct Config {
     /// Headers sent on every request, in this order, before the target's own headers.
     pub default_headers: Vec<(String, String)>,
     pub tls: TlsSettings,
+    pub h1: H1Settings,
     pub h2: H2Settings,
+    /// Empty: no proxy, direct connections (announced). Otherwise every connection uses the selected
+    /// proxy and nothing else.
+    pub proxy: ProxyConfig,
 }
 
 impl Default for Config {
@@ -41,7 +46,9 @@ impl Default for Config {
                 ("accept".into(), "*/*".into()),
             ],
             tls: TlsSettings::default(),
+            h1: H1Settings::default(),
             h2: H2Settings::default(),
+            proxy: ProxyConfig::default(),
         }
     }
 }
@@ -63,6 +70,29 @@ impl Config {
                 return Err(Error::Config(format!(
                     "tls.alpn entry {p:?} is not supported (only \"h2\" and \"http/1.1\")"
                 )));
+            }
+        }
+        // h2 panics on these instead of returning an error (h2 0.4.20 src/frame/settings.rs:91).
+        if let Some(v) = self.h2.max_frame_size {
+            if !(16_384..=16_777_215).contains(&v) {
+                return Err(Error::Config(format!("h2.max_frame_size {v} is outside 16384..=16777215 (RFC 9113 6.5.2)")));
+            }
+        }
+        for (name, v) in [
+            ("initial_stream_window_size", self.h2.initial_stream_window_size),
+            ("initial_connection_window_size", self.h2.initial_connection_window_size),
+        ] {
+            if v.is_some_and(|v| v > 0x7fff_ffff) {
+                return Err(Error::Config(format!("h2.{name} is above 2^31-1 (RFC 9113 6.9.1)")));
+            }
+        }
+        if self.h1.max_response_headers == Some(0) {
+            return Err(Error::Config("h1.max_response_headers must be greater than 0".into()));
+        }
+        for key in self.resolve.keys() {
+            let port = key.rsplit_once(':').and_then(|(h, p)| (!h.is_empty()).then_some(p));
+            if port.and_then(|p| p.parse::<u16>().ok()).is_none() {
+                return Err(Error::Config(format!("resolve key {key:?} is not HOST:PORT (IPv6 hosts in brackets)")));
             }
         }
         Ok(())
@@ -89,6 +119,11 @@ impl Target {
         }
         if url.host_str().is_none() {
             return Err(Error::Target(format!("{url}: no host")));
+        }
+        if !url.username().is_empty() || url.password().is_some() {
+            return Err(Error::Target(
+                "credentials in the URL are not supported (they would reach reports and HTTP/2 :authority); send an authorization header".into(),
+            ));
         }
         Ok(Self { method: "GET".into(), url, headers: Vec::new(), body: None })
     }

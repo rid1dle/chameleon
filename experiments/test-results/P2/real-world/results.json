@@ -1,0 +1,4537 @@
+[
+  {
+    "case_id": "bms-cdn-image",
+    "category": "static",
+    "description": "BookMyShow CDN icon referenced by the homepage",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:35:51Z",
+    "request": {
+      "method": "GET",
+      "url": "https://assets-in.bmscdn.com/m6/images/icons/apple-launch-1125x2436.png",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "image/png"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Amazon, CN=Amazon RSA 2048 M01",
+          "not_after": "Mar 28 23:59:59 2027 GMT",
+          "not_before": "Sep 12 00:00:00 2026 GMT",
+          "sha256": "86e25cc6b4394749c07aeec439b1f85ab0cf8cf3933b3516420455add7b664e0",
+          "subject": "CN=*.bmscdn.com"
+        },
+        {
+          "issuer": "C=US, O=Amazon, CN=Amazon Root CA 1",
+          "not_after": "Aug 23 22:21:28 2030 GMT",
+          "not_before": "Aug 23 22:21:28 2022 GMT",
+          "sha256": "5338ebec8fb2ac60996126d3e76aa34fd0f3318ac78ebb7ac8f6f1361f484b33",
+          "subject": "C=US, O=Amazon, CN=Amazon RSA 2048 M01"
+        },
+        {
+          "issuer": "C=US, ST=Arizona, L=Scottsdale, O=Starfield Technologies, Inc., CN=Starfield Services Root Certificate Authority - G2",
+          "not_after": "Dec 31 01:00:00 2037 GMT",
+          "not_before": "May 25 12:00:00 2015 GMT",
+          "sha256": "87dcd4dc74640a322cd205552506d1be64f12596258096544986b4850bc72706",
+          "subject": "C=US, O=Amazon, CN=Amazon Root CA 1"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 35274,
+      "connection": {
+        "address_source": "dns",
+        "id": 1,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 1,
+        "reused": false
+      },
+      "informational": [],
+      "set_cookies": [],
+      "timings": {
+        "connect_ms": 1.8760649999999999,
+        "dns_ms": 2.626131,
+        "tls_ms": 5.531155,
+        "total_ms": 30.494722,
+        "ttfb_ms": 29.332244
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": false,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": null,
+      "retry_after": null,
+      "location": null,
+      "title": null,
+      "indicators": [],
+      "evidence": [
+        "no cf-ray header and server is not cloudflare",
+        "no challenge, block or error marker: status 200 is the origin's"
+      ],
+      "caveats": []
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://assets-in.bmscdn.com/m6/images/icons/apple-launch-1125x2436.png",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 32,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only bms-cdn-image   # client \"cfprobe\""
+  },
+  {
+    "case_id": "discord-home",
+    "category": "landing",
+    "description": "Discord homepage",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:35:53Z",
+    "request": {
+      "method": "GET",
+      "url": "https://discord.com/",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/html; charset=utf-8"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d455fd4db089-<removed>"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "HIT"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 140 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 205 bytes>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Jan 25 06:42:35 2027 GMT",
+          "not_before": "Oct 27 05:42:41 2026 GMT",
+          "sha256": "2cbd361af205eb087adf6c92df9a526e39abeb5a0c573db475681730611b394d",
+          "subject": "CN=discord.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 160937,
+      "connection": {
+        "address_source": "dns",
+        "id": 2,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 1,
+        "reused": false
+      },
+      "informational": [],
+      "set_cookies": [
+        {
+          "attributes": [
+            [
+              "expires",
+              "Sun, 23 Nov 2031 16:35:53 GMT"
+            ],
+            [
+              "max-age",
+              "157680000"
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "Lax"
+            ]
+          ],
+          "name": "__dcfduid",
+          "value_len": 32
+        },
+        {
+          "attributes": [
+            [
+              "expires",
+              "Sun, 23 Nov 2031 16:35:53 GMT"
+            ],
+            [
+              "max-age",
+              "157680000"
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "Lax"
+            ]
+          ],
+          "name": "__sdcfduid",
+          "value_len": 96
+        }
+      ],
+      "timings": {
+        "connect_ms": 1.597383,
+        "dns_ms": 1.116643,
+        "tls_ms": 6.076537,
+        "total_ms": 31.228006,
+        "ttfb_ms": 28.226963
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d455fd4db089-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": "Discord - Group Chat That’s All Fun &amp; Games",
+      "indicators": [
+        "js_detections_script"
+      ],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's",
+        "JavaScript Detections script present: it scores this visit for later requests, it does not block this one"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://discord.com/",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 36,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only discord-home   # client \"cfprobe\""
+  },
+  {
+    "case_id": "cf-api-user",
+    "category": "auth",
+    "description": "Cloudflare API endpoint that needs a token, called without one",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:35:57Z",
+    "request": {
+      "method": "GET",
+      "url": "https://api.cloudflare.com/client/v4/user",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 403,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "application/json"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d46a5c44cda7-<removed>"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "DYNAMIC"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 130 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 327 bytes>"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Jan 10 00:24:34 2027 GMT",
+          "not_before": "Oct 11 23:24:45 2026 GMT",
+          "sha256": "1d88908e0e8c1e4ca1500271d91f730fd3857a1f3d3e9b454d7a3c6c23d3fbf1",
+          "subject": "CN=api.cloudflare.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 162,
+      "connection": {
+        "address_source": "dns",
+        "id": 3,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 1,
+        "reused": false
+      },
+      "informational": [],
+      "set_cookies": [
+        {
+          "attributes": [
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "None"
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "expires",
+              "Tue, 24 Nov 2026 19:05:58 GMT"
+            ]
+          ],
+          "name": "__cflb",
+          "value_len": 43
+        },
+        {
+          "attributes": [
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "None"
+            ],
+            [
+              "partitioned",
+              null
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "domain",
+              "api.cloudflare.com"
+            ],
+            [
+              "expires",
+              "Tue, 24 Nov 2026 17:05:57 GMT"
+            ]
+          ],
+          "name": "__cf_bm",
+          "value_len": 199
+        }
+      ],
+      "timings": {
+        "connect_ms": 1.9041080000000001,
+        "dns_ms": 1.114398,
+        "tls_ms": 7.430303,
+        "total_ms": 378.417264,
+        "ttfb_ms": 378.381437
+      }
+    },
+    "analysis": {
+      "verdict": "ACCESS_DENIED",
+      "confidence": "medium",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d46a5c44cda7-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": null,
+      "indicators": [],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 403 is the origin's"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://api.cloudflare.com/client/v4/user",
+        "attempt": 1,
+        "status": 403,
+        "verdict": "ACCESS_DENIED",
+        "waited_ms": 0,
+        "elapsed_ms": 378,
+        "decision": {
+          "decision": "stop",
+          "reason": "ACCESS_DENIED is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only cf-api-user   # client \"cfprobe\""
+  },
+  {
+    "case_id": "asura-api-root",
+    "category": "json",
+    "description": "AsuraScans API host root (referenced by the homepage)",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:00Z",
+    "request": {
+      "method": "GET",
+      "url": "https://api.asurascans.com/",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 404,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/plain; charset=utf-8"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "HIT"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d47de8822e96-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Feb 12 23:50:21 2027 GMT",
+          "not_before": "Nov 14 22:51:47 2026 GMT",
+          "sha256": "dcb6eb67982dd33440ea1ee745df6982f54c5634572aa9905098cec20d1d65df",
+          "subject": "CN=asurascans.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 19,
+      "connection": {
+        "address_source": "dns",
+        "id": 4,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 1,
+        "reused": false
+      },
+      "informational": [],
+      "set_cookies": [],
+      "timings": {
+        "connect_ms": 9.749578999999999,
+        "dns_ms": 1.782931,
+        "tls_ms": 13.175088,
+        "total_ms": 204.22711800000002,
+        "ttfb_ms": 204.149432
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "medium",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d47de8822e96-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": null,
+      "indicators": [],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 404 is the origin's"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://api.asurascans.com/",
+        "attempt": 1,
+        "status": 404,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 204,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only asura-api-root   # client \"cfprobe\""
+  },
+  {
+    "case_id": "nowsecure-home",
+    "category": "landing",
+    "description": "nowsecure.nl homepage (a bot-detection test page)",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:04Z",
+    "request": {
+      "method": "GET",
+      "url": "https://nowsecure.nl/",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/html"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "DYNAMIC"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d4924e11d11e-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Jan 17 22:43:31 2027 GMT",
+          "not_before": "Oct 19 21:43:43 2026 GMT",
+          "sha256": "f2f17a7bd4f464771e10c4ffa23e4bcf060403d14cd28431fe00ef3197d6deb3",
+          "subject": "CN=nowsecure.nl"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 179642,
+      "connection": {
+        "address_source": "dns",
+        "id": 5,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 1,
+        "reused": false
+      },
+      "informational": [],
+      "set_cookies": [],
+      "timings": {
+        "connect_ms": 1.723659,
+        "dns_ms": 1.0854739999999998,
+        "tls_ms": 8.910136000000001,
+        "total_ms": 777.016954,
+        "ttfb_ms": 627.79075
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d4924e11d11e-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": "nowsecure.nl",
+      "indicators": [
+        "js_detections_script",
+        "turnstile_script",
+        "turnstile_widget"
+      ],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's",
+        "JavaScript Detections script present: it scores this visit for later requests, it does not block this one",
+        "embedded Turnstile: a widget inside the origin's page, not a blocking challenge"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://nowsecure.nl/",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 781,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only nowsecure-home   # client \"cfprobe\""
+  },
+  {
+    "case_id": "asura-css",
+    "category": "static",
+    "description": "AsuraScans stylesheet referenced by the homepage",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:06Z",
+    "request": {
+      "method": "GET",
+      "url": "https://asurascans.com/_astro/global.C145GP2_.css",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/css; charset=utf-8"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "HIT"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d4a40e1b5801-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Feb 12 23:50:21 2027 GMT",
+          "not_before": "Nov 14 22:51:47 2026 GMT",
+          "sha256": "dcb6eb67982dd33440ea1ee745df6982f54c5634572aa9905098cec20d1d65df",
+          "subject": "CN=asurascans.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 200735,
+      "connection": {
+        "address_source": "dns",
+        "id": 6,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 1,
+        "reused": false
+      },
+      "informational": [],
+      "set_cookies": [],
+      "timings": {
+        "connect_ms": 2.03322,
+        "dns_ms": 1.3518130000000002,
+        "tls_ms": 8.049693999999999,
+        "total_ms": 23.113581,
+        "ttfb_ms": 19.614715
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d4a40e1b5801-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": null,
+      "indicators": [],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://asurascans.com/_astro/global.C145GP2_.css",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 28,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only asura-css   # client \"cfprobe\""
+  },
+  {
+    "case_id": "cf-home",
+    "category": "landing",
+    "description": "Cloudflare homepage (mentions Turnstile in its menu)",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:10Z",
+    "request": {
+      "method": "GET",
+      "url": "https://www.cloudflare.com/",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/html; charset=utf-8"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d4bca9342e90-<removed>"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "HIT"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 93 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 211 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 250 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 207 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 349 bytes>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Feb 14 18:06:04 2027 GMT",
+          "not_before": "Nov 16 17:06:07 2026 GMT",
+          "sha256": "2d9beac2bedd71968e698ec04cb0385b298f33b4eb13015205eb4df0394d560c",
+          "subject": "CN=www.cloudflare.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 1334658,
+      "connection": {
+        "address_source": "dns",
+        "id": 7,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 1,
+        "reused": false
+      },
+      "informational": [],
+      "set_cookies": [
+        {
+          "attributes": [
+            [
+              "expires",
+              "Fri, 24 Dec 2027 16:36:10 GMT"
+            ],
+            [
+              "path",
+              "/"
+            ]
+          ],
+          "name": "_ga",
+          "value_len": 42
+        },
+        {
+          "attributes": [
+            [
+              "expires",
+              "Fri Dec 24 2027 16:36:10 GMT+0000 (Coordinated Universal Time)"
+            ],
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "Lax"
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "secure",
+              null
+            ]
+          ],
+          "name": "cfz_google-analytics_v4",
+          "value_len": 75
+        },
+        {
+          "attributes": [
+            [
+              "expires",
+              "Fri Dec 24 2027 16:36:10 GMT+0000 (Coordinated Universal Time)"
+            ],
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "Lax"
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "secure",
+              null
+            ]
+          ],
+          "name": "cfz_adobe",
+          "value_len": 128
+        },
+        {
+          "attributes": [
+            [
+              "expires",
+              "Fri, 24 Dec 2027 16:36:10 GMT"
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "samesite",
+              "Lax"
+            ]
+          ],
+          "name": "<removed>",
+          "value_len": 88
+        },
+        {
+          "attributes": [
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "None"
+            ],
+            [
+              "partitioned",
+              null
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "domain",
+              "www.cloudflare.com"
+            ],
+            [
+              "expires",
+              "Tue, 24 Nov 2026 17:06:10 GMT"
+            ]
+          ],
+          "name": "__cf_bm",
+          "value_len": 221
+        }
+      ],
+      "timings": {
+        "connect_ms": 1.981353,
+        "dns_ms": 1.052473,
+        "tls_ms": 6.691047999999999,
+        "total_ms": 342.887946,
+        "ttfb_ms": 261.73767599999996
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d4bca9342e90-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": "Cloudflare: Build for the agent era",
+      "indicators": [],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://www.cloudflare.com/",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 359,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only cf-home   # client \"cfprobe\""
+  },
+  {
+    "case_id": "cf-docs-turnstile",
+    "category": "docs",
+    "description": "Cloudflare Turnstile documentation (talks about Turnstile throughout)",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:13Z",
+    "request": {
+      "method": "GET",
+      "url": "https://developers.cloudflare.com/turnstile/",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/html"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "HIT"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 334 bytes>"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d4d0ca90e3fd-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Feb 16 01:28:36 2027 GMT",
+          "not_before": "Nov 18 03:09:29 2026 GMT",
+          "sha256": "724528952fa029f57f0218e947f32b21a2b9f33cd5f4b332df9817441d3fed87",
+          "subject": "CN=developers.cloudflare.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 123402,
+      "connection": {
+        "address_source": "dns",
+        "id": 8,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 1,
+        "reused": false
+      },
+      "informational": [],
+      "set_cookies": [
+        {
+          "attributes": [
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "None"
+            ],
+            [
+              "partitioned",
+              null
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "domain",
+              "developers.cloudflare.com"
+            ],
+            [
+              "expires",
+              "Tue, 24 Nov 2026 17:06:13 GMT"
+            ]
+          ],
+          "name": "__cf_bm",
+          "value_len": 199
+        }
+      ],
+      "timings": {
+        "connect_ms": 2.333132,
+        "dns_ms": 1.612612,
+        "tls_ms": 7.553012,
+        "total_ms": 49.546881,
+        "ttfb_ms": 48.122322000000004
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d4d0ca90e3fd-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": "Overview · Cloudflare Turnstile docs",
+      "indicators": [],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://developers.cloudflare.com/turnstile/",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 54,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only cf-docs-turnstile   # client \"cfprobe\""
+  },
+  {
+    "case_id": "discord-docs",
+    "category": "docs",
+    "description": "Discord developer documentation",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:16Z",
+    "request": {
+      "method": "GET",
+      "url": "https://discord.com/developers/docs/intro",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/html; charset=utf-8"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d4e31e56e3fd-<removed>"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "DYNAMIC"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Jan 25 06:42:35 2027 GMT",
+          "not_before": "Oct 27 05:42:41 2026 GMT",
+          "sha256": "2cbd361af205eb087adf6c92df9a526e39abeb5a0c573db475681730611b394d",
+          "subject": "CN=discord.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 219462,
+      "connection": {
+        "address_source": "dns",
+        "id": 9,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 1,
+        "reused": false
+      },
+      "informational": [],
+      "set_cookies": [],
+      "timings": {
+        "connect_ms": 1.746823,
+        "dns_ms": 8.46401,
+        "tls_ms": 7.9757549999999995,
+        "total_ms": 347.12958,
+        "ttfb_ms": 342.07441700000004
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d4e31e56e3fd-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": "Discord Developer Platform - Documentation - Discord",
+      "indicators": [
+        "js_detections_script"
+      ],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's",
+        "JavaScript Detections script present: it scores this visit for later requests, it does not block this one"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://discord.com/developers/docs/intro",
+        "attempt": 1,
+        "status": 301,
+        "verdict": "REDIRECT",
+        "waited_ms": 0,
+        "elapsed_ms": 7,
+        "decision": {
+          "decision": "stop",
+          "reason": "REDIRECT is not transient"
+        }
+      },
+      {
+        "fetch": 0,
+        "hop": 1,
+        "url": "https://docs.discord.com/developers/intro",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 353,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only discord-docs   # client \"cfprobe\""
+  },
+  {
+    "case_id": "asuracomic-home",
+    "category": "redirect",
+    "description": "asuracomic.net homepage (old domain)",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:20Z",
+    "request": {
+      "method": "GET",
+      "url": "https://asuracomic.net/",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/html"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "HIT"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d4fd281a5801-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Feb 12 23:50:21 2027 GMT",
+          "not_before": "Nov 14 22:51:47 2026 GMT",
+          "sha256": "dcb6eb67982dd33440ea1ee745df6982f54c5634572aa9905098cec20d1d65df",
+          "subject": "CN=asurascans.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 783344,
+      "connection": {
+        "address_source": "dns",
+        "id": 6,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 2,
+        "reused": true
+      },
+      "informational": [],
+      "set_cookies": [],
+      "timings": {
+        "connect_ms": null,
+        "dns_ms": null,
+        "tls_ms": null,
+        "total_ms": 48.307067,
+        "ttfb_ms": 12.666976
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d4fd281a5801-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": "Asura Scans - Read Manga, Manhwa &amp; Manhua Online",
+      "indicators": [
+        "js_detections_script"
+      ],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's",
+        "JavaScript Detections script present: it scores this visit for later requests, it does not block this one"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://asuracomic.net/",
+        "attempt": 1,
+        "status": 301,
+        "verdict": "REDIRECT",
+        "waited_ms": 0,
+        "elapsed_ms": 25,
+        "decision": {
+          "decision": "stop",
+          "reason": "REDIRECT is not transient"
+        }
+      },
+      {
+        "fetch": 0,
+        "hop": 1,
+        "url": "https://asurascans.com/",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 63,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only asuracomic-home   # client \"cfprobe\""
+  },
+  {
+    "case_id": "bms-home",
+    "category": "landing",
+    "description": "BookMyShow India homepage",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:22Z",
+    "request": {
+      "method": "GET",
+      "url": "https://in.bookmyshow.com/",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/html; charset=utf-8"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "DYNAMIC"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 40 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 323 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 186 bytes>"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d50ae9765801-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=CA, O=Entrust Limited, CN=Entrust OV TLS Issuing RSA CA 2",
+          "not_after": "Dec 19 23:59:59 2026 GMT",
+          "not_before": "Jun  4 00:00:00 2026 GMT",
+          "sha256": "14b6ecbbe20f9248afc57896b62e5ffa29161e6c8bbd4a2de74901af0a442e85",
+          "subject": "C=IN, ST=Mahārāshtra, O=Big Tree Entertainment Private Limited, CN=*.bookmyshow.com"
+        },
+        {
+          "issuer": "C=GB, O=Sectigo Limited, CN=Sectigo Public Server Authentication Root R46",
+          "not_after": "Dec 10 23:59:59 2027 GMT",
+          "not_before": "Dec 11 00:00:00 2024 GMT",
+          "sha256": "1f927f37470306afc3018ab049e6be1d3c0a3a45ca207f64f532512ba969eb94",
+          "subject": "C=CA, O=Entrust Limited, CN=Entrust OV TLS Issuing RSA CA 2"
+        },
+        {
+          "issuer": "C=US, ST=New Jersey, L=Jersey City, O=The USERTRUST Network, CN=USERTrust RSA Certification Authority",
+          "not_after": "Jan 18 23:59:59 2038 GMT",
+          "not_before": "Mar 22 00:00:00 2021 GMT",
+          "sha256": "92f351bf3d54164dfa8dd8f9e1139d3150349786485d2b9eecd00e2971c1e6c5",
+          "subject": "C=GB, O=Sectigo Limited, CN=Sectigo Public Server Authentication Root R46"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 141824,
+      "connection": {
+        "address_source": "dns",
+        "id": 11,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 1,
+        "reused": false
+      },
+      "informational": [],
+      "set_cookies": [
+        {
+          "attributes": [
+            [
+              "path",
+              "/"
+            ]
+          ],
+          "name": "bmsId",
+          "value_len": 26
+        },
+        {
+          "attributes": [
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "None"
+            ],
+            [
+              "partitioned",
+              null
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "domain",
+              "bookmyshow.com"
+            ],
+            [
+              "expires",
+              "Tue, 24 Nov 2026 17:06:22 GMT"
+            ]
+          ],
+          "name": "__cf_bm",
+          "value_len": 199
+        },
+        {
+          "attributes": [
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "None"
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "domain",
+              "bookmyshow.com"
+            ]
+          ],
+          "name": "_cfuvid",
+          "value_len": 114
+        }
+      ],
+      "timings": {
+        "connect_ms": 1.9671459999999998,
+        "dns_ms": 1.186142,
+        "tls_ms": 6.249561,
+        "total_ms": 108.196797,
+        "ttfb_ms": 105.254794
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d50ae9765801-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": "Movie Tickets, Plays, Sports, Events &amp; Cinemas nearby - BookMyShow",
+      "indicators": [
+        "js_detections_script"
+      ],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's",
+        "JavaScript Detections script present: it scores this visit for later requests, it does not block this one"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://in.bookmyshow.com/",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 113,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only bms-home   # client \"cfprobe\""
+  },
+  {
+    "case_id": "asura-browse",
+    "category": "search",
+    "description": "AsuraScans browse listing filtered by genre (linked from the homepage)",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:26Z",
+    "request": {
+      "method": "GET",
+      "url": "https://asurascans.com/browse?genres=action",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/html"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "EXPIRED"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d520f92f5801-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Feb 12 23:50:21 2027 GMT",
+          "not_before": "Nov 14 22:51:47 2026 GMT",
+          "sha256": "dcb6eb67982dd33440ea1ee745df6982f54c5634572aa9905098cec20d1d65df",
+          "subject": "CN=asurascans.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 232587,
+      "connection": {
+        "address_source": "dns",
+        "id": 6,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 3,
+        "reused": true
+      },
+      "informational": [],
+      "set_cookies": [],
+      "timings": {
+        "connect_ms": null,
+        "dns_ms": null,
+        "tls_ms": null,
+        "total_ms": 533.677879,
+        "ttfb_ms": 530.0839950000001
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d520f92f5801-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": "Browse | Asura Scans",
+      "indicators": [
+        "js_detections_script"
+      ],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's",
+        "JavaScript Detections script present: it scores this visit for later requests, it does not block this one"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://asurascans.com/browse?genres=action",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 538,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only asura-browse   # client \"cfprobe\""
+  },
+  {
+    "case_id": "asura-cdn-image",
+    "category": "static",
+    "description": "AsuraScans CDN image referenced by the homepage",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:30Z",
+    "request": {
+      "method": "GET",
+      "url": "https://cdn.asurascans.com/asura-images/announcements/launch-chat.ba97c2.webp",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "image/webp"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "HIT"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d53d0bc4cda7-<removed>"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Feb 13 09:45:21 2027 GMT",
+          "not_before": "Nov 15 08:45:36 2026 GMT",
+          "sha256": "cd1a1c986e0d2854ed9f21252ba7c02b696444e264314d12890171895a61566a",
+          "subject": "CN=1e0524f2.sni.cloudflaressl.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 21302,
+      "connection": {
+        "address_source": "dns",
+        "id": 12,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 1,
+        "reused": false
+      },
+      "informational": [],
+      "set_cookies": [],
+      "timings": {
+        "connect_ms": 1.822084,
+        "dns_ms": 1.052542,
+        "tls_ms": 6.2650500000000005,
+        "total_ms": 19.198503,
+        "ttfb_ms": 19.140985
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d53d0bc4cda7-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": null,
+      "indicators": [],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://cdn.asurascans.com/asura-images/announcements/launch-chat.ba97c2.webp",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 21,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only asura-cdn-image   # client \"cfprobe\""
+  },
+  {
+    "case_id": "cf-apex",
+    "category": "redirect",
+    "description": "cloudflare.com apex",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:33Z",
+    "request": {
+      "method": "GET",
+      "url": "https://cloudflare.com/",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/html; charset=utf-8"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d54f294e2e90-<removed>"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "HIT"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 89 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 83 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 103 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 129 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 65 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 171 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 248 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 349 bytes>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Feb 14 18:06:04 2027 GMT",
+          "not_before": "Nov 16 17:06:07 2026 GMT",
+          "sha256": "2d9beac2bedd71968e698ec04cb0385b298f33b4eb13015205eb4df0394d560c",
+          "subject": "CN=www.cloudflare.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 1334658,
+      "connection": {
+        "address_source": "dns",
+        "id": 7,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 2,
+        "reused": true
+      },
+      "informational": [],
+      "set_cookies": [
+        {
+          "attributes": [
+            [
+              "domain",
+              ".cloudflare.com"
+            ],
+            [
+              "expires",
+              "Thu, 01 Jan 1970 00:00:00 GMT"
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "secure",
+              null
+            ]
+          ],
+          "name": "cfz_adobe",
+          "value_len": 0
+        },
+        {
+          "attributes": [
+            [
+              "domain",
+              ".cloudflare.com"
+            ],
+            [
+              "expires",
+              "Thu, 01 Jan 1970 00:00:00 GMT"
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "secure",
+              null
+            ]
+          ],
+          "name": "_ga",
+          "value_len": 0
+        },
+        {
+          "attributes": [
+            [
+              "domain",
+              ".cloudflare.com"
+            ],
+            [
+              "expires",
+              "Thu, 01 Jan 1970 00:00:00 GMT"
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "secure",
+              null
+            ]
+          ],
+          "name": "cfz_google-analytics_v4",
+          "value_len": 0
+        },
+        {
+          "attributes": [
+            [
+              "domain",
+              ".cloudflare.com"
+            ],
+            [
+              "expires",
+              "Thu, 01 Jan 1970 00:00:00 GMT"
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "secure",
+              null
+            ]
+          ],
+          "name": "<removed>",
+          "value_len": 0
+        },
+        {
+          "attributes": [
+            [
+              "path",
+              "/"
+            ],
+            [
+              "max-age",
+              "33696000"
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "Lax"
+            ]
+          ],
+          "name": "_cf_c",
+          "value_len": 1
+        },
+        {
+          "attributes": [
+            [
+              "path",
+              "/"
+            ],
+            [
+              "max-age",
+              "31104000"
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "httponly",
+              null
+            ]
+          ],
+          "name": "cfz_google-analytics_v4",
+          "value_len": 107
+        },
+        {
+          "attributes": [
+            [
+              "expires",
+              "Fri Dec 24 2027 16:36:33 GMT+0000 (Coordinated Universal Time)"
+            ],
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "Lax"
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "secure",
+              null
+            ]
+          ],
+          "name": "cfz_adobe",
+          "value_len": 126
+        },
+        {
+          "attributes": [
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "None"
+            ],
+            [
+              "partitioned",
+              null
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "domain",
+              "www.cloudflare.com"
+            ],
+            [
+              "expires",
+              "Tue, 24 Nov 2026 17:06:33 GMT"
+            ]
+          ],
+          "name": "__cf_bm",
+          "value_len": 221
+        }
+      ],
+      "timings": {
+        "connect_ms": null,
+        "dns_ms": null,
+        "tls_ms": null,
+        "total_ms": 81.980542,
+        "ttfb_ms": 11.742923000000001
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d54f294e2e90-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": "Cloudflare: Build for the agent era",
+      "indicators": [],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://cloudflare.com/",
+        "attempt": 1,
+        "status": 301,
+        "verdict": "REDIRECT",
+        "waited_ms": 0,
+        "elapsed_ms": 17,
+        "decision": {
+          "decision": "stop",
+          "reason": "REDIRECT is not transient"
+        }
+      },
+      {
+        "fetch": 0,
+        "hop": 1,
+        "url": "https://www.cloudflare.com/",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 100,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only cf-apex   # client \"cfprobe\""
+  },
+  {
+    "case_id": "discord-http",
+    "category": "redirect",
+    "description": "Discord over plain HTTP",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:36Z",
+    "request": {
+      "method": "GET",
+      "url": "http://discord.com/",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/html; charset=utf-8"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d55e4b53b089-<removed>"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "REVALIDATED"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Jan 25 06:42:35 2027 GMT",
+          "not_before": "Oct 27 05:42:41 2026 GMT",
+          "sha256": "2cbd361af205eb087adf6c92df9a526e39abeb5a0c573db475681730611b394d",
+          "subject": "CN=discord.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 160937,
+      "connection": {
+        "address_source": "dns",
+        "id": 2,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 3,
+        "reused": true
+      },
+      "informational": [],
+      "set_cookies": [],
+      "timings": {
+        "connect_ms": null,
+        "dns_ms": null,
+        "tls_ms": null,
+        "total_ms": 26.849419,
+        "ttfb_ms": 26.219679
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d55e4b53b089-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": "Discord - Group Chat That’s All Fun &amp; Games",
+      "indicators": [
+        "js_detections_script"
+      ],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's",
+        "JavaScript Detections script present: it scores this visit for later requests, it does not block this one"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "http://discord.com/",
+        "attempt": 1,
+        "status": 301,
+        "verdict": "REDIRECT",
+        "waited_ms": 0,
+        "elapsed_ms": 8,
+        "decision": {
+          "decision": "stop",
+          "reason": "REDIRECT is not transient"
+        }
+      },
+      {
+        "fetch": 0,
+        "hop": 1,
+        "url": "https://discord.com/",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 32,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only discord-http   # client \"cfprobe\""
+  },
+  {
+    "case_id": "discord-json",
+    "category": "json",
+    "description": "Discord discovery categories API (robots.txt allows /api/v*/discovery)",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:38Z",
+    "request": {
+      "method": "GET",
+      "url": "https://discord.com/api/v9/discovery/categories",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 401,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "application/json"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "BYPASS"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 183 bytes>"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d56cf866b089-<removed>"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Jan 25 06:42:35 2027 GMT",
+          "not_before": "Oct 27 05:42:41 2026 GMT",
+          "sha256": "2cbd361af205eb087adf6c92df9a526e39abeb5a0c573db475681730611b394d",
+          "subject": "CN=discord.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 43,
+      "connection": {
+        "address_source": "dns",
+        "id": 2,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 4,
+        "reused": true
+      },
+      "informational": [],
+      "set_cookies": [
+        {
+          "attributes": [
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "None"
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "domain",
+              "discord.com"
+            ]
+          ],
+          "name": "_cfuvid",
+          "value_len": 114
+        }
+      ],
+      "timings": {
+        "connect_ms": null,
+        "dns_ms": null,
+        "tls_ms": null,
+        "total_ms": 310.12942300000003,
+        "ttfb_ms": 310.059441
+      }
+    },
+    "analysis": {
+      "verdict": "ACCESS_DENIED",
+      "confidence": "medium",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d56cf866b089-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": null,
+      "indicators": [],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 401 is the origin's"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://discord.com/api/v9/discovery/categories",
+        "attempt": 1,
+        "status": 401,
+        "verdict": "ACCESS_DENIED",
+        "waited_ms": 0,
+        "elapsed_ms": 310,
+        "decision": {
+          "decision": "stop",
+          "reason": "ACCESS_DENIED is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only discord-json   # client \"cfprobe\""
+  },
+  {
+    "case_id": "cf-api-ips",
+    "category": "json",
+    "description": "Cloudflare public API: IP ranges (no auth)",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:42Z",
+    "request": {
+      "method": "GET",
+      "url": "https://api.cloudflare.com/client/v4/ips",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "application/json"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 327 bytes>"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d586baf7cda7-<removed>"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Jan 10 00:24:34 2027 GMT",
+          "not_before": "Oct 11 23:24:45 2026 GMT",
+          "sha256": "1d88908e0e8c1e4ca1500271d91f730fd3857a1f3d3e9b454d7a3c6c23d3fbf1",
+          "subject": "CN=api.cloudflare.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 505,
+      "connection": {
+        "address_source": "dns",
+        "id": 3,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 2,
+        "reused": true
+      },
+      "informational": [],
+      "set_cookies": [
+        {
+          "attributes": [
+            [
+              "httponly",
+              null
+            ],
+            [
+              "samesite",
+              "None"
+            ],
+            [
+              "partitioned",
+              null
+            ],
+            [
+              "secure",
+              null
+            ],
+            [
+              "path",
+              "/"
+            ],
+            [
+              "domain",
+              "api.cloudflare.com"
+            ],
+            [
+              "expires",
+              "Tue, 24 Nov 2026 17:06:42 GMT"
+            ]
+          ],
+          "name": "__cf_bm",
+          "value_len": 199
+        }
+      ],
+      "timings": {
+        "connect_ms": null,
+        "dns_ms": null,
+        "tls_ms": null,
+        "total_ms": 34.540721000000005,
+        "ttfb_ms": 34.474647
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d586baf7cda7-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": null,
+      "indicators": [],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://api.cloudflare.com/client/v4/ips",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 34,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only cf-api-ips   # client \"cfprobe\""
+  },
+  {
+    "case_id": "bms-explore",
+    "category": "search",
+    "description": "BookMyShow listing page linked from the homepage",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:45Z",
+    "request": {
+      "method": "GET",
+      "url": "https://in.bookmyshow.com/explore/action-movies",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/html; charset=utf-8"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 40 bytes>"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "DYNAMIC"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d599abbc5801-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=CA, O=Entrust Limited, CN=Entrust OV TLS Issuing RSA CA 2",
+          "not_after": "Dec 19 23:59:59 2026 GMT",
+          "not_before": "Jun  4 00:00:00 2026 GMT",
+          "sha256": "14b6ecbbe20f9248afc57896b62e5ffa29161e6c8bbd4a2de74901af0a442e85",
+          "subject": "C=IN, ST=Mahārāshtra, O=Big Tree Entertainment Private Limited, CN=*.bookmyshow.com"
+        },
+        {
+          "issuer": "C=GB, O=Sectigo Limited, CN=Sectigo Public Server Authentication Root R46",
+          "not_after": "Dec 10 23:59:59 2027 GMT",
+          "not_before": "Dec 11 00:00:00 2024 GMT",
+          "sha256": "1f927f37470306afc3018ab049e6be1d3c0a3a45ca207f64f532512ba969eb94",
+          "subject": "C=CA, O=Entrust Limited, CN=Entrust OV TLS Issuing RSA CA 2"
+        },
+        {
+          "issuer": "C=US, ST=New Jersey, L=Jersey City, O=The USERTRUST Network, CN=USERTrust RSA Certification Authority",
+          "not_after": "Jan 18 23:59:59 2038 GMT",
+          "not_before": "Mar 22 00:00:00 2021 GMT",
+          "sha256": "92f351bf3d54164dfa8dd8f9e1139d3150349786485d2b9eecd00e2971c1e6c5",
+          "subject": "C=GB, O=Sectigo Limited, CN=Sectigo Public Server Authentication Root R46"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 181706,
+      "connection": {
+        "address_source": "dns",
+        "id": 11,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 2,
+        "reused": true
+      },
+      "informational": [],
+      "set_cookies": [
+        {
+          "attributes": [
+            [
+              "path",
+              "/"
+            ]
+          ],
+          "name": "bmsId",
+          "value_len": 26
+        }
+      ],
+      "timings": {
+        "connect_ms": null,
+        "dns_ms": null,
+        "tls_ms": null,
+        "total_ms": 113.96901600000001,
+        "ttfb_ms": 113.858018
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d599abbc5801-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": "Latest Action Movies 2026 | List of New Action Films Releases  - BookMyShow",
+      "indicators": [
+        "js_detections_script"
+      ],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's",
+        "JavaScript Detections script present: it scores this visit for later requests, it does not block this one"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://in.bookmyshow.com/explore/action-movies",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 119,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only bms-explore   # client \"cfprobe\""
+  },
+  {
+    "case_id": "asura-home",
+    "category": "landing",
+    "description": "AsuraScans homepage",
+    "client": "cfprobe",
+    "timestamp": "2026-11-24T16:36:49Z",
+    "request": {
+      "method": "GET",
+      "url": "https://asurascans.com/",
+      "headers": [],
+      "repeat": 1,
+      "client_config": {
+        "connect_timeout_ms": 10000,
+        "default_headers": [
+          [
+            "user-agent",
+            "cfprobe/0.1.0"
+          ],
+          [
+            "accept",
+            "*/*"
+          ]
+        ],
+        "h1": {
+          "max_response_headers": null,
+          "title_case_headers": false
+        },
+        "h2": {
+          "header_table_size": null,
+          "initial_connection_window_size": null,
+          "initial_stream_window_size": null,
+          "max_concurrent_streams": null,
+          "max_frame_size": null,
+          "max_header_list_size": null
+        },
+        "max_body_bytes": 8388608,
+        "request_timeout_ms": 30000,
+        "resolve": {},
+        "reuse_connections": true,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "ca_file": null,
+          "cipher_list": null,
+          "curves": null,
+          "grease": null,
+          "max_version": null,
+          "min_version": null,
+          "ocsp_stapling": false,
+          "permute_extensions": null,
+          "sigalgs": null,
+          "signed_cert_timestamps": false,
+          "verify": true
+        }
+      }
+    },
+    "status": 200,
+    "http_version": "HTTP/2",
+    "relevant_headers": [
+      {
+        "name": "content-type",
+        "value": "text/html"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "HIT"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9d5b1eac55801-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "tls": {
+      "alpn": "h2",
+      "cipher": {
+        "iana": "TLS_AES_128_GCM_SHA256",
+        "openssl": "TLS_AES_128_GCM_SHA256"
+      },
+      "peer_chain": [
+        {
+          "issuer": "C=US, O=Google Trust Services, CN=WE1",
+          "not_after": "Feb 12 23:50:21 2027 GMT",
+          "not_before": "Nov 14 22:51:47 2026 GMT",
+          "sha256": "dcb6eb67982dd33440ea1ee745df6982f54c5634572aa9905098cec20d1d65df",
+          "subject": "CN=asurascans.com"
+        },
+        {
+          "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+          "not_after": "Feb 20 14:00:00 2029 GMT",
+          "not_before": "Dec 13 09:00:00 2023 GMT",
+          "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+          "subject": "C=US, O=Google Trust Services, CN=WE1"
+        },
+        {
+          "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+          "not_after": "Jan 28 00:00:42 2028 GMT",
+          "not_before": "Nov 15 03:43:21 2023 GMT",
+          "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+          "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+        }
+      ],
+      "session_reused": false,
+      "version": "TLSv1.3"
+    },
+    "response_meta": {
+      "body_decoding": {
+        "state": "identity"
+      },
+      "body_len": 783344,
+      "connection": {
+        "address_source": "dns",
+        "id": 6,
+        "protocol": "h2",
+        "remote_addr": "<removed>",
+        "request_number": 4,
+        "reused": true
+      },
+      "informational": [],
+      "set_cookies": [],
+      "timings": {
+        "connect_ms": null,
+        "dns_ms": null,
+        "tls_ms": null,
+        "total_ms": 43.04284,
+        "ttfb_ms": 10.99437
+      }
+    },
+    "analysis": {
+      "verdict": "NORMAL_PAGE",
+      "confidence": "high",
+      "issued_by": "origin",
+      "cloudflare_present": true,
+      "challenge_kind": null,
+      "error_code": null,
+      "cf_ray": "a5f9d5b1eac55801-<removed>",
+      "retry_after": null,
+      "location": null,
+      "title": "Asura Scans - Read Manga, Manhwa &amp; Manhua Online",
+      "indicators": [
+        "js_detections_script"
+      ],
+      "evidence": [
+        "cf-ray present",
+        "no challenge, block or error marker: status 200 is the origin's",
+        "JavaScript Detections script present: it scores this visit for later requests, it does not block this one"
+      ],
+      "caveats": [
+        "cf-mitigated absent does not prove no challenge applied: a held cf_clearance or a later JavaScript Detections result leave no mark here"
+      ]
+    },
+    "expect": null,
+    "seed": 7530801478306363241,
+    "policy": {
+      "max_redirects": 5,
+      "cookies": true,
+      "retry": {
+        "max_attempts": 3,
+        "base_delay_ms": 500,
+        "max_delay_ms": 8000,
+        "jitter": 0.5,
+        "honor_retry_after": true,
+        "max_retry_after_ms": 60000
+      },
+      "circuit": {
+        "failures_to_open": 3,
+        "open_ms": 30000
+      }
+    },
+    "fetch_outcome": {
+      "outcome": "completed"
+    },
+    "attempts": [
+      {
+        "fetch": 0,
+        "hop": 0,
+        "url": "https://asurascans.com/",
+        "attempt": 1,
+        "status": 200,
+        "verdict": "NORMAL_PAGE",
+        "waited_ms": 0,
+        "elapsed_ms": 58,
+        "decision": {
+          "decision": "stop",
+          "reason": "NORMAL_PAGE is not transient"
+        }
+      }
+    ],
+    "outcome": "observed",
+    "details": [],
+    "reproduce": "cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir> --seed 7530801478306363241 --only asura-home   # client \"cfprobe\""
+  }
+]

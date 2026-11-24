@@ -1,0 +1,72 @@
+{
+  "source": {
+    "url": "https://asurascans.com/",
+    "captured_by": "cfprobe inspect --show-body",
+    "raw_file": "experiments/test-results/P2/raw/third-party/asurascans.com.json"
+  },
+  "note": "Excerpt of a third-party page: title and windows around classifier markers only.",
+  "response": {
+    "status": 200,
+    "http_version": "HTTP/2",
+    "headers": [
+      {
+        "name": "date",
+        "value": "Tue, 24 Nov 2026 15:11:54 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "text/html"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "report-to",
+        "value": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?<removed>\"}]}"
+      },
+      {
+        "name": "nel",
+        "value": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+      },
+      {
+        "name": "cache-control",
+        "value": "public, s-maxage=3600"
+      },
+      {
+        "name": "last-modified",
+        "value": "Tue, 24 Nov 2026 14:51:29 GMT"
+      },
+      {
+        "name": "speculation-rules",
+        "value": "\"/cdn-cgi/speculation\""
+      },
+      {
+        "name": "age",
+        "value": "1225"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "HIT"
+      },
+      {
+        "name": "strict-transport-security",
+        "value": "max-age=15552000; includeSubDomains; preload"
+      },
+      {
+        "name": "x-content-type-options",
+        "value": "nosniff"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9594f3a9e2e97-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "body_len_full": 779104,
+    "body": "<title>Asura Scans - Read Manga, Manhwa &amp; Manhua Online</title>\n<!-- excerpt gap -->\n|(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'a5f9594f3a9e2e97',t:'MTc5NTUzMzExNA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5f9594f3a9e2e97',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.p"
+  }
+}

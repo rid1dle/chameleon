@@ -1,0 +1,142 @@
+{
+  "configured_h2": {
+    "header_table_size": null,
+    "initial_connection_window_size": null,
+    "initial_stream_window_size": null,
+    "max_concurrent_streams": null,
+    "max_frame_size": null,
+    "max_header_list_size": null
+  },
+  "configured_tls": {
+    "alpn": [
+      "h2",
+      "http/1.1"
+    ],
+    "ca_file": null,
+    "cipher_list": null,
+    "curves": null,
+    "grease": null,
+    "max_version": null,
+    "min_version": null,
+    "ocsp_stapling": false,
+    "permute_extensions": null,
+    "sigalgs": null,
+    "signed_cert_timestamps": false,
+    "verify": true
+  },
+  "connection": {
+    "id": 1,
+    "protocol": "h2",
+    "remote_addr": "<removed>",
+    "request_number": 1,
+    "reused": false
+  },
+  "request": {
+    "headers": [
+      {
+        "name": "user-agent",
+        "value": "cfprobe/0.1.0"
+      },
+      {
+        "name": "accept",
+        "value": "*/*"
+      }
+    ],
+    "method": "GET",
+    "url": "https://lab.riddlelab.dev/b/echo"
+  },
+  "response": {
+    "body": "<!DOCTYPE html>\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 7]>    <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 8]>    <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!--<![endif]-->\n<head>\n<title>Attention Required! | Cloudflare</title>\n<meta charset=\"UTF-8\" />\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\" />\n<meta name=\"robots\" content=\"noindex, nofollow\" />\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\" />\n<link rel=\"stylesheet\" id=\"cf_styles-css\" href=\"/cdn-cgi/styles/cf.errors.css\" />\n<!--[if lt IE 9]><link rel=\"stylesheet\" id='cf_styles-ie-css' href=\"/cdn-cgi/styles/cf.errors.ie.css\" /><![endif]-->\n<style>body{margin:0;padding:0}</style>\n\n\n<!--[if gte IE 10]><!-->\n<script>\n  if (!navigator.cookieEnabled) {\n    window.addEventListener('DOMContentLoaded', function () {\n      var cookieEl = document.getElementById('cookie-alert');\n      cookieEl.style.display = 'block';\n    })\n  }\n</script>\n<!--<![endif]-->\n\n</head>\n<body>\n  <div id=\"cf-wrapper\">\n    <div class=\"cf-alert cf-alert-error cf-cookie-error\" id=\"cookie-alert\" data-translate=\"enable_cookies\">Please enable cookies.</div>\n    <div id=\"cf-error-details\" class=\"cf-error-details-wrapper\">\n      <div class=\"cf-wrapper cf-header cf-error-overview\">\n        <h1 data-translate=\"block_headline\">Sorry, you have been blocked</h1>\n        <h2 class=\"cf-subheadline\"><span data-translate=\"unable_to_access\">You are unable to access</span> riddlelab.dev</h2>\n      </div><!-- /.header -->\n\n      <div class=\"cf-section cf-highlight\">\n        <div class=\"cf-wrapper\">\n          <div class=\"cf-screenshot-container cf-screenshot-full\">\n            \n              <span class=\"cf-no-screenshot error\"></span>\n            \n          </div>\n        </div>\n      </div><!-- /.captcha-container -->\n\n      <div class=\"cf-section cf-wrapper\">\n        <div class=\"cf-columns two\">\n          <div class=\"cf-column\">\n            <h2 data-translate=\"blocked_why_headline\">Why have I been blocked?</h2>\n\n            <p data-translate=\"blocked_why_detail\">This website is using a security service to protect itself from online attacks. The action you just performed triggered the security solution. There are several actions that could trigger this block including submitting a certain word or phrase, a SQL command or malformed data.</p>\n          </div>\n\n          <div class=\"cf-column\">\n            <h2 data-translate=\"blocked_resolve_headline\">What can I do to resolve this?</h2>\n\n            <p data-translate=\"blocked_resolve_detail\">You can email the site owner to let them know you were blocked. Please include what you were doing when this page came up and the Cloudflare Ray ID found at the bottom of this page.</p>\n          </div>\n        </div>\n      </div><!-- /.section -->\n\n      <div class=\"cf-error-footer cf-wrapper w-240 lg:w-full py-10 sm:py-4 sm:px-8 mx-auto text-center sm:text-left border-solid border-0 border-t border-gray-300\">\n    <p class=\"text-13\">\n      <span class=\"cf-footer-item sm:block sm:mb-1\">Cloudflare Ray ID: <strong class=\"font-semibold\">a5f94928e8f5cda7</strong></span>\n      <span class=\"cf-footer-separator sm:hidden\">&bull;</span>\n      <span id=\"cf-footer-item-ip\" class=\"cf-footer-item hidden sm:block sm:mb-1\">\n        Your IP:\n        <button type=\"button\" id=\"cf-footer-ip-reveal\" class=\"cf-footer-ip-reveal-btn\">Click to reveal</button>\n        <span class=\"hidden\" id=\"cf-footer-ip\"><removed></span>\n        <span class=\"cf-footer-separator sm:hidden\">&bull;</span>\n      </span>\n      <span class=\"cf-footer-item sm:block sm:mb-1\"><span>Performance &amp; security by</span> <a rel=\"noopener noreferrer\" href=\"https://www.cloudflare.com/5xx-error-landing\" id=\"brand_link\" target=\"_blank\">Cloudflare</a></span>\n      \n    </p>\n    <script>(function(){function d(){var b=a.getElementById(\"cf-footer-item-ip\"),c=a.getElementById(\"cf-footer-ip-reveal\");b&&\"classList\"in b&&(b.classList.remove(\"hidden\"),c.addEventListener(\"click\",function(){c.classList.add(\"hidden\");a.getElementById(\"cf-footer-ip\").classList.remove(\"hidden\")}))}var a=document;document.addEventListener&&a.addEventListener(\"DOMContentLoaded\",d)})();</script>\n  </div><!-- /.error-footer -->\n\n    </div><!-- /#cf-error-details -->\n  </div><!-- /#cf-wrapper -->\n\n  <script>\n    window._cf_translation = {};\n    \n    \n  </script>\n</body>\n</html>",
+    "body_len": 4549,
+    "headers": [
+      {
+        "name": "date",
+        "value": "Tue, 24 Nov 2026 15:00:53 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "text/html; charset=UTF-8"
+      },
+      {
+        "name": "cache-control",
+        "value": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0"
+      },
+      {
+        "name": "expires",
+        "value": "Thu, 01 Jan 1970 00:00:01 GMT"
+      },
+      {
+        "name": "referrer-policy",
+        "value": "same-origin"
+      },
+      {
+        "name": "x-frame-options",
+        "value": "SAMEORIGIN"
+      },
+      {
+        "name": "report-to",
+        "value": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?<removed>\"}]}"
+      },
+      {
+        "name": "nel",
+        "value": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f94928e8f5cda7-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "http_version": "HTTP/2",
+    "set_cookies": [],
+    "status": 403
+  },
+  "timings": {
+    "connect_ms": 1.9951550000000002,
+    "dns_ms": 0.005891,
+    "tls_ms": 6.423526,
+    "total_ms": 14.146494,
+    "ttfb_ms": 14.124884000000002
+  },
+  "tls": {
+    "alpn": "h2",
+    "cipher": {
+      "iana": "TLS_AES_128_GCM_SHA256",
+      "openssl": "TLS_AES_128_GCM_SHA256"
+    },
+    "client_random": "<removed>",
+    "peer_chain": [
+      {
+        "issuer": "C=US, O=Google Trust Services, CN=WE1",
+        "not_after": "Feb 22 14:57:32 2027 GMT",
+        "not_before": "Nov 24 13:57:36 2026 GMT",
+        "sha256": "0d298917aacd4b36d7c3d7c2aa4c02905189b1af7a607e05fabb4106a297baf3",
+        "subject": "CN=riddlelab.dev"
+      },
+      {
+        "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+        "not_after": "Feb 20 14:00:00 2029 GMT",
+        "not_before": "Dec 13 09:00:00 2023 GMT",
+        "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+        "subject": "C=US, O=Google Trust Services, CN=WE1"
+      },
+      {
+        "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+        "not_after": "Jan 28 00:00:42 2028 GMT",
+        "not_before": "Nov 15 03:43:21 2023 GMT",
+        "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+        "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+      }
+    ],
+    "session_reused": false,
+    "sni": "lab.riddlelab.dev",
+    "version": "TLSv1.3"
+  }
+}

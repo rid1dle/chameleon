@@ -1,0 +1,48 @@
+{
+  "source": {
+    "url": "https://asuracomic.net/",
+    "captured_by": "cfprobe inspect --show-body",
+    "raw_file": "experiments/test-results/P2/raw/third-party/asuracomic.net.json"
+  },
+  "note": "Excerpt of a third-party page: title and windows around classifier markers only.",
+  "response": {
+    "status": 301,
+    "http_version": "HTTP/2",
+    "headers": [
+      {
+        "name": "date",
+        "value": "Tue, 24 Nov 2026 15:11:55 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "text/html; charset=UTF-8"
+      },
+      {
+        "name": "location",
+        "value": "https://asurascans.com/"
+      },
+      {
+        "name": "speculation-rules",
+        "value": "\"/cdn-cgi/speculation\""
+      },
+      {
+        "name": "report-to",
+        "value": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?<removed>\"}]}"
+      },
+      {
+        "name": "nel",
+        "value": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f959559fdb2e8d-<removed>"
+      }
+    ],
+    "body_len_full": 167,
+    "body": "<title>301 Moved Permanently</title>"
+  }
+}

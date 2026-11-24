@@ -24,6 +24,7 @@ pub(super) fn parse(v: &Value) -> Result<Fingerprint> {
         version: tls.get("tls_version_negotiated").and_then(Value::as_str).map(version_name),
         ja4: s(tls, "ja4"),
         ja3_hash: s(tls, "ja3_hash"),
+        ja3: s(tls, "ja3"),
         peetprint_hash: s(tls, "peetprint_hash"),
         ciphers: tls
             .get("ciphers")

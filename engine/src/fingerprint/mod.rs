@@ -39,6 +39,9 @@ pub struct TlsPrint {
     pub version: Option<String>,
     pub ja4: Option<String>,
     pub ja3_hash: Option<String>,
+    /// Full JA3 string `version,ciphers,extensions,groups,point_formats` (GREASE already excluded by
+    /// the receiver). Used to tell an order-only JA3 difference from a real one.
+    pub ja3: Option<String>,
     pub peetprint_hash: Option<String>,
     /// Offered cipher suites in order; GREASE values shown as `"GREASE"`.
     pub ciphers: Option<Vec<String>>,
@@ -150,6 +153,9 @@ fn derive(fp: &Fingerprint) -> Vec<Derived> {
 pub enum FieldStatus {
     Same,
     Differs,
+    /// The hashes differ but the JA3 strings hold the same values in a different extension order.
+    /// Chrome reorders its extensions on every connection, so this is not a difference in client.
+    OrderOnly,
     /// Only one side captured this field; not evidence either way.
     OnlyLeft,
     OnlyRight,
@@ -170,6 +176,8 @@ pub struct Comparison {
     pub right: String,
     pub same: usize,
     pub differs: usize,
+    /// Differences in extension order only (see `FieldStatus::OrderOnly`). Not counted in `differs`.
+    pub order_only: usize,
     /// Fields only one side captured, or neither did.
     pub not_comparable: usize,
     pub fields: Vec<FieldDiff>,
@@ -221,6 +229,7 @@ pub fn compare(left_name: &str, left: &Fingerprint, right_name: &str, right: &Fi
             let (l, r) = (get(left), get(right));
             let status = match (&l, &r) {
                 (Some(a), Some(b)) if a == b => FieldStatus::Same,
+                (Some(_), Some(_)) if *field == "tls.ja3_hash" && ja3_order_only(left, right) => FieldStatus::OrderOnly,
                 (Some(_), Some(_)) => FieldStatus::Differs,
                 (Some(_), None) => FieldStatus::OnlyLeft,
                 (None, Some(_)) => FieldStatus::OnlyRight,
@@ -235,9 +244,26 @@ pub fn compare(left_name: &str, left: &Fingerprint, right_name: &str, right: &Fi
         right: right_name.to_string(),
         same: count(FieldStatus::Same),
         differs: count(FieldStatus::Differs),
-        not_comparable: fields.len() - count(FieldStatus::Same) - count(FieldStatus::Differs),
+        order_only: count(FieldStatus::OrderOnly),
+        not_comparable: fields.len() - count(FieldStatus::Same) - count(FieldStatus::Differs) - count(FieldStatus::OrderOnly),
         fields,
     }
+}
+
+/// Both JA3 strings are known and equal once the extension list (third field) is sorted.
+fn ja3_order_only(left: &Fingerprint, right: &Fingerprint) -> bool {
+    let norm = |f: &Fingerprint| -> Option<Vec<String>> {
+        let parts: Vec<String> = f.tls.ja3.as_ref()?.split(',').map(str::to_string).collect();
+        if parts.len() != 5 {
+            return None;
+        }
+        let mut p = parts;
+        let mut ext: Vec<&str> = p[2].split('-').collect();
+        ext.sort_unstable();
+        p[2] = ext.join("-");
+        Some(p)
+    };
+    matches!((norm(left), norm(right)), (Some(a), Some(b)) if a == b)
 }
 
 // ---------- baselines ----------

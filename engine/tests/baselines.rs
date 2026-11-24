@@ -95,7 +95,7 @@ fn cross_receiver_comparison_marks_uncaptured_fields_not_comparable() {
     assert_eq!(status(&c, "http.pseudo_order"), FieldStatus::Same);
     assert_eq!(status(&c, "tls.ja4"), FieldStatus::OnlyLeft);
     assert_eq!(status(&c, "tls.client_hello_len"), FieldStatus::OnlyRight);
-    assert_eq!(c.same + c.differs + c.not_comparable, c.fields.len());
+    assert_eq!(c.same + c.differs + c.order_only + c.not_comparable, c.fields.len());
 }
 
 #[test]
@@ -140,4 +140,20 @@ fn baseline_markdown_matches_the_python_table_except_escaped_pipes() {
     let md = cfprobe::reporting::baseline_table(&found);
     assert!(md.contains("| `okhttp-suwayomi` | `h2` | `t13d1114h2_5e2a75874763_89e9e4bb3419` | `4:16777216\\|16711681\\|0\\|m,p,a,s` | `3` |"), "{md}");
     assert!(md.contains("- **curl-host**: `user-agent,accept`  \n  UA: `curl/8.22.0`"));
+}
+
+/// D8. Before: the same Chromium binary diffed as "1 differ" on tls.ja3_hash, because JA3 keeps
+/// extension order and Chrome reorders extensions per connection. The JA3 strings hold the same
+/// values, so that difference is now reported as order-only and not counted as a difference.
+#[test]
+fn d8_ja3_order_difference_is_not_a_client_difference() {
+    let a = load("L1/chromium-headful.json");
+    let b = load("L1/flaresolverr-chrome.json");
+    let c = fingerprint::compare("a", &a.fingerprint, "b", &b.fingerprint);
+    assert_eq!(status(&c, "tls.ja3_hash"), FieldStatus::OrderOnly);
+    assert_eq!((c.differs, c.order_only), (0, 1));
+    // A real JA3 difference (another browser) stays a difference.
+    let f = load("L1/ci-firefox155.json");
+    let c = fingerprint::compare("chrome", &a.fingerprint, "firefox", &f.fingerprint);
+    assert_eq!(status(&c, "tls.ja3_hash"), FieldStatus::Differs);
 }

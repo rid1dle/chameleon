@@ -1,0 +1,56 @@
+{
+  "source": {
+    "url": "https://lab.riddlelab.dev/p2/throw",
+    "captured_by": "cfprobe inspect --show-body",
+    "raw_file": "experiments/test-results/P2/zone raw run 2026-11-24 (local only)"
+  },
+  "note": "Excerpt of a third-party page: title and windows around classifier markers only.",
+  "response": {
+    "status": 500,
+    "http_version": "HTTP/2",
+    "headers": [
+      {
+        "name": "date",
+        "value": "Tue, 24 Nov 2026 15:31:29 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "text/plain; charset=UTF-8"
+      },
+      {
+        "name": "content-length",
+        "value": "17"
+      },
+      {
+        "name": "cache-control",
+        "value": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0"
+      },
+      {
+        "name": "expires",
+        "value": "Thu, 01 Jan 1970 00:00:01 GMT"
+      },
+      {
+        "name": "referrer-policy",
+        "value": "same-origin"
+      },
+      {
+        "name": "x-frame-options",
+        "value": "SAMEORIGIN"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f975fc7d302e9f-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "body_len_full": 17,
+    "body": "error code: 1101\n"
+  }
+}

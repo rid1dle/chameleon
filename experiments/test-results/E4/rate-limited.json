@@ -1,0 +1,150 @@
+{
+  "configured_h2": {
+    "header_table_size": null,
+    "initial_connection_window_size": null,
+    "initial_stream_window_size": null,
+    "max_concurrent_streams": null,
+    "max_frame_size": null,
+    "max_header_list_size": null
+  },
+  "configured_tls": {
+    "alpn": [
+      "h2",
+      "http/1.1"
+    ],
+    "ca_file": null,
+    "cipher_list": null,
+    "curves": null,
+    "grease": null,
+    "max_version": null,
+    "min_version": null,
+    "ocsp_stapling": false,
+    "permute_extensions": null,
+    "sigalgs": null,
+    "signed_cert_timestamps": false,
+    "verify": true
+  },
+  "connection": {
+    "id": 1,
+    "protocol": "h2",
+    "remote_addr": "<removed>",
+    "request_number": 3,
+    "reused": true
+  },
+  "request": {
+    "headers": [
+      {
+        "name": "user-agent",
+        "value": "cfprobe/0.1.0"
+      },
+      {
+        "name": "accept",
+        "value": "*/*"
+      }
+    ],
+    "method": "GET",
+    "url": "https://lab.riddlelab.dev/r/echo"
+  },
+  "response": {
+    "body": "error code: 1015\n",
+    "body_len": 17,
+    "headers": [
+      {
+        "name": "date",
+        "value": "Tue, 24 Nov 2026 15:01:04 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "text/plain; charset=UTF-8"
+      },
+      {
+        "name": "content-length",
+        "value": "17"
+      },
+      {
+        "name": "retry-after",
+        "value": "10"
+      },
+      {
+        "name": "cache-control",
+        "value": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0"
+      },
+      {
+        "name": "expires",
+        "value": "Thu, 01 Jan 1970 00:00:01 GMT"
+      },
+      {
+        "name": "referrer-policy",
+        "value": "same-origin"
+      },
+      {
+        "name": "x-frame-options",
+        "value": "SAMEORIGIN"
+      },
+      {
+        "name": "report-to",
+        "value": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?<removed>\"}]}"
+      },
+      {
+        "name": "nel",
+        "value": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f9496e0a3c2e9f-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "http_version": "HTTP/2",
+    "set_cookies": [],
+    "status": 429
+  },
+  "timings": {
+    "connect_ms": null,
+    "dns_ms": null,
+    "tls_ms": null,
+    "total_ms": 5.404458,
+    "ttfb_ms": 5.344164999999999
+  },
+  "tls": {
+    "alpn": "h2",
+    "cipher": {
+      "iana": "TLS_AES_128_GCM_SHA256",
+      "openssl": "TLS_AES_128_GCM_SHA256"
+    },
+    "client_random": "<removed>",
+    "peer_chain": [
+      {
+        "issuer": "C=US, O=Google Trust Services, CN=WE1",
+        "not_after": "Feb 22 14:57:32 2027 GMT",
+        "not_before": "Nov 24 13:57:36 2026 GMT",
+        "sha256": "0d298917aacd4b36d7c3d7c2aa4c02905189b1af7a607e05fabb4106a297baf3",
+        "subject": "CN=riddlelab.dev"
+      },
+      {
+        "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+        "not_after": "Feb 20 14:00:00 2029 GMT",
+        "not_before": "Dec 13 09:00:00 2023 GMT",
+        "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+        "subject": "C=US, O=Google Trust Services, CN=WE1"
+      },
+      {
+        "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+        "not_after": "Jan 28 00:00:42 2028 GMT",
+        "not_before": "Nov 15 03:43:21 2023 GMT",
+        "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+        "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+      }
+    ],
+    "session_reused": false,
+    "sni": "lab.riddlelab.dev",
+    "version": "TLSv1.3"
+  }
+}

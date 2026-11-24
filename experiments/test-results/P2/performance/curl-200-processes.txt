@@ -1,0 +1,1 @@
+( for i in {1..200}; do; curl -sk -o /dev/null --resolve  ; done; )  0.65s user 0.62s system 94% cpu 1.343 total

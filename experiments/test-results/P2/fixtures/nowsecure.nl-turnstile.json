@@ -1,0 +1,56 @@
+{
+  "source": {
+    "url": "https://nowsecure.nl/",
+    "captured_by": "cfprobe inspect --show-body",
+    "raw_file": "experiments/test-results/P2/real-world/raw/cfprobe/nowsecure-home.json (local only)"
+  },
+  "note": "Excerpt of a third-party page: title and windows around classifier markers only.",
+  "response": {
+    "status": 200,
+    "http_version": "HTTP/2",
+    "headers": [
+      {
+        "name": "date",
+        "value": "Tue, 24 Nov 2026 15:28:37 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "text/html"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "last-modified",
+        "value": "Sun, 05 Jan 2025 07:34:07 GMT"
+      },
+      {
+        "name": "vary",
+        "value": "Accept-Encoding"
+      },
+      {
+        "name": "report-to",
+        "value": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?<removed>\"}]}"
+      },
+      {
+        "name": "nel",
+        "value": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "DYNAMIC"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f971c3f986cda7-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "body_len_full": 179642,
+    "body": "<title>nowsecure.nl</title>\n<!-- excerpt gap -->\n6, 16, 16, 1);\r\n        }\r\n\r\n        .front {\r\n            transform: rotateX(0deg) translateZ(calc(var(--h) / 2 * 1px));\r\n            background: rgba(21, 21, 21, 1);\r\n        }\r\n\r\n        .back {\r\n            transform: rotateX(-180deg) translateZ(calc(var(--h) / 2 * 1px));\r\n        }\r\n\r\n        .cf-turnstile {\r\n            transform: rotateX(0deg) translateZ(calc(var(--h) / 2* 1px));\r\n            \r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\r\n            flex-direction: column;\r\n            /* height: 100%; */\r\n            /* perspective: 100px; */\n<!-- excerpt gap -->\n\n            transform-style: preserve-3d;\r\n            /* margin-top: calc((var(--h) / 4)* 1px); */\r\n            margin-left: auto;\r\n            margin-right: auto;\r\n            /* zoom: 1.1; */\r\n            /* transform: scale3d(1.1, 1.1, 1); */\r\n            overflow: hidden;\r\n        }\r\n        .cf-turnstile > * {\r\n            left: 0;\r\n            position: relative;\r\n            margin: 0 auto;\r\n        }\r\n        @keyframes spin {\r\n            0% {\r\n                transform: rotateX(45deg) rotateY(-45deg) rotateZ(-45deg);\r\n            }\r\n\r\n            60% {\r\n                transform: rotateX(-30de\n<!-- excerpt gap -->\nr-title);\r\n            font-weight: 600;\r\n            font-family: \"ivymode\", sans-serif;\r\n            mix-blend-mode: overlay;\r\n            display: flex;\r\n            justify-content: center;\r\n        }\r\n        main {\r\n            height: 100vh;\r\n        }\r\n    </style>\r\n    <script src=\"https://challenges.cloudflare.com/turnstile/v0/api.js\" async defer></script>\r\n\r\n</head>\r\n<body>\r\n\r\n    <main>\r\n        <div class=\"content\">\r\n            <h2 class=\"content__title\">NOWSECURE</h2>\r\n            <h3 class=\"subtitle\">by <span>nodriver</span></h3>\r\n            <div class=\"item\">\r\n                <div class=\"item__inner\" style=\"tra\n<!-- excerpt gap -->\ntate: none; scale: none; transform: translate3d(0px, 0px, 0px) scale(1.1314, 1.1314);\">\r\n                        </div> -->\r\n                    <div class=\"container\">\r\n                        <div class=\"cube\">\r\n                            <div class=\"face front\"> \r\n\t\t\t\t<form>  \r\n\t\t\t\t\t<div class=\"cf-turnstile\" data-sitekey=\"3x00000000000000000000FF\"></div> \r\n\t\t\t\t</form>\r\n\r\n                            </div>\r\n                            <div class=\"face back\"></div>\r\n                            <div class=\"face right\"></div>\r\n                            <div class=\"face left\"></div>\r\n                    \n<!-- excerpt gap -->\n3d(0px, 0px, 0px) scale(1.1314, 1.1314);\">\r\n                            </div>\r\n                        </div-->\r\n                        <div class=\"container\">\r\n                            <div class=\"cube\">\r\n                                <div class=\"face front\">\r\n\t\t\t\t<form>  \r\n\t\t\t\t\t<div class=\"cf-turnstile\" data-sitekey=\"3x00000000000000000000FF\"></div> \r\n\t\t\t\t</form>\r\n                            \r\n\t\t\t\t</div>\r\n                                <div class=\"face back\"></div>\r\n                                <div class=\"face right\"></div>\r\n                                <div class=\"face left\"></div>\r\n    \n<!-- excerpt gap -->\n|(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'a5f971c3f986cda7',t:'MTc5NTUzNDExNg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5f971c3f986cda7',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.p"
+  }
+}

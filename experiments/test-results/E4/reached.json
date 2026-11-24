@@ -1,0 +1,134 @@
+{
+  "configured_h2": {
+    "header_table_size": null,
+    "initial_connection_window_size": null,
+    "initial_stream_window_size": null,
+    "max_concurrent_streams": null,
+    "max_frame_size": null,
+    "max_header_list_size": null
+  },
+  "configured_tls": {
+    "alpn": [
+      "h2",
+      "http/1.1"
+    ],
+    "ca_file": null,
+    "cipher_list": null,
+    "curves": null,
+    "grease": null,
+    "max_version": null,
+    "min_version": null,
+    "ocsp_stapling": false,
+    "permute_extensions": null,
+    "sigalgs": null,
+    "signed_cert_timestamps": false,
+    "verify": true
+  },
+  "connection": {
+    "id": 1,
+    "protocol": "h2",
+    "remote_addr": "<removed>",
+    "request_number": 1,
+    "reused": false
+  },
+  "request": {
+    "headers": [
+      {
+        "name": "user-agent",
+        "value": "cfprobe/0.1.0"
+      },
+      {
+        "name": "accept",
+        "value": "*/*"
+      }
+    ],
+    "method": "GET",
+    "url": "https://lab.riddlelab.dev/echo"
+  },
+  "response": {
+    "body": "{\"receivedAt\":\"2026-11-24T15:00:53.105Z\",\"method\":\"GET\",\"path\":\"/echo\",\"cookieNames\":[],\"hasClearance\":false,\"clearanceUuid\":null,\"userAgent\":\"cfprobe/0.1.0\",\"headers\":{\"accept\":\"*/*\",\"accept-encoding\":\"gzip, br\",\"cf-ray\":\"a5f94927e85ab089\",\"cf-visitor\":\"{\\\"scheme\\\":\\\"https\\\"}\",\"connection\":\"Keep-Alive\",\"host\":\"lab.riddlelab.dev\",\"user-agent\":\"cfprobe/0.1.0\",\"x-forwarded-proto\":\"https\"},\"cf\":{\"httpProtocol\":\"HTTP/2\",\"requestPriority\":\"weight=16;exclusive=0;group=0;group-weight=0\",\"edgeRequestKeepAliveStatus\":1,\"requestHeaderNames\":[\":method\",\":scheme\",\":authority\",\":path\",\"user-agent\",\"accept\"],\"clientTcpRtt\":1,\"clientQuicRtt\":0,\"tlsVersion\":\"TLSv1.3\",\"tlsCipher\":\"AEAD-AES128-GCM-SHA256\",\"tlsClientCiphersSha1\":\"z756bn+x21PiebYy319nCdFpEYo=\",\"tlsClientExtensionsSha1\":\"1+H5dwtXCJYUavRE3xpeguLwCoM=\",\"tlsClientExtensionsSha1Le\":\"ZxoH7HN+CTc5NGm9OvZxaZEDxfo=\",\"tlsClientHelloLength\":\"1493\",\"tlsClientAuth\":{\"certPresented\":\"0\",\"certVerified\":\"NONE\",\"certRevoked\":\"0\",\"certIssuerDN\":\"\",\"certSubjectDN\":\"\",\"certIssuerDNRFC2253\":\"\",\"certSubjectDNRFC2253\":\"\",\"certIssuerDNLegacy\":\"\",\"certSubjectDNLegacy\":\"\",\"certSerial\":\"\",\"certIssuerSerial\":\"\",\"certSKI\":\"\",\"certIssuerSKI\":\"\",\"certFingerprintSHA1\":\"\",\"certFingerprintSHA256\":\"\",\"certNotBefore\":\"\",\"certNotAfter\":\"\",\"certRFC9440\":\"\",\"certRFC9440TooLarge\":false,\"certChainRFC9440\":\"\",\"certChainRFC9440TooLarge\":false},\"verifiedBotCategory\":\"\",\"edgeL4\":{\"deliveryRate\":2275536}}}",
+    "body_len": 2775,
+    "headers": [
+      {
+        "name": "date",
+        "value": "Tue, 24 Nov 2026 15:00:53 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "application/json"
+      },
+      {
+        "name": "content-length",
+        "value": "2775"
+      },
+      {
+        "name": "cache-control",
+        "value": "no-store"
+      },
+      {
+        "name": "report-to",
+        "value": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?<removed>\"}]}"
+      },
+      {
+        "name": "nel",
+        "value": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f94927e85ab089-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "http_version": "HTTP/2",
+    "set_cookies": [],
+    "status": 200
+  },
+  "timings": {
+    "connect_ms": 1.882825,
+    "dns_ms": 0.005631,
+    "tls_ms": 6.321535,
+    "total_ms": 17.024192,
+    "ttfb_ms": 16.993394
+  },
+  "tls": {
+    "alpn": "h2",
+    "cipher": {
+      "iana": "TLS_AES_128_GCM_SHA256",
+      "openssl": "TLS_AES_128_GCM_SHA256"
+    },
+    "client_random": "<removed>",
+    "peer_chain": [
+      {
+        "issuer": "C=US, O=Google Trust Services, CN=WE1",
+        "not_after": "Feb 22 14:57:32 2027 GMT",
+        "not_before": "Nov 24 13:57:36 2026 GMT",
+        "sha256": "0d298917aacd4b36d7c3d7c2aa4c02905189b1af7a607e05fabb4106a297baf3",
+        "subject": "CN=riddlelab.dev"
+      },
+      {
+        "issuer": "C=US, O=Google Trust Services LLC, CN=GTS Root R4",
+        "not_after": "Feb 20 14:00:00 2029 GMT",
+        "not_before": "Dec 13 09:00:00 2023 GMT",
+        "sha256": "1dfc1605fbad358d8bc844f76d15203fac9ca5c1a79fd4857ffaf2864fbebf96",
+        "subject": "C=US, O=Google Trust Services, CN=WE1"
+      },
+      {
+        "issuer": "C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA",
+        "not_after": "Jan 28 00:00:42 2028 GMT",
+        "not_before": "Nov 15 03:43:21 2023 GMT",
+        "sha256": "76b27b80a58027dc3cf1da68dac17010ed93997d0b603e2fadbe85012493b5a7",
+        "subject": "C=US, O=Google Trust Services LLC, CN=GTS Root R4"
+      }
+    ],
+    "session_reused": false,
+    "sni": "lab.riddlelab.dev",
+    "version": "TLSv1.3"
+  }
+}

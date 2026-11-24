@@ -1,0 +1,132 @@
+{
+  "source": {
+    "url": "https://www.cloudflare.com/",
+    "captured_by": "cfprobe inspect --show-body",
+    "raw_file": "experiments/test-results/P2/raw/third-party/www.cloudflare.com.json"
+  },
+  "note": "Excerpt of a third-party page: title and windows around classifier markers only.",
+  "response": {
+    "status": 200,
+    "http_version": "HTTP/2",
+    "headers": [
+      {
+        "name": "date",
+        "value": "Tue, 24 Nov 2026 15:11:55 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "text/html; charset=utf-8"
+      },
+      {
+        "name": "link",
+        "value": "<https://www.cloudflare.com/.well-known/api-catalog>; rel=\"api-catalog\", <https://www.cloudflare.com/.well-known/agents.json>; rel=\"service-desc\", <https://www.cloudflare.com/.well-known/webmcp.json>; rel=\"service-desc\", <https://www.cloudflare.com/openapi.json>; rel=\"service-desc\", <https://www.cloudflare.com/llms.txt>; rel=\"service-doc\", <https://www.cloudflare.com/sitemap.xml>; rel=\"sitemap\", </fonts/<removed>>; rel=preload; as=font; type=\"font/woff2\"; crossorigin, </fonts/<removed>>; rel=preload; as=font; type=\"font/woff2\"; crossorigin, <https://ot.www.cloudflare.com>; rel=preconnect; crossorigin, <https://imagedelivery.net>; rel=preconnect; crossorigin, </static/hero-poster.avif>; rel=preload; as=image; type=\"image/avif\"; fetchpriority=high"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f95952ab542b45-<removed>"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "HIT"
+      },
+      {
+        "name": "accept-ranges",
+        "value": "bytes"
+      },
+      {
+        "name": "age",
+        "value": "8"
+      },
+      {
+        "name": "cache-control",
+        "value": "max-age=10"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "vary",
+        "value": "accept-encoding"
+      },
+      {
+        "name": "strict-transport-security",
+        "value": "max-age=31536000; includeSubDomains"
+      },
+      {
+        "name": "content-security-policy",
+        "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com https://<removed> https://challenges.cloudflare.com https://*.onetrust.com https://cdn.cookielaw.org https://ot.www.cloudflare.com https://www.googletagmanager.com https://tagmanager.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://adservice.google.com https://cdn.bizible.com https://js.adsrvr.org https://*.marketo.net https://platform.twitter.com https://static.ads-twitter.com https://scripts.demandbase.com https://tag.demandbase.com https://*.6sc.co https://*.qualified.com https://snap.licdn.com https://bat.bing.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.googletagmanager.com https://*.google-analytics.com https://*.google.com https://*.doubleclick.net https://www.googleadservices.com https://translate.googleapis.com https://cdn.bizible.com https://js.adsrvr.org https://*.marketo.net https://ads-twitter.com https://analytics.twitter.com https://*.twimg.com https://api.demandbase.com https://scripts.demandbase.com https://tag.demandbase.com https://tag-logger.demandbase.com https://api.company-target.com https://*.6sc.co https://epsilon.6sense.com https://*.qualified.com https://*.ads.linkedin.com https://www.linkedin.com https://bat.bing.com https: wss://*.qualified.com wss://*.registrar.cloudflare.com; frame-src https://*.adsrvr.org https://*.cloudflare.com https://*.videodelivery.net https://*.cloudflarestream.com https://www.googletagmanager.com https://*.qualified.com https://td.doubleclick.net https://bid.g.doubleclick.net https://9309168.fls.doubleclick.net https://9973066.fls.doubleclick.net https://s.company-target.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; worker-src 'self' blob:; child-src 'self' blob:; upgrade-insecure-requests"
+      },
+      {
+        "name": "cross-origin-opener-policy",
+        "value": "unsafe-none"
+      },
+      {
+        "name": "cross-origin-resource-policy",
+        "value": "cross-origin"
+      },
+      {
+        "name": "permissions-policy",
+        "value": "geolocation=(), camera=(), microphone=()"
+      },
+      {
+        "name": "referrer-policy",
+        "value": "<removed>"
+      },
+      {
+        "name": "x-content-type-options",
+        "value": "nosniff"
+      },
+      {
+        "name": "x-frame-options",
+        "value": "SAMEORIGIN"
+      },
+      {
+        "name": "x-served-by",
+        "value": "marketing-site"
+      },
+      {
+        "name": "x-xss-protection",
+        "value": "1; mode=block"
+      },
+      {
+        "name": "x-rm",
+        "value": "GW"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 93 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 211 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 250 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 207 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 348 bytes>"
+      },
+      {
+        "name": "report-to",
+        "value": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?<removed>\"}]}"
+      },
+      {
+        "name": "nel",
+        "value": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "body_len_full": 1334658,
+    "body": "<title>Cloudflare: Build for the agent era</title>\n<!-- excerpt gap -->\n{&quot;title&quot;:[0,&quot;SSL&quot;],&quot;description&quot;:[0,&quot;Secure Your Site with SSL&quot;],&quot;href&quot;:[0,&quot;/products/ssl/&quot;],&quot;icon&quot;:[0,&quot;shieldPlus&quot;],&quot;category&quot;:[0,&quot;security&quot;],&quot;order&quot;:[0,2]}],[0,{&quot;title&quot;:[0,&quot;Turnstile&quot;],&quot;description&quot;:[0,&quot;A CAPTCHA Replacement Solution&quot;],&quot;href&quot;:[0,&quot;/products/turnstile/&quot;],&quot;icon&quot;:[0,&quot;productTurnstile&quot;],&quot;category&quot;:[0,&quot;security&quot;],&quot;order&quot;:[0,3]}],[0,{&quot;title&quot;:[0,&quot;WAF&quot;],&quot;description&quot;:[0,&quot;Web Application Firewall&quot;],&quot;href&quot;:[0,&quot;/products/waf/&quot;],&quot;icon&quot;:[0,&quot;productWaf&quot;],&quot;category&quot;:\n<!-- excerpt gap -->\n{&quot;title&quot;:[0,&quot;SSL&quot;],&quot;description&quot;:[0,&quot;Secure Your Site with SSL&quot;],&quot;href&quot;:[0,&quot;/products/ssl/&quot;],&quot;icon&quot;:[0,&quot;shieldPlus&quot;],&quot;category&quot;:[0,&quot;security&quot;],&quot;order&quot;:[0,2]}],[0,{&quot;title&quot;:[0,&quot;Turnstile&quot;],&quot;description&quot;:[0,&quot;A CAPTCHA Replacement Solution&quot;],&quot;href&quot;:[0,&quot;/products/turnstile/&quot;],&quot;icon&quot;:[0,&quot;productTurnstile&quot;],&quot;category&quot;:[0,&quot;security&quot;],&quot;order&quot;:[0,3]}],[0,{&quot;title&quot;:[0,&quot;WAF&quot;],&quot;description&quot;:[0,&quot;Web Application Firewall&quot;],&quot;href&quot;:[0,&quot;/products/waf/&quot;],&quot;icon&quot;:[0,&quot;productWaf&quot;],&quot;category&quot;:"
+  }
+}

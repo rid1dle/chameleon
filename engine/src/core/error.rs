@@ -77,4 +77,8 @@ pub enum Error {
 
     #[error("timed out in {stage} after {after_ms} ms")]
     Timeout { stage: Stage, after_ms: u64 },
+
+    /// The configured proxy failed at `stage`. Never followed by a direct attempt.
+    #[error("proxy {proxy:?}: {stage} failed: {detail}")]
+    Proxy { proxy: String, stage: crate::proxy::ProxyStage, detail: String },
 }

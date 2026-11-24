@@ -5,6 +5,12 @@
 # (location, client IP, TLS random) before they are written. All arms leave from this host's IPv4,
 # the same address FlareSolverr solved from.
 set -u
+# E1's clients (OkHttp and curl-impersonate in Docker, host curl) are not routed through a proxy.
+# Rather than bypass one silently, refuse to run when one is defined.
+if [[ -n ${CFPROBE_PROXY:-} ]]; then
+  print -u2 "e1_replay.sh predates proxy routing and its clients would connect directly: unset CFPROBE_PROXY to run it"
+  exit 2
+fi
 FS_JSON=$1; OUT=$2; mkdir -p "$OUT"
 ROOT=${0:A:h:h:h}
 URL=https://${LAB_HOST:-lab.riddlelab.dev}/c/echo

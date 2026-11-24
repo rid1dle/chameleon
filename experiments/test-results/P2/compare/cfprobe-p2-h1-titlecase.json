@@ -1,0 +1,129 @@
+{
+  "donate": "Please consider donating to keep this API running. Visit https://tls.peet.ws",
+  "ip": "<removed>:44504",
+  "http_version": "HTTP/1.1",
+  "method": "GET",
+  "user_agent": "cfprobe/0.1.0",
+  "tls": {
+    "ciphers": [
+      "TLS_AES_128_GCM_SHA256",
+      "TLS_AES_256_GCM_SHA384",
+      "TLS_CHACHA20_POLY1305_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "<removed>",
+      "<removed>",
+      "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA"
+    ],
+    "extensions": [
+      {
+        "name": "server_name (0)",
+        "server_name": "fp.lab.test"
+      },
+      {
+        "name": "extended_master_secret (23)",
+        "master_secret_data": "",
+        "extended_master_secret_data": ""
+      },
+      {
+        "name": "extensionRenegotiationInfo (boringssl) (65281)",
+        "data": "00"
+      },
+      {
+        "name": "supported_groups (10)",
+        "supported_groups": [
+          "X25519MLKEM768 (4588)",
+          "Unknown curve 65074",
+          "X25519 (29)",
+          "P-256 (23)",
+          "P-384 (24)"
+        ]
+      },
+      {
+        "name": "ec_point_formats (11)",
+        "elliptic_curves_point_formats": [
+          "0x00"
+        ]
+      },
+      {
+        "name": "session_ticket (35)",
+        "data": ""
+      },
+      {
+        "name": "application_layer_protocol_negotiation (16)",
+        "protocols": [
+          "http/1.1"
+        ]
+      },
+      {
+        "name": "signature_algorithms (13)",
+        "signature_algorithms": [
+          "0x904",
+          "0x905",
+          "0x906",
+          "ecdsa_secp256r1_sha256",
+          "rsa_pss_rsae_sha256",
+          "rsa_pkcs1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "rsa_pss_rsae_sha384",
+          "rsa_pkcs1_sha384",
+          "rsa_pss_rsae_sha512",
+          "rsa_pkcs1_sha512",
+          "rsa_pkcs1_sha1"
+        ]
+      },
+      {
+        "name": "key_share (51)",
+        "shared_keys": [
+          {
+            "X25519MLKEM768 (4588)": "707761fe4a604e2c89b3a033adba40cb5a6988f2b1441bac1b57969938bbd0fa5598145ef8c5a6e53c04234aa29a601ed3965bca98adb2f92600995e07c0ca6071cf9ce217ba743bd8b80cb5f434799785950741a241bfdae6b09dd6888dd4536b921db57b2052eaaeaeb9bf30a093b23a8e99257faa831236f22ebc29a61d855bba6583aec95830f87978831e05f38c9c494bde747884d6996f532ed5d6447ad62fab44299b0b214e1460b588bfd91789b4a64a49f3881be741b395440631bf042376a07a3e06b2736afcc4770133da626a18fc31efc0639481b998e3c9df27b80ad6a3dac7af3024a0323798bd9a9085c60a63180744acb5ddabc996194ffc8926996250743939da830283187d8fca38a75ccb31d04a6fe3cc56b93cf83a56561238504b6513004153a2301e3a64bb0c9a5c0a5bfae7545624c861538231d35caf43724d85bf1aeb07934609de90557e5a250a034403e460ee761a49aa9504519d1046bbeed92d74055f82254cb492a34fb04727b1caad198b6773527bd9932fa25b336886efe6c868127d27d0b357c1089fa1bc5c66c740a69eb755bca8512804e693663b79b0aa9b56208eb85436f3a29718d562bae613765a371088bb6774850e3a1b71ac3f3d8645a4032034812d84e617d36bc2a08b407caa80f8fc3f4fdbcb85324645d8b470517863c9271e43a04796083152994ed50d7f3c81e18a7b12c7c664b89521705b2614b4e3ea65c36435babcbe854cc0226014ae5377cb4279a33400edfa9d06d1c416f131bd20b0b8744f4fb233d4776a9faa8f1faa16341b2abd0ac8561c92530664912c346064aba82a00cd521288998f09796760c2895e4648fd135f27b9a5d96b2a776a211397603f44831a235d69c50957e7c7cd803ba893b12311897ac4864666c810f3320b9879bc7462a1ec9037b712c06130266664e47383dff892cbc15433859336a259c4bc9156f0ce84595f4ff09ada91333170645b09ccac695a7c921a1fb90f2db98c7f326e6941620bb956e88c5c19a1334dd4aac884a54d4b58c5e15af0b7c50cd607ea8c077c8438817bc95ed32e94575a43a437bdb87aad91af3e968bd6310d6abcb6b879b8faa92ac9cc4880a2674f8081afe78f438b53ebc541bec90c19157c0fa46f6fa0a32ff26cdd4168f6ea4f81b6911d6a4a50029f29217a5ea29843715d25f1cf7b5696d0909da4531842e41916f6bccf453d3293b690a75a1f4b5724943baf924e6e3528477987493825bc300012b667dd8b69f46ca1b2c701be71ca3b3a3299c9c595e7bc37298e85a395d388856220488b7410328924fce4215077afcdbc273e8321b4bb99bad39108d7a24cab8a53731fad13a800b92200a17d820b5bd3704429602b6fd5cf85c2c01fa74fb2f84d767635102580635ca612c605c1f4732385811ba0c2ad68c2a234a28145455adc37b66149564b46725b98f325c6b445a0979964fae5b089c58a5a920611a26346e7779c276ec0136e683b5291d0599c288011681f0a856fa075979d50a00271b6066c4e03bc03337775629a9cf3a25376e79ca410476094a1d0231489d02711ca23f4078382e7b97dc9bab6b2cf2b127ce202b80fc78bfd3681b1db1fdced0eb83430f20201a34e07a6f53ebe9f8e348748303f5d0d31f12d43d67e88fd68e76275ae234962960d64f05314eb08535b74fba3b8bf66eb04d653"
+          },
+          {
+            "X25519 (29)": "381f4de6aaae9ae88f1dd8434c2c7d5d1430d8065f41a8c918666a9bc1a54617"
+          }
+        ]
+      },
+      {
+        "name": "psk_key_exchange_modes (45)",
+        "PSK_Key_Exchange_Mode": "PSK with (EC)DHE key establishment (psk_dhe_ke) (1)"
+      },
+      {
+        "name": "supported_versions (43)",
+        "versions": [
+          "TLS 1.3",
+          "TLS 1.2"
+        ]
+      }
+    ],
+    "tls_version_record": "771",
+    "tls_version_negotiated": "772",
+    "ja3": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53,0-23-65281-10-11-35-16-13-51-45-43,4588-65074-29-23-24,0",
+    "ja3_hash": "cc29a389ffb30773156d50cdf293f775",
+    "ja4": "t13d1711h1_5b57614c22b0_8af51f2a06eb",
+    "ja4_r": "t13d1711h1_002f,0035,009c,009d,1301,1302,1303,c009,c00a,c013,c014,c02b,c02c,c02f,c030,cca8,cca9_000a,000b,000d,0017,0023,002b,002d,0033,ff01_0904,0905,0906,0403,0804,0401,0503,0805,0501,0806,0601,0201",
+    "peetprint": "772-771|1.1|4588-65074-29-23-24|2308-2309-2310-1027-2052-1025-1283-2053-1281-2054-1537-513|1||4865-4866-4867-49195-49199-49196-49200-52393-52392-49161-49171-49162-49172-156-157-47-53|0-10-11-13-16-23-35-43-45-51-65281",
+    "peetprint_hash": "585abde83c11c6a33956c1b7dec29b9e",
+    "client_random": "f8ff027747366b6248a9df53ecd3baa2d85f7311bf373675df04153978a0a356",
+    "session_id": "4c1f3de487af417e880b67e41a418af5f2137eef613b181f55f8ed28e2820e6d"
+  },
+  "http1": {
+    "headers": [
+      "Host: fp.lab.test:8443",
+      "User-Agent: cfprobe/0.1.0",
+      "Accept: */*"
+    ]
+  },
+  "tcpip": {
+    "ip": {},
+    "tcp": {}
+  }
+}

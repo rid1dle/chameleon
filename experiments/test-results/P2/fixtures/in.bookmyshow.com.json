@@ -1,0 +1,108 @@
+{
+  "source": {
+    "url": "https://in.bookmyshow.com/",
+    "captured_by": "cfprobe inspect --show-body",
+    "raw_file": "experiments/test-results/P2/raw/third-party/in.bookmyshow.com.json"
+  },
+  "note": "Excerpt of a third-party page: title and windows around classifier markers only.",
+  "response": {
+    "status": 200,
+    "http_version": "HTTP/2",
+    "headers": [
+      {
+        "name": "date",
+        "value": "Tue, 24 Nov 2026 15:11:55 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "text/html; charset=utf-8"
+      },
+      {
+        "name": "server",
+        "value": "cloudflare"
+      },
+      {
+        "name": "vary",
+        "value": "Accept-Encoding"
+      },
+      {
+        "name": "vary",
+        "value": "User-Agent, Accept-Encoding"
+      },
+      {
+        "name": "true-client-ip",
+        "value": "<removed>"
+      },
+      {
+        "name": "cache-control",
+        "value": "no-cache, max-age=0, must-revalidate, no-store"
+      },
+      {
+        "name": "strict-transport-security",
+        "value": "max-age=15552000; includeSubDomains; preload"
+      },
+      {
+        "name": "content-security-policy",
+        "value": "child-src 'self' blob:; object-src 'none'; manifest-src 'self'; worker-src 'self' blob: *.bookmyshow.com *.bmscdn.com *.cricketworldcup.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' *.bmscdn.com https://*.freshchat.com https://*.freshbots.ai https://www.riddle.com fonts.googleapis.com https://license-global.pallycon.com; default-src 'self' data: blob: ssl.gstatic.com 'unsafe-inline'; img-src 'self' 'unsafe-inline' data: *.bmscdn.com *.bmstvod.com *.testbms.com *.google.com *.googleapis.com https://storage.googleapis.com *.bookmyshow.com *.cricketworldcup.com https://*.scdn.co https://*.spotifycdn.com https://i.scdn.co https://*.bing.com https://i.ytimg.com https://*.youtube.com https://*.google.co.in https://*.facebook.com https://*.cloudfront.net https://*.brightcove.com https://*.freshbots.ai https://s3.amazonaws.com *.doubleclick.net *.flashtalking.com https://res.cloudinary.com https://secure.gravatar.com *.googleadservices.com *.googlesyndication.com https://<removed> *.gravatar.com https://www.instagram.com https://platform.twitter.com *.google-analytics.com *.googletagmanager.com *.criteo.com *.criteo.net secure-ds.serving-sys.com lm.serving-sys.com bs.serving-sys.com https://sync.aralego.com srv.tunefindforfans.com ids.ad.gt https://prebid.andbeyond.media https://pagead2.googlesyndication.com/ https://c.4dex.io/ https://license-global.pallycon.com https://dsp-media.adster.tech https://*.mzstatic.com; media-src blob: 'self' *.bookmyshow.com *.cricketworldcup.com *.bmscdn.com *.bmstvod.com 'unsafe-inline' https://*.cloudfront.net https://license-global.pallycon.com https://*.spotify.com https://*.scdn.co https://*.spotifycdn.com https://storage.googleapis.com https://*.itunes.apple.com; script-src 'self' *.bmscdn.com *.bmstvod.com *.pusher.com 'unsafe-eval' 'unsafe-inline' *.bookmyshow.com *.cricketworldcup.com https://sdk.scdn.co https://*.spotify.com https://spotify.app.link https://*.spotifycdn.com https://s3-eu-west-1.amazonaws.com https://wzrkt.com https://s0.2mdn.net https://*.google.com https://script.4dex.io http://code.jquery.com https://vjs.zencdn.net http://www.gstatic.com https://www.gstatic.com https://www.youtube.com https://*.cloudfront.net https://*.brightcove.net https://*.brightcove.com https://www.riddle.com https://cdn.ampproject.org http://static.clevertap.com https://eu1.clevertap-prod.com http://p.adlooxtracking.com http://client.perimeterx.net https://connect.facebook.net https://imasdk.googleapis.com https://rtbcdn.andbeyond.media https://adservice.google.co.in *.doubleclick.net *.flashtalking.com *.googletagmanager.com *.googleadservices.com *.googletagservices.com http://rtbpass-us.andbeyond.media http://global.cloud.netacuity.com https://s3.ap-south-1.amazonaws.com https://customerglu-ui-v3.vercel.app *.googlesyndication.com https://*.freshchat.com https://*.freshbots.ai https://*.bing.com https://ajax.cloudflare.com https://runtime.imagekit.io https://www.instagram.com https://platform.twitter.com *.googleanalytics.com *.google-analytics.com https://bs.serving-sys.com https://*.sharechat.com *.crwdcntrl.net *.criteo.com *.criteo.net cdn.doubleverify secure-ds.serving-sys.com lm.serving-sys.com https://*.branch.io https://app.link *.criteo.com *.criteo.net srv.tunefindforfans.com a.ad.gt cs.deviceatlas-cdn.com p.ad.gt cdn.hadronid.net *.ltmsphrcl.net https://pixels.ad.gt https://prebid.andbeyond.media https://pagead2.googlesyndication.com/ https://c.4dex.io/ https://ads.aralego.com/cookiesync https://license-global.pallycon.com; connect-src ws: wss: 'self' *.bms.bz *.bookmyshow.com *.cricketworldcup.com *.bmscdn.com *.bmstvod.com *.pusher.com https://*.spotify.com https://spotify.app.link https://*.scdn.co https://api.spotify.com https://bs.com https://*.bmscdn.com https://*.google.com https://*.gstatic.com https://*.google.co.in https://*.facebook.com https://script.4dex.io https://*.akamaihd.net https://*.bookmyshow.com https://*.cloudfront.net https://*.freshbots.ai https://cdn.ampproject.org https://*.vdocipher.com https://*.brightcove.com https://manifest.prod.boltdns.net http://global.cloud.netacuity.com *.googletagmanager.com https://attestation.android.com *.doubleclick.net https://*.razorpayads.com *.flashtalking.com *.googlesyndication.com https://<removed> https://bs.serving-sys.com https://view.adjust.net.in *.google-analytics.com https://*.sharechat.com *.freshworksapi.com *.recruiterbox.com *.crwdcntrl.net lm.serving-sys.com https://*.branch.io https://app.link *.criteo.com *.criteo.net srv.tunefindforfans.com *.ltmsphrcl.net https://seg.ad.gt https://a.ad.gt https://id.hadron.ad.gt https://prebid.andbeyond.media https://pagead2.googlesyndication.com/ https://c.4dex.io/ https://license-global.pallycon.com; font-src fonts.gstatic.com 'self' data: https://maxcdn.bootstrapcdn.com *.bmscdn.com; frame-src 'self' 'unsafe-inline' *.bmscdn.com https://*.google.com *.googletagmanager.com https://*.youtube.com https://*.facebook.com https://*.freshchat.com https://*.spotify.com https://spotify.app.link https://sdk.scdn.co https://*.scdn.co *.doubleclick.net *.flashtalking.com http://imasdk.googleapis.com https://app-bms.customerglu.com *.googlesyndication.com https://www.riddle.com https://www.instagram.com https://platform.twitter.com *.crwdcntrl.net *.criteo.com *.criteo.net https://cuelinks.gotrackier.com/ *.ltmsphrcl.net https://prebid.andbeyond.media https://pagead2.googlesyndication.com/ https://c.4dex.io/ https://license-global.pallycon.com;"
+      },
+      {
+        "name": "response-time",
+        "value": "82.882763ms"
+      },
+      {
+        "name": "x-served-by",
+        "value": "<removed>"
+      },
+      {
+        "name": "service-worker-allowed",
+        "value": "/"
+      },
+      {
+        "name": "nel",
+        "value": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+      },
+      {
+        "name": "x-xss-protection",
+        "value": "1; mode=block"
+      },
+      {
+        "name": "x-content-type-options",
+        "value": "nosniff"
+      },
+      {
+        "name": "x-frame-options",
+        "value": "SAMEORIGIN"
+      },
+      {
+        "name": "cf-cache-status",
+        "value": "DYNAMIC"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 41 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 323 bytes>"
+      },
+      {
+        "name": "set-cookie",
+        "value": "<redacted 186 bytes>"
+      },
+      {
+        "name": "report-to",
+        "value": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?<removed>\"}]}"
+      },
+      {
+        "name": "cf-ray",
+        "value": "a5f95950d8792e9c-<removed>"
+      },
+      {
+        "name": "alt-svc",
+        "value": "h3=\":443\"; ma=86400"
+      }
+    ],
+    "body_len_full": 141793,
+    "body": "<title>Movie Tickets, Plays, Sports, Events &amp; Cinemas nearby - BookMyShow</title>\n<!-- excerpt gap -->\n|(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'a5f95950d8792e9c',t:'MTc5NTUzMzExNQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5f95950d8792e9c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.p"
+  }
+}

@@ -119,14 +119,27 @@ docker run -d --rm --name cflab-probe --network cflab --network-alias probe.lab.
 
 FlareSolverr: `request.get` to `https://probe.lab.test/probe.html` (same as L1). Headful baseline: `baseline_chromium.py https://probe.lab.test/probe.html`. Captures go to `experiments/test-results/L2/`. Last run: 2026-11-24.
 
-## 7. Zone lab: E1 and E2
+## 7. Zone lab: E1, E2 and E4
 
-The zone lab is an echo Worker on `lab.riddlelab.dev` plus one WAF rule that puts a Managed Challenge on `lab.riddlelab.dev/c/*`. Two scripts create and remove exactly that, nothing else:
+The zone lab is an echo Worker on `lab.riddlelab.dev` plus one rule per Cloudflare action, listed in `scripts/zone/lib.sh` (`WAF_RULES`, `RL_DESC`):
+
+| Path | Rule | Used by |
+|---|---|---|
+| `/echo` | none | every run (the "reached" control) |
+| `/c/*` | Managed Challenge | E1, E2, E4 |
+| `/b/*` | Block | E4 |
+| `/j/*` | JS Challenge | E4 |
+| `/i/*` | Interactive Challenge | E4 |
+| `/r/echo` | Rate limit, 2 requests per 10 s (the Free plan's one rule; its expression is the path only, so it applies to `/r/echo` on every host of the zone) | E4 |
+
+Two scripts create and remove exactly that, nothing else:
 
 ```
-scripts/zone/up.sh     # upload Worker, attach Custom Domain, add WAF rule, wait until /echo 200 and /c/echo 403 challenge
-scripts/zone/down.sh   # delete those three things by name, then confirm none are left and the name is NXDOMAIN
+scripts/zone/up.sh     # upload Worker, attach Custom Domain, add the rules, wait until /echo 200 and /c/echo 403 challenge
+scripts/zone/down.sh   # delete each of those by exact name, then confirm none are left and the name is NXDOMAIN
 ```
+
+**Re-checked 2026-11-24 with all five rules**: `up.sh` added the four custom rules and the rate limit rule and exited 0; `down.sh` deleted all five, the Custom Domain and the Worker, and reported `rules left: 0 custom + 0 rate limit, domains left: 0, scripts left: 0, authoritative DNS: NXDOMAIN`.
 
 State on 2026-11-24: **down**. Both scripts **re-checked** in a full cycle (down, up from a clean zone, down): `up.sh` exited 0 with `/echo -> 200`, `/c/echo -> 403 challenge`, and `cfprobe fingerprint` against the rebuilt Worker gave `same_handshake_as_client: true`, ClientHello 1493 bytes, pseudo order `m,s,a,p`, identical to the original setup. `down.sh` exited 0 with nothing left and the name NXDOMAIN at the zone's nameserver.
 
@@ -174,6 +187,15 @@ scripts/zone/fw_events.sh 2026-11-24T12:55:00Z 2026-11-24T13:05:00Z > experiment
 
 `managed_challenge_bypassed` is what proves a 200 came from the cookie. **Re-checked**: the rewritten script returns the same 6 events, same ray IDs, as the committed capture for 12:59:50 to 13:00:00.
 
+### E4: one response per action (the engine's classifier fixtures)
+
+```
+(cd engine && cargo build)
+scripts/zone/e4_capture.sh experiments/test-results/E4
+```
+
+Saves `cfprobe inspect --show-body` for `/echo`, each rule path and direct IP access (error 1003), scrubbed of tokens, IP addresses and the cf-ray data-centre suffix, and fails if anything address- or token-like is left. `engine/tests/cloudflare.rs` reads these files.
+
 ### Finish
 
 ```
@@ -183,11 +205,30 @@ docker stop cflab-fs
 
 For your own browser after a rebuild, either wait out the 30 minutes or point it at an address from `python3 -I scripts/zone/authdns.py lab.riddlelab.dev`.
 
+## 7b. Proxy (optional; routes cfprobe, the zone scripts and FlareSolverr)
+
+With `CFPROBE_PROXY` unset everything connects directly and says so. To verify proxy routing locally, a pinned gost image serves three authenticated proxies on loopback (password random, never committed):
+
+```
+docker pull gogost/gost@sha256:27f4bda42d13f00ef76044cc0fe2fd900e7b7a4e08f3ff67a2826138f9dc877c
+P=~/cflab-private/gost; mkdir -p $P
+openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -days 2 -subj /CN=localhost \
+  -addext subjectAltName=DNS:localhost -keyout $P/key.pem -out $P/cert.pem && chmod 644 $P/*.pem
+PW=$(openssl rand -hex 12)
+docker run -d --rm --name cflab-proxy -v $P:/c:ro -p 127.0.0.1:18080:18080 -p 127.0.0.1:18081:18081 -p 127.0.0.1:18443:18443 \
+  gogost/gost@sha256:27f4bda42d13f00ef76044cc0fe2fd900e7b7a4e08f3ff67a2826138f9dc877c \
+  -L "http://lab:$PW@:18080" -L "socks5://lab:$PW@:18081" -L "https://lab:$PW@:18443?certFile=/c/cert.pem&keyFile=/c/key.pem"
+export CFPROBE_PROXY="http://lab:$PW@127.0.0.1:18080"      # or socks5h://...:18081
+engine/target/debug/cfprobe proxy-check https://www.cloudflare.com/cdn-cgi/trace
+```
+
+Then `scripts/zone/up.sh`, `scripts/phase2/run_zone.sh`, `scripts/phase2/solve.sh` (start FlareSolverr with `--network host` so it reaches the loopback proxy), `scripts/phase2/lifecycle.sh` and `scripts/zone/down.sh` all go through it. `docker logs cflab-proxy` shows every destination it carried. A local proxy shares this host's egress address: it proves routing, not a different egress. Details: `docs/phase2/PROXY_ROUTING.md`. Last run: 2026-11-24.
+
 ## 8. Engine
 
 ```
 cd engine
-CARGO_BUILD_JOBS=4 cargo test        # 24 tests, offline
+CARGO_BUILD_JOBS=4 cargo test        # 35 tests, offline
 cargo build --release
 ```
 

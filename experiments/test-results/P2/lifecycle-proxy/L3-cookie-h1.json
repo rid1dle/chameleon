@@ -1,0 +1,16 @@
+{
+  "arm": "L3-cookie-h1",
+  "status": 200,
+  "http_version": "HTTP/1.1",
+  "sent_cookie": [
+    "<redacted 445 bytes>"
+  ],
+  "verdict": "NORMAL_PAGE",
+  "confidence": "high",
+  "issued_by": "origin",
+  "challenge_kind": null,
+  "evidence": [
+    "cf-ray present",
+    "no challenge, block or error marker: status 200 is the origin's"
+  ]
+}

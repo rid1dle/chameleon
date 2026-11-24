@@ -1,0 +1,128 @@
+{
+ "note": "Target registry for Phase 2. 'cloudflare' is what responses showed (cf-ray / server: cloudflare), not an assumption. Third-party targets: ordinary public access only, robots.txt checked first, no login, booking, challenge or clearance work.",
+ "checked": "2026-11-24",
+ "targets": [
+  {
+   "name": "AsuraScans",
+   "domains": [
+    "asurascans.com",
+    "cdn.asurascans.com",
+    "api.asurascans.com"
+   ],
+   "cloudflare": {
+    "asurascans.com": true,
+    "cdn.asurascans.com": true,
+    "api.asurascans.com": true
+   },
+   "robots": "Allow /; disallows /login /register /settings /bookmarks /history /notifications /api/",
+   "scope": "passive",
+   "cases": [
+    "asura-home",
+    "asura-browse",
+    "asura-css",
+    "asura-cdn-image",
+    "asura-api-root"
+   ]
+  },
+  {
+   "name": "AsuraScans old domain",
+   "domains": [
+    "asuracomic.net"
+   ],
+   "cloudflare": {
+    "asuracomic.net": true
+   },
+   "robots": "Allow / (AI crawlers disallowed by name)",
+   "scope": "passive",
+   "cases": [
+    "asuracomic-home"
+   ]
+  },
+  {
+   "name": "BookMyShow",
+   "domains": [
+    "in.bookmyshow.com",
+    "assets-in.bmscdn.com"
+   ],
+   "cloudflare": {
+    "in.bookmyshow.com": true,
+    "assets-in.bmscdn.com": false
+   },
+   "other_providers": {
+    "assets-in.bmscdn.com": "ImageKit.io behind AWS CloudFront (x-server, via headers)"
+   },
+   "robots": "* group disallows test, payment and booking-detail paths; / and /explore/ allowed",
+   "scope": "passive",
+   "cases": [
+    "bms-home",
+    "bms-explore",
+    "bms-cdn-image"
+   ]
+  },
+  {
+   "name": "Discord",
+   "domains": [
+    "discord.com"
+   ],
+   "cloudflare": {
+    "discord.com": true
+   },
+   "robots": "Disallows /api/ except /api/v*/discovery and a few others",
+   "scope": "passive",
+   "cases": [
+    "discord-home",
+    "discord-docs",
+    "discord-json",
+    "discord-http"
+   ]
+  },
+  {
+   "name": "Cloudflare",
+   "domains": [
+    "www.cloudflare.com",
+    "cloudflare.com",
+    "developers.cloudflare.com",
+    "api.cloudflare.com"
+   ],
+   "cloudflare": {
+    "www.cloudflare.com": true,
+    "developers.cloudflare.com": true,
+    "api.cloudflare.com": true
+   },
+   "robots": "Allow /",
+   "scope": "passive",
+   "cases": [
+    "cf-home",
+    "cf-docs-turnstile",
+    "cf-apex",
+    "cf-api-ips",
+    "cf-api-user"
+   ]
+  },
+  {
+   "name": "nowsecure.nl",
+   "domains": [
+    "nowsecure.nl"
+   ],
+   "cloudflare": {
+    "nowsecure.nl": true
+   },
+   "robots": "timed out while the site was down (522)",
+   "scope": "passive, homepage only",
+   "cases": [
+    "nowsecure-home"
+   ]
+  },
+  {
+   "name": "Zone lab (owned)",
+   "domains": [
+    "lab.riddlelab.dev"
+   ],
+   "cloudflare": {
+    "lab.riddlelab.dev": true
+   },
+   "scope": "full: challenges, rate limits, clearance lifecycle, resilience",
+   "matrix": "experiments/test-results/P2/matrices/zone.template.json"
+  }
+ ]
+}
