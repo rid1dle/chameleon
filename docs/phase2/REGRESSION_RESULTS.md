@@ -1,6 +1,6 @@
 # Regression results (Phase 2, 2026-11-24)
 
-Run everything: `cd engine && CARGO_BUILD_JOBS=4 cargo test` (offline, loopback only, about 15 s after a build). Last run: **133 passed, 0 failed**. `cargo clippy --all-targets`: no warnings.
+Run everything: `cd engine && CARGO_BUILD_JOBS=4 cargo test` (offline, loopback only, about 15 s after a build). Last run: **137 passed, 0 failed**. `cargo clippy --all-targets`: no warnings.
 
 | File | Tests | What it covers |
 |---|---|---|
@@ -10,11 +10,11 @@ Run everything: `cd engine && CARGO_BUILD_JOBS=4 cargo test` (offline, loopback 
 | `src/http/mod.rs` (unit) | 5 | Redaction (idempotent), every body encoding, decode cap |
 | `src/runner/mod.rs` (unit) | 3 | Timestamp, config merge, "no expectation is never a pass" |
 | `src/main.rs`, `src/fingerprint`, `src/reporting` (unit) | 3 | `--resolve` parsing, GREASE, table escaping |
-| `tests/adversarial.rs` | 18 | One or more per transport defect, malformed and cut responses |
+| `tests/adversarial.rs` | 20 | One or more per transport defect, malformed and cut responses |
 | `tests/resilience.rs` | 12 | Redirect chains and loops, cookie jar, retries, Retry-After, circuit breaker, cancellation, failure verdicts |
 | `tests/randomized.rs` | 4 | Fixed-seed fuzz run (150 scenarios), reproducibility, single-scenario rerun |
 | `tests/properties.rs` | 10 | proptest invariants, 2000 cases each |
-| `tests/real_world.rs` | 7 | P2 fixtures: former false positives and negatives |
+| `tests/real_world.rs` | 9 | P2 fixtures: former false positives and negatives |
 | `tests/cloudflare.rs` | 6 | E4 zone captures, one per Cloudflare action |
 | `tests/baselines.rs` | 10 | L1 receiver records |
 | `tests/local_tls.rs` | 11 | TLS, ALPN, reuse, header order, timeouts, limits |
@@ -55,12 +55,18 @@ Run everything: `cd engine && CARGO_BUILD_JOBS=4 cargo test` (offline, loopback 
 | D27 | Proxy URL credentials printed by `{:?}` on the config | Derived `Debug` on `ProxySpec` | Hand-written `Debug` that redacts the URL | `url: "http://x:pw-in-url@h:3128"` | Unit test written with the feature | `credentials_never_print` |
 | D24 | Cloudflare's own cookies ignored | Classifier read only the redacted header list | `__cf_bm`, `_cfuvid`, `cf_clearance` names become indicators | seen on cloudflare.com, BookMyShow, Discord, never reported | Real-world run | `cloudflare_cookie_names_are_indicators_and_values_stay_out` |
 
+## Fixed after the first commit
+
+| ID | Defect | Root cause | Fix | Before | After | Guarded by |
+|---|---|---|---|---|---|---|
+| P1 | HTTP/1.1 throughput 18% below reqwest at concurrency 32 | **Profiled** (pprof, in-process): the connection pool sat behind an async `tokio::sync::Mutex`, taken twice per request by 32 competing tasks; each contended lock cost a scheduler round-trip. The per-request measurement record costs CPU too, but only about 1% of latency | `std::sync::Mutex` (never held across an await) | median of 5: 68,451 req/s, 20.5 us CPU/req (reqwest 83,338) | **89,836 req/s, 15 us** (reqwest 81,904); plain HTTP/1.1 92.5k vs 82.4k; HTTP/2 unchanged (34.1k vs 32.9k) | `PERFORMANCE.md` benchmark (no unit test: a throughput threshold would flake) |
+| D10 | Response header order: a repeated name was grouped at its first position (`a, b, a` -> `a, a, b`) | hyper's client exposes only a `HeaderMap` | HTTP/1.1: a tap on the connection copies each final response head (1xx skipped, bodies never) and records names in wire order and case in `response.wire_header_order`. HTTP/2: `None`, stated (HPACK, stream not identifiable) | only the grouped view | real cloudflare.com over HTTP/1.1: 31 names in order with original case (`CF-Ray`, `x-RM`, `Nel`, `alt-svc`, `set-cookie` after four `Set-Cookie`); tap costs about 1 us CPU per request, throughput still at parity (87.1k vs 85.9k) | `d10_http1_header_wire_order_is_recorded`, `d10_http2_wire_order_is_absent_not_guessed` |
+
+| D28 | Error 1002 came out UNKNOWN, and Cloudflare's HTML 1xxx pages lost their number | 1002 and the other 1000-range DNS/host configuration errors were unmapped; the HTML 1xxx page states its number as `<span data-translate="error">Error</span> <span>1002</span>`, a layout the parser did not know. Cloudflare sends HTML error pages only to requests that offer a content encoding (curl `--compressed`), plain text otherwise | 1000, 1001, 1002, 1004, 1014, 1018, 1019 mapped to ORIGIN_UNAVAILABLE (1002, 1016 observed; the rest documented); third HTML layout parsed | zone: curl 1002 -> UNKNOWN, curl 1016 -> no number | zone: all three clients ORIGIN_UNAVAILABLE with the number | `deliberate_origin_failures_are_origin_unavailable`, `html_1xxx_pages_give_their_number`, unit `error_code_accepts...` |
+
 ## Not fixed, documented
 
-| ID | Issue | Why | Where |
-|---|---|---|---|
-| D10 | Response headers grouped by name, not wire order | hyper's client exposes only a `HeaderMap`; wire order is behind its `ffi` feature | `KNOWN_ISSUES.md`, field doc |
-| P1 | HTTP/1.1 throughput 14 to 19% below reqwest at concurrency 32 | Not profiled; likely the per-request measurement record and the async pool lock | `PERFORMANCE.md` |
+None open. HTTP/2 header wire order remains unavailable by design (`KNOWN_ISSUES.md`).
 
 ## Defects in the test harness itself (found and fixed, not engine defects)
 

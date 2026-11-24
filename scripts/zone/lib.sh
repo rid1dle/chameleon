@@ -17,6 +17,15 @@ WAF_RULES=(
   "js_challenge|/j/|cflab P7: js challenge on /j/"
   "challenge|/i/|cflab P7: interactive challenge on /i/"
 )
+# Proxied DNS records whose origins fail on purpose: "name|type|content|what Cloudflare answers".
+# Only reserved or non-existent targets, so Cloudflare's origin attempts reach no one else's host.
+# (Private and loopback targets are refused for proxied records: API error 9003.)
+ORIGIN_RECORDS=(
+  "p2-testnet|A|192.0.2.1|522 after ~19.5 s: TEST-NET, nothing answers"
+  "p2-nxcname|CNAME|origin-does-not-exist.invalid|530 + error 1016: origin DNS error"
+  "p2-classe|A|240.0.0.1|403 + error 1002: reserved address"
+)
+ORIGIN_COMMENT="cflab P2: deliberate origin failure"
 # The one rate limiting rule a Free zone gets (phase http_ratelimit). Its expression is the path
 # only, so it applies to RL_PATH on every host of the zone.
 RL_DESC="cflab P7: rate limit on /r/"

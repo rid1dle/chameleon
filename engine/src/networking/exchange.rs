@@ -90,9 +90,14 @@ pub struct ResponseRecord {
     pub http_version: String,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub informational: Vec<Informational>,
-    /// Grouped by name in first-seen order (hyper's `HeaderMap`), not wire order: `a, b, a` on the
-    /// wire is listed `a, a, b`.
+    /// Values, redacted. Distinct names keep arrival order; a repeated name is grouped at its first
+    /// position (hyper's `HeaderMap`): `a, b, a` is listed `a, a, b`. Exact order: `wire_header_order`.
     pub headers: Vec<HeaderEntry>,
+    /// HTTP/1.1: header names exactly as received, in order, original case, repeats kept (read from
+    /// the wire by a tap on the connection). `None` on HTTP/2, where headers arrive HPACK-encoded and
+    /// the stream is not identifiable here: use `headers`, whose only difference is that repeated
+    /// names are grouped at their first position.
+    pub wire_header_order: Option<Vec<String>>,
     pub set_cookies: Vec<SetCookie>,
     /// Bytes received on the wire (still encoded when `content-encoding` was set).
     pub body_len: usize,

@@ -37,7 +37,7 @@ To rebuild: `git clone https://github.com/<repo> vendor/<owner>_<name>` and `git
 | `research/` mechanism notes | Done: bot signals, challenges and clearance, TLS/HTTP fingerprinting |
 | Lab L1, L2 | Done: `experiments/test-results/L1/summary.md`, `experiments/test-results/L2/summary.md`. L1 extended 2026-11-24 with cfprobe's own fingerprint and Chromium 124 vs 152 (L1-8 to L1-10) |
 | `engine/` (cfprobe, Rust) | Phases 1 to 7, 9 and 10 done, 8 partly; Phase 2 testing campaign done. See "Engine" below |
-| Phase 2 testing ("Chameleon-RS" briefs) | Done: `docs/phase2/PHASE2_SUMMARY.md`. 27 defects found, 26 fixed with regression tests. Proxy routing done: `docs/phase2/PROXY_ROUTING.md` |
+| Phase 2 testing ("Chameleon-RS" briefs) | Done: `docs/phase2/PHASE2_SUMMARY.md`. 27 defects plus one performance gap found, all fixed. Proxy routing done: `docs/phase2/PROXY_ROUTING.md` |
 | E1, E2 (Free zone) | Done: `experiments/test-results/E1/summary.md`, `experiments/test-results/E2/summary.md`. Second-IP arm of E1 not run |
 | E4 (Free zone) | Done: `experiments/test-results/E4/summary.md`. One real response per Cloudflare action; the engine's classifier is tested on them |
 | E3 | Blocked: needs Enterprise Bot Management (bot score) |
@@ -58,7 +58,7 @@ To rebuild: `git clone https://github.com/<repo> vendor/<owner>_<name>` and `git
 `cfprobe` is a native Rust engine for this research: its own connection stack (BoringSSL via Cloudflare's `boring` 5.6.0, hyper 1.13 HTTP/1.1 and HTTP/2), explicit TLS and HTTP/2 settings for controlled experiments, and no browser profiles or challenge solving. Every value it reports is either **configured**, **measured by the client**, or **measured by a receiver** (lab TrackMe or the zone Worker).
 
 ```
-cd engine && CARGO_BUILD_JOBS=4 cargo test      # 133 tests, offline (loopback only)
+cd engine && CARGO_BUILD_JOBS=4 cargo test      # 137 tests, offline (loopback only)
 cargo run -- proxy-check https://lab.riddlelab.dev/cdn-cgi/trace   # route check; CFPROBE_PROXY or --proxy, else direct (announced)
 cargo run -- inspect https://lab.riddlelab.dev/echo                 # JSON, with a "cloudflare" verdict
 cargo run -- inspect https://lab.riddlelab.dev/c/echo --format md   # verdict, evidence, TLS, timings
@@ -101,6 +101,6 @@ Known engine limits: HTTP/2 SETTINGS order and pseudo-header order are fixed by 
 ## Open items
 
 - The zone lab (echo Worker, its `/p2/` scenarios and five rules on `lab.riddlelab.dev`) is **down** again after Phase 2 on 2026-11-24. `scripts/zone/up.sh` brings it back.
-- Deliberate 52x origin failures need DNS:Edit on the zone token (refused as of 2026-11-24).
+- Tor routing: `scripts/tor.sh up`, then `cfprobe --tor ...` (`docs/phase2/PROXY_ROUTING.md`).
 - `scripts/fingerprint-analysis/summarize_l1.py` is superseded by `cfprobe baselines` (identical output apart from escaped `|`). Delete once agreed.
 - Captures are scrubbed of client IP, location and ISP (`<removed>`); keep it that way for anything added to this public repo. For Phase 2 data, `python3 -I scripts/phase2/scrub.py --check` enforces it. The L1 TrackMe captures (already committed) still carry the Docker network client address (`172.23.0.x`), not a public IP.

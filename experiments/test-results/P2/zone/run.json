@@ -1,0 +1,12 @@
+{
+  "matrix": "P2 controlled zone (lab.riddlelab.dev, Free plan), runner defaults: redirects 5, cookie jar, 3 attempts with backoff and Retry-After; circuit breaker only in the breaker-* cases (the matrix fails on purpose)",
+  "proxy_preflight": {
+    "skipped": "no proxy defined: direct connections"
+  },
+  "route": {
+    "kind": "direct"
+  },
+  "route_description": "no proxy defined: running in no-proxy mode (direct connections)",
+  "seed": 20261124,
+  "started": "2026-11-24T17:52:35Z"
+}

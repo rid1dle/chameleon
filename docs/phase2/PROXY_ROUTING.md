@@ -50,6 +50,18 @@ With an `https://` proxy there are two TLS sessions: one to the proxy (verified 
 
 From the URL (`http://user:pass@host:port`, percent-decoded) or the `username` / `password` fields; `url: "env:NAME"` reads the URL from the environment so it stays out of config files. Held in `Secret`, which prints `<redacted N bytes>` in `Debug` and JSON; URLs are redacted wherever they appear. curl gets them only through its environment, never its command line (which `ps` shows to every user).
 
+## Tor in one switch
+
+```
+scripts/tor.sh up                       # pinned Tor SOCKS container on 127.0.0.1:9150, waits for bootstrap
+cfprobe --tor inspect <url>             # one command through Tor (socks5h://127.0.0.1:9150)
+eval "$(scripts/tor.sh env)"            # or: everything here (cfprobe, zone scripts, authdns.py, solve.sh)
+scripts/tor.sh status                   # bootstrap state + whether the exit differs from this host's address
+scripts/tor.sh down
+```
+
+`--tor` is shorthand for `--proxy socks5h://127.0.0.1:9150` (`CFPROBE_TOR_ADDR` overrides the address) and follows the proxy rule: with Tor down, `proxy "tor": connect failed`, a hint to run `scripts/tor.sh up`, and no direct attempt. `--tor` and `--proxy` together are refused. There is deliberately no "new identity" or circuit-renewal command: changing exits to get past a site's block or rate limit would be circumvention. Tor exits are shared and Cloudflare often challenges them.
+
 ## Selection
 
 `proxy.proxies` may list several; `proxy.select` names the one to use (required when more than one). There is **no automatic rotation or failover**, and in particular none on blocks or rate limits: a failing proxy is reported, never replaced silently. Changing proxies to get past a site's restriction would be circumvention.
@@ -90,7 +102,18 @@ One container, three authenticated listeners on loopback: HTTP `:18080`, SOCKS5 
 | `down.sh` through the proxy | Clean (0 rules, 0 domains, 0 scripts, record gone) |
 | Proxy password in the working tree | Not found anywhere (raw records included) |
 
-**Egress:** the local proxy shares this host's public address, so the egress the destination saw equals the direct one (checked for all four schemes). That proves routing, not a different egress. `--expect-egress-ip` verifies a proxy on another host (your proxy URL or an SSH SOCKS tunnel) once one is used.
+**Egress:** the local proxy shares this host's public address, so the egress the destination saw equals the direct one (checked for all four schemes). That proves routing, not a different egress.
+
+**Egress through another host (Tor, `peterdavehello/tor-socks-proxy@sha256:0cc12d36d31265ce828c8422a7e163a0bf46755e90531f4c7d38a6149f071729`, SOCKS5 on `127.0.0.1:9150`), 2026-11-24, `www.cloudflare.com/cdn-cgi/trace` only:**
+
+| Check | Result |
+|---|---|
+| `proxy-check` through Tor with `--expect-egress-ip <direct egress>` | Exit 1 twice: the destination saw a **different** address (`egress_matches_expected: false`); `address_source: proxy`, `dns_ms: null` |
+| Same exit across 4 consecutive connections | 4 of 4 identical (compared as hashes) |
+| `--expect-egress-ip <the Tor exit>` | `egress_matches_expected: true` |
+| First positive control | Failed once: Tor had moved to another exit between the two connections. Repeated, it matched |
+
+So the check detects a route that does not leave from the expected address, and passes one that does. Egress addresses were compared, not stored.
 
 ## Limits
 

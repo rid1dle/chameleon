@@ -66,4 +66,4 @@ Two measured behaviours: Retry-After counts down in whole seconds and reaches 0 
 
 - curl has its own retry logic (`--retry`), so its attempts are not visible to the runner; only its final answer is compared.
 - The breaker is per host, not per path: one failing path protects the whole host. That is deliberate for third parties and is why the zone matrix turns it off for its deliberately failing cases.
-- HTTP/2 1xx and response header wire order are not observable (see `KNOWN_ISSUES.md`).
+- HTTP/2 1xx responses and HTTP/2 response header wire order are not observable (see `KNOWN_ISSUES.md`).

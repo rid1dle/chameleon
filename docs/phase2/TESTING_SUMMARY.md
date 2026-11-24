@@ -4,10 +4,10 @@
 
 | What | Command | Needs | Last result |
 |---|---|---|---|
-| Unit, integration, adversarial, property, randomized | `cd engine && CARGO_BUILD_JOBS=4 cargo test` | nothing (loopback) | **133 passed, 0 failed** |
+| Unit, integration, adversarial, property, randomized | `cd engine && CARGO_BUILD_JOBS=4 cargo test` | nothing (loopback) | **137 passed, 0 failed** |
 | Lint | `cargo clippy --all-targets` | | no warnings |
 | Fuzz campaign | `engine/target/debug/cfprobe fuzz --count 500 --concurrency 32 --out <dir>` | nothing | 20 seeds x 500: **10,000 passed** |
-| Zone matrix | `scripts/zone/up.sh`, then `scripts/phase2/run_zone.sh <dir>`, then `scripts/zone/down.sh` | `.env` token | **96 results, 0 failed** |
+| Zone matrix | `scripts/zone/up.sh`, then `scripts/phase2/run_zone.sh <dir>`, then `scripts/zone/down.sh` | `.env` token (with DNS:Edit) | **105 results, 0 failed** (37 cases) |
 | Lifecycle (challenge, clearance, replay) | `scripts/phase2/lifecycle.sh <flaresolverr-solve.json> <dir>` | zone up, FlareSolverr image | 5 arms as expected |
 | Real-world observations | `cfprobe run experiments/test-results/P2/matrices/real-world.json --out <dir>` | network | 19 observed, 0 errors |
 | Client comparison | TrackMe (lab/README section 5), then captures in `experiments/test-results/P2/compare/` and `cfprobe diff` | Docker images | `FINGERPRINT_ACCURACY.md` |
@@ -37,12 +37,12 @@ Raw records (`raw/`, bodies included with `--save-bodies`) stay local; processed
 
 | Kind | Count |
 |---|---|
-| Rust tests | 133 (41 unit, 92 integration) |
+| Rust tests | 137 (41 unit, 96 integration) |
 | Property-test cases per run | 10 properties x 2000 cases |
 | Fuzz scenarios run and passed | 10,000 (sweep) + 1,600 (fixed seeds) + 351 (in `cargo test`) |
 | Zone matrix results | 96 (34 cases, up to 3 clients) |
 | Public URLs observed | 19 on 6 sites, 2 runs |
-| Defects found | 27 numbered (D1 to D27): 26 fixed, 1 documented (D10); 1 performance gap open (P1) |
+| Defects found | 28 numbered (D1 to D28) plus P1: all fixed (D10 for HTTP/1.1; HTTP/2 header order unavailable by design) |
 | Harness defects found and fixed | 8 (`REGRESSION_RESULTS.md`) |
 
 ## Confirmed vs inferred vs open
@@ -50,5 +50,5 @@ Raw records (`raw/`, bodies included with `--save-bodies`) stay local; processed
 | Kind | Examples |
 |---|---|
 | **Confirmed** (probe or capture in hand) | Every D-numbered defect and its fix; all zone verdicts; Cloudflare's Retry-After countdown; Cloudflare hiding origin body truncation; cfprobe's HTTP/2 fingerprint equal to reqwest's; no memory growth over 1M requests |
-| **Inferred** (stated as such) | The chance 522s came from Custom Domain propagation; P1's cause (measurement record, pool lock) |
-| **Open** | Deliberate 52x (DNS:Edit), Google Chrome and Firefox comparisons, IPv6 on the network, clearance-to-IP binding, P1 profiling, D10 |
+| **Inferred** (stated as such) | The chance 522s came from Custom Domain propagation |
+| **Open** | 520/521/524/525/526 (need an origin of our own), Google Chrome and Firefox comparisons, IPv6 on the network, clearance-to-IP binding |

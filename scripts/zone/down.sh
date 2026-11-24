@@ -4,6 +4,7 @@
 #   - the rate limiting rule whose description is exactly RL_DESC
 #   - Custom Domains for LAB_HOST that point at the cflab-echo Worker (their DNS record goes with them)
 #   - the cflab-echo Worker script
+#   - DNS records named in lib.sh ORIGIN_RECORDS that carry ORIGIN_COMMENT (both must match)
 # Each target is listed and matched by name before it is deleted.
 # Usage: scripts/zone/down.sh
 set -u
@@ -53,11 +54,25 @@ else
   print "none"
 fi
 
+print "== DNS records for deliberate origin failures"
+NAMES=$(for spec in $ORIGIN_RECORDS; do print -r -- "${spec%%|*}.$ZONE_NAME"; done | jq -Rsc 'split("\n") | map(select(length > 0))')
+origin_ids() {
+  cf "$API/zones/$ZONE_ID/dns_records?per_page=100" | jq -r --argjson n "$NAMES" --arg m "$ORIGIN_COMMENT" \
+    '.result[]? | select((.name as $x | any($n[]; . == $x)) and .comment == $m) | "\(.id) \(.name)"'
+}
+recs=( ${(f)"$(origin_ids)"} ); recs=( ${recs:#} )
+for r in $recs; do
+  print "delete record ${r#* } (${r%% *})"
+  cf -X DELETE "$API/zones/$ZONE_ID/dns_records/${r%% *}" | ok
+done
+(( $#recs )) || print "none"
+
 print "== check"
 left_waf=$(left_rules http_request_firewall_custom "$DESCS")
 left_rl=$(left_rules http_ratelimit "$(jq -nc --arg d "$RL_DESC" '[$d]')")
 left_doms=$(cf "$API/accounts/$ACCOUNT_ID/workers/domains" | jq -r --arg h $LAB_HOST '[.result[]? | select(.hostname == $h)] | length')
 left_script=$(cf "$API/accounts/$ACCOUNT_ID/workers/scripts" | jq -r --arg w $WORKER '[.result[]? | select(.id == $w)] | length')
+left_recs=$(origin_ids | grep -c . || true)
 # The Custom Domain's DNS record goes away a few seconds after the domain; for a short while the
 # nameserver answers NOERROR with no records. Wait up to 60 s for a clean NXDOMAIN.
 for i in {1..12}; do
@@ -65,5 +80,5 @@ for i in {1..12}; do
   [[ $auth == NXDOMAIN ]] && break
   sleep 5
 done
-print "rules left: $left_waf custom + $left_rl rate limit, domains left: $left_doms, scripts left: $left_script, authoritative DNS: ${auth:-no answer} (NXDOMAIN = record gone)"
-[[ $left_waf == 0 && $left_rl == 0 && $left_doms == 0 && $left_script == 0 ]] || exit 1
+print "rules left: $left_waf custom + $left_rl rate limit, domains left: $left_doms, scripts left: $left_script, origin records left: $left_recs, authoritative DNS: ${auth:-no answer} (NXDOMAIN = record gone)"
+[[ $left_waf == 0 && $left_rl == 0 && $left_doms == 0 && $left_script == 0 && $left_recs == 0 ]] || exit 1

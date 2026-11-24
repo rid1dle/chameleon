@@ -224,6 +224,8 @@ engine/target/debug/cfprobe proxy-check https://www.cloudflare.com/cdn-cgi/trace
 
 Then `scripts/zone/up.sh`, `scripts/phase2/run_zone.sh`, `scripts/phase2/solve.sh` (start FlareSolverr with `--network host` so it reaches the loopback proxy), `scripts/phase2/lifecycle.sh` and `scripts/zone/down.sh` all go through it. `docker logs cflab-proxy` shows every destination it carried. A local proxy shares this host's egress address: it proves routing, not a different egress. Details: `docs/phase2/PROXY_ROUTING.md`. Last run: 2026-11-24.
 
+Tor instead of gost: `scripts/tor.sh up`, then `cfprobe --tor ...` for one command or `eval "$(scripts/tor.sh env)"` for every tool here; `scripts/tor.sh status` shows whether the exit differs from this host's address; `scripts/tor.sh down` stops it (image pinned by digest in the script).
+
 ## 8. Engine
 
 ```

@@ -18,7 +18,7 @@ Stack: hyper 1.13 client connections (HTTP/1.1 and HTTP/2 via the `h2` crate), c
 | 1xx responses | HTTP/1.1: recorded in `response.informational` (D14); HTTP/2: not surfaced by hyper | `d14_...` |
 | Response header count | HTTP/1.1 limit 100 unless `h1.max_response_headers`; over it the response is UNKNOWN ("response parsing"), not retried (D22); HTTP/2 no count limit | Zone `many-headers` (120 headers): h2 and curl 200, HTTP/1.1 refused |
 | Large single header | 64 KiB header accepted | adversarial probe (Phase 2 start) |
-| Response header order in the record | Grouped by name, not wire order (D10, open) | `KNOWN_ISSUES.md` |
+| Response header order in the record | HTTP/1.1: exact wire order and case in `wire_header_order` (D10). HTTP/2: `headers` only, where a repeated name is grouped at its first position | `d10_...`; real cloudflare.com over HTTP/1.1 |
 | Unexpected status codes | Any status recorded and classified; 418 and 451 included in fuzzing | fuzz |
 | Body size limit | Wire and decoded body capped at `max_body_bytes` (8 MiB); over is an error, never a truncation | `body_over_limit...`, D7 cap test |
 | Connection cut mid-body | `Error::Body`, CONNECTION_FAILURE, when the length is known; a chunked body cut by the origin through Cloudflare arrives as complete for every client (zone `cut-body`) | adversarial; zone |

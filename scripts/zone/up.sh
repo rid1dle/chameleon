@@ -66,6 +66,21 @@ else
     -H 'content-type: application/json' --data "$(jq -nc --argjson r "$RL" '{rules: [$r]}')" | ok
 fi
 
+print "== deliberate origin failures: ${#ORIGIN_RECORDS} proxied DNS records"
+RECS=$(cf "$API/zones/$ZONE_ID/dns_records?per_page=100")
+for spec in $ORIGIN_RECORDS; do
+  parts=( "${(@s:|:)spec}" )
+  fqdn=${parts[1]}.$ZONE_NAME
+  if jq -e --arg n $fqdn '.result[]? | select(.name == $n)' <<<"$RECS" >/dev/null; then
+    print "present: $fqdn"
+  else
+    print "add: $fqdn ${parts[2]} ${parts[3]} (${parts[4]})"
+    cf -X POST "$API/zones/$ZONE_ID/dns_records" -H 'content-type: application/json' \
+      --data "$(jq -nc --arg n $fqdn --arg t ${parts[2]} --arg c ${parts[3]} --arg m "$ORIGIN_COMMENT" \
+        '{type: $t, name: $n, content: $c, proxied: true, ttl: 1, comment: $m}')" | ok
+  fi
+done
+
 print "== 4/4 wait for the edge"
 # Resolve through the zone's own nameserver: public resolvers may still cache NXDOMAIN from a
 # recent down.sh for up to the SOA negative TTL (1800 s), which says nothing about the edge.

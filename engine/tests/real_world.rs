@@ -83,3 +83,25 @@ fn worker_exception_1101_is_origin_unavailable() {
     let (status, a) = fixture("zone-1101");
     assert_eq!((status, a.verdict, a.error_code, a.issued_by), (500, Verdict::OriginUnavailable, Some(1101), IssuedBy::CloudflareEdge));
 }
+
+/// Deliberate origin failures on the zone (2026-11-24): proxied records to a TEST-NET address that
+/// never answers (522 after ~19.5 s), a CNAME to a name that does not exist (530 + 1016), and a
+/// reserved class E address (403 + 1002). 1002 used to be UNKNOWN (unmapped).
+#[test]
+fn deliberate_origin_failures_are_origin_unavailable() {
+    for (name, status, code) in [("zone-522-deliberate", 522, 522), ("zone-530-1016", 530, 1016), ("zone-1002", 403, 1002)] {
+        let (s, a) = fixture(name);
+        assert_eq!((s, a.verdict, a.error_code, a.issued_by, a.confidence), (status, Verdict::OriginUnavailable, Some(code), IssuedBy::CloudflareEdge, Confidence::High), "{name}");
+    }
+}
+
+/// D28: the HTML form of 1xxx errors (sent when the request offers compression) states its number as
+/// `<span data-translate="error">Error</span> <span>1002</span>`. curl (`--compressed`) got these
+/// pages on the zone and the 1002 one came out UNKNOWN, the 1016 one without its number.
+#[test]
+fn html_1xxx_pages_give_their_number() {
+    for (name, status, code) in [("zone-1002-html", 403, 1002), ("zone-530-1016-html", 530, 1016)] {
+        let (s, a) = fixture(name);
+        assert_eq!((s, a.verdict, a.error_code, a.confidence), (status, Verdict::OriginUnavailable, Some(code), Confidence::High), "{name}");
+    }
+}

@@ -334,3 +334,40 @@ async fn cloudflare_cookie_names_are_indicators_and_values_stay_out() {
     let json = serde_json::to_string(&(&ex, &v)).unwrap();
     assert!(!json.contains("BMVALUE") && !json.contains("UVVALUE") && !json.contains("CLVALUE"));
 }
+
+/// D10: response headers were only available grouped by name (`a, b, a` listed `a, a, b`). On
+/// HTTP/1.1 the wire order is now recorded from the connection itself: original case, repeats kept,
+/// 1xx heads skipped, each response on a keep-alive connection getting its own order.
+#[tokio::test]
+async fn d10_http1_header_wire_order_is_recorded() {
+    let (a, _) = scripted_server(|r| {
+        if r.n == 0 {
+            let mut v = b"HTTP/1.1 103 Early Hints\r\nLink: </a.css>\r\n\r\n".to_vec();
+            v.extend(h1_response("200 OK", "X-Mixed-Case: 1\r\nSet-Cookie: a=1\r\nVary: x\r\nSet-Cookie: b=2\r\n", b"body-with-colon: not a header"));
+            v
+        } else {
+            h1_response("404 Not Found", "Server: second\r\n", b"")
+        }
+    })
+    .await;
+    let e = CFProbe::new(Config::default()).unwrap();
+    let first = e.inspect(http_target(a, "/")).await.unwrap();
+    assert_eq!(
+        first.response.wire_header_order.as_deref().unwrap(),
+        ["X-Mixed-Case", "Set-Cookie", "Vary", "Set-Cookie", "Content-Length"]
+    );
+    // The grouped view, for contrast: the two Set-Cookie lines sit together.
+    let grouped: Vec<_> = first.response.headers.iter().map(|h| h.name.as_str()).collect();
+    assert_eq!(grouped, ["x-mixed-case", "set-cookie", "set-cookie", "vary", "content-length"]);
+    let second = e.inspect(http_target(a, "/again")).await.unwrap();
+    assert!(second.connection.reused);
+    assert_eq!(second.response.wire_header_order.as_deref().unwrap(), ["Server", "Content-Length"]);
+}
+
+/// On HTTP/2 the wire order is not available and the record says so (None), rather than guessing.
+#[tokio::test]
+async fn d10_http2_wire_order_is_absent_not_guessed() {
+    let lab = Lab::start(H2_AND_H1).await;
+    let ex = CFProbe::new(lab.config()).unwrap().inspect(lab.url("/x")).await.unwrap();
+    assert_eq!((ex.connection.protocol, ex.response.wire_header_order.is_none()), (Protocol::Http2, true));
+}

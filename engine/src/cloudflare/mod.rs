@@ -160,12 +160,21 @@ const PLAIN_ERROR: &str = "error code: ";
 const HTML_ERROR: &str = "<span class=\"cf-error-code\">";
 /// The HTML 5xx error page: `<span class="code-label">Error code 522</span>` (P2 zone capture).
 const HTML_CODE_LABEL: &str = "<span class=\"code-label\">Error code ";
+/// The HTML 1xxx error page: `<span data-translate="error">Error</span> <span>1002</span>` (P2 zone
+/// captures of 1002 and 1016). Cloudflare sends the HTML pages only to requests that offer a
+/// content encoding; others get `error code: N` as plain text.
+const HTML_1XXX: &str = "<span data-translate=\"error\">Error</span>";
 const RATE_LIMITED_CODE: u16 = 1015;
 /// Cloudflare 10xx errors that deny access. [documented] developers.cloudflare.com/support/troubleshooting/cloudflare-errors/
 const ACCESS_DENIED_CODES: [u16; 10] = [1003, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1020];
-/// Origin unreachable, timed out, invalid response, the origin/tunnel could not be resolved, or the
-/// Worker serving the hostname failed (1101 exception, 1102 resource limits).
-const ORIGIN_CODES: [u16; 13] = [520, 521, 522, 523, 524, 525, 526, 527, 530, 1016, 1033, 1101, 1102];
+/// Origin unreachable, timed out, invalid response, the origin/tunnel could not be resolved, the
+/// origin's DNS record is unusable (1000-range configuration errors), or the Worker serving the
+/// hostname failed (1101 exception, 1102 resource limits). Observed on the zone: 522 (unanswering
+/// origin), 530 + 1016 (CNAME to a missing name), 1002 (record pointing at a reserved address),
+/// 1101. The rest are [documented] (developers.cloudflare.com/support/troubleshooting/cloudflare-errors/).
+const ORIGIN_CODES: [u16; 20] = [
+    520, 521, 522, 523, 524, 525, 526, 527, 530, 1000, 1001, 1002, 1004, 1014, 1016, 1018, 1019, 1033, 1101, 1102,
+];
 /// Of `ORIGIN_CODES`, those that are also HTTP status codes Cloudflare answers with.
 const ORIGIN_STATUSES: [u16; 9] = [520, 521, 522, 523, 524, 525, 526, 527, 530];
 
@@ -185,7 +194,10 @@ fn ctype(body: &str) -> Option<&str> {
 fn error_code(body: &str) -> Option<u16> {
     let plain = body.trim().strip_prefix(PLAIN_ERROR).filter(|rest| rest.len() <= 4);
     let html = || {
-        [HTML_ERROR, HTML_CODE_LABEL].iter().find_map(|m| body.find(m).map(|i| &body[i + m.len()..]))
+        [HTML_ERROR, HTML_CODE_LABEL].iter().find_map(|m| body.find(m).map(|i| &body[i + m.len()..])).or_else(|| {
+            let i = body.find(HTML_1XXX)? + HTML_1XXX.len();
+            body[i..].trim_start().strip_prefix("<span>")
+        })
     };
     let digits = plain.or_else(html)?;
     let n: String = digits.chars().take_while(char::is_ascii_digit).collect();
@@ -470,6 +482,7 @@ mod tests {
         assert_eq!(error_code("error code: 522"), Some(522));
         assert_eq!(error_code("<span class=\"cf-error-code\">1003</span>"), Some(1003));
         assert_eq!(error_code("<span class=\"code-label\">Error code 522</span>"), Some(522));
+        assert_eq!(error_code("<span data-translate=\"error\">Error</span>\n   <span>1016</span>"), Some(1016));
         assert_eq!(error_code("error code: 10155"), None);
         assert_eq!(error_code("error code: 52"), None);
         assert_eq!(error_code("the error code: 1015 was mentioned"), None);

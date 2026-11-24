@@ -77,6 +77,9 @@ async fn load(a: &[String]) {
     let mut h1 = false;
     // Leak checks: keep no per-request data, so RSS growth is the client's alone.
     let mut no_latency = false;
+    // CPU profile (SIGPROF sampling, no kernel perf access needed): self and total samples per
+    // function, written as text.
+    let mut profile: Option<String> = None;
     let mut i = 4;
     while i < a.len() {
         match a[i].as_str() {
@@ -96,6 +99,10 @@ async fn load(a: &[String]) {
                 no_latency = true;
                 i += 1;
             }
+            "--profile" => {
+                profile = Some(a[i + 1].clone());
+                i += 2;
+            }
             x => panic!("unknown {x}"),
         }
     }
@@ -107,6 +114,7 @@ async fn load(a: &[String]) {
         std::process::exit(2);
     }
     let rss_start = proc_status("VmRSS:");
+    let guard = profile.as_ref().map(|_| pprof::ProfilerGuardBuilder::default().frequency(1000).build().unwrap());
     let started = Instant::now();
     let send: Arc<dyn Fn() -> std::pin::Pin<Box<dyn std::future::Future<Output = bool> + Send>> + Send + Sync> = match client {
         "cfprobe" => {
@@ -188,6 +196,9 @@ async fn load(a: &[String]) {
         }
     }
     let wall = started.elapsed().as_secs_f64();
+    if let (Some(g), Some(path)) = (guard, &profile) {
+        write_profile(&g.report().build().unwrap(), path);
+    }
     let failed = lat.iter().filter(|x| !x.1).count();
     if failed > 0 {
         // Latencies of failed requests are not performance numbers: refuse to report them.
@@ -210,4 +221,32 @@ async fn load(a: &[String]) {
             "rss_kb": {"start": rss_start, "peak_hwm": proc_status("VmHWM:"), "end": proc_status("VmRSS:"), "samples": rss},
         })
     );
+}
+
+/// Self samples (the function on top of the stack) and total samples (anywhere in the stack), top 60
+/// of each, from a pprof report.
+fn write_profile(report: &pprof::Report, path: &str) {
+    use std::collections::HashMap;
+    let (mut selfc, mut total): (HashMap<String, usize>, HashMap<String, usize>) = (HashMap::new(), HashMap::new());
+    let mut all = 0usize;
+    for (frames, &count) in &report.data {
+        let count = count.max(0) as usize;
+        all += count;
+        let names: Vec<String> = frames.frames.iter().flat_map(|f| f.iter().map(|s| s.name())).collect();
+        if let Some(top) = names.first() {
+            *selfc.entry(top.clone()).or_default() += count;
+        }
+        let mut seen = std::collections::HashSet::new();
+        for n in names {
+            if seen.insert(n.clone()) {
+                *total.entry(n).or_default() += count;
+            }
+        }
+    }
+    let fmt = |m: HashMap<String, usize>| {
+        let mut v: Vec<_> = m.into_iter().collect();
+        v.sort_by_key(|e| std::cmp::Reverse(e.1));
+        v.into_iter().take(400).map(|(n, c)| format!("{:6.2}%  {}", 100.0 * c as f64 / all.max(1) as f64, n)).collect::<Vec<_>>().join("\n")
+    };
+    std::fs::write(path, format!("samples {all}\n\n== self\n{}\n\n== total\n{}\n", fmt(selfc), fmt(total))).unwrap();
 }

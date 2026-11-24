@@ -13,7 +13,7 @@ import sys
 
 MARKERS = [
     "/cdn-cgi/challenge-platform/", "_cf_chl_opt", "cType:", "challenges.cloudflare.com/turnstile/",
-    "cf-turnstile", "cf-error-details", "cf-wrapper", "block_headline", "cf-error-code", "code-label", "error code:",
+    "cf-turnstile", "cf-error-details", "cf-wrapper", "block_headline", "cf-error-code", "code-label", "data-translate=\"error\"", "error code:",
     "turnstile", "Just a moment",
 ]
 WINDOW = 300

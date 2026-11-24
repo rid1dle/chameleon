@@ -1,6 +1,6 @@
 # P2 controlled zone (lab.riddlelab.dev, Free plan), runner defaults: redirects 5, cookie jar, 3 attempts with backoff and Retry-After; circuit breaker only in the breaker-* cases (the matrix fails on purpose)
 
-Matrix `experiments/test-results/P2/zone/matrix.json`, run 2026-11-24T16:32:05Z, seed **20261124**. 96 results: 90 pass, 0 fail, 5 observed (no expectation), 1 error.
+Matrix `experiments/test-results/P2/zone/matrix.json`, run 2026-11-24T17:52:35Z, seed **20261124**. 105 results: 99 pass, 0 fail, 5 observed (no expectation), 1 error.
 
 | case | category | client | status | verdict | confidence | issued by | indicators | attempts | outcome | details |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -14,7 +14,7 @@ Matrix `experiments/test-results/P2/zone/matrix.json`, run 2026-11-24T16:32:05Z,
 | `interactive` | challenge | cfprobe | 403 | CONFIRMED_CHALLENGE_RESPONSE | high | cloudflare_edge | challenge_orchestrate_script, challenge_options, challenge_title | 403 | **pass** |  |
 | `waf-block` | waf | cfprobe | 403 | ACCESS_DENIED | high | cloudflare_edge | cloudflare_error_page, block_page | 403 | **pass** |  |
 | `rate-limit` | rate-limit | cfprobe | 429 | RATE_LIMITED | high | cloudflare_edge | none | 200 > 200 > 429 | **pass** |  |
-| `rate-limit-backoff` | rate-limit | cfprobe | 200 | NORMAL_PAGE | high | origin | none | 429 > 429 > 200 > 200 > 429 > 429 > 200 | **pass** |  |
+| `rate-limit-backoff` | rate-limit | cfprobe | 200 | NORMAL_PAGE | high | origin | none | 429 > 200 > 200 > 429 > 200 | **pass** |  |
 | `direct-ip` | waf | cfprobe | 403 | ACCESS_DENIED | high | cloudflare_edge | none | 403 | **pass** |  |
 | `turnstile-embed` | turnstile | cfprobe | 200 | NORMAL_PAGE | high | origin | turnstile_script, turnstile_widget | 200 | **pass** |  |
 | `turnstile-verify-no-token` | turnstile | cfprobe | 403 | ACCESS_DENIED | medium | origin | none | 403 | **pass** |  |
@@ -38,6 +38,9 @@ Matrix `experiments/test-results/P2/zone/matrix.json`, run 2026-11-24T16:32:05Z,
 | `breaker-2` | resilience | cfprobe | 503 | ORIGIN_UNAVAILABLE | low | origin | none | 503 | **pass** |  |
 | `breaker-3` | resilience | cfprobe | 503 | ORIGIN_UNAVAILABLE | low | origin | none | 503 | **pass** |  |
 | `breaker-open` | resilience | cfprobe | - | - | - | - | none | - | **pass** |  |
+| `origin-522-deliberate` | origin-failure | cfprobe | 522 | ORIGIN_UNAVAILABLE | high | cloudflare_edge | none | 522 | **pass** |  |
+| `origin-530-1016` | origin-failure | cfprobe | 530 | ORIGIN_UNAVAILABLE | high | cloudflare_edge | none | 530 | **pass** |  |
+| `origin-1002` | origin-failure | cfprobe | 403 | ORIGIN_UNAVAILABLE | high | cloudflare_edge | none | 403 | **pass** |  |
 | `echo` | normal | cfprobe-h1-titlecase | 200 | NORMAL_PAGE | high | origin | none | 200 | **pass** |  |
 | `echo-html` | normal | cfprobe-h1-titlecase | 200 | NORMAL_PAGE | high | origin | none | 200 | **pass** |  |
 | `echo-compressed` | normal | cfprobe-h1-titlecase | 200 | NORMAL_PAGE | high | origin | none | 200 | **pass** |  |
@@ -48,7 +51,7 @@ Matrix `experiments/test-results/P2/zone/matrix.json`, run 2026-11-24T16:32:05Z,
 | `interactive` | challenge | cfprobe-h1-titlecase | 403 | CONFIRMED_CHALLENGE_RESPONSE | high | cloudflare_edge | challenge_orchestrate_script, challenge_options, challenge_title | 403 | **pass** |  |
 | `waf-block` | waf | cfprobe-h1-titlecase | 403 | ACCESS_DENIED | high | cloudflare_edge | cloudflare_error_page, block_page | 403 | **pass** |  |
 | `rate-limit` | rate-limit | cfprobe-h1-titlecase | 429 | RATE_LIMITED | high | cloudflare_edge | none | 200 > 200 > 429 | **pass** |  |
-| `rate-limit-backoff` | rate-limit | cfprobe-h1-titlecase | 200 | NORMAL_PAGE | high | origin | none | 429 > 200 > 429 > 429 > 200 > 200 | **pass** |  |
+| `rate-limit-backoff` | rate-limit | cfprobe-h1-titlecase | 200 | NORMAL_PAGE | high | origin | none | 429 > 200 > 200 > 429 > 200 | **pass** |  |
 | `direct-ip` | waf | cfprobe-h1-titlecase | 403 | ACCESS_DENIED | high | cloudflare_edge | none | 403 | **pass** |  |
 | `turnstile-embed` | turnstile | cfprobe-h1-titlecase | 200 | NORMAL_PAGE | high | origin | turnstile_script, turnstile_widget | 200 | **pass** |  |
 | `turnstile-verify-no-token` | turnstile | cfprobe-h1-titlecase | 403 | ACCESS_DENIED | medium | origin | none | 403 | **pass** |  |
@@ -72,6 +75,9 @@ Matrix `experiments/test-results/P2/zone/matrix.json`, run 2026-11-24T16:32:05Z,
 | `breaker-2` | resilience | cfprobe-h1-titlecase | 503 | ORIGIN_UNAVAILABLE | low | origin | none | 503 | **pass** |  |
 | `breaker-3` | resilience | cfprobe-h1-titlecase | 503 | ORIGIN_UNAVAILABLE | low | origin | none | 503 | **pass** |  |
 | `breaker-open` | resilience | cfprobe-h1-titlecase | - | - | - | - | none | - | **pass** |  |
+| `origin-522-deliberate` | origin-failure | cfprobe-h1-titlecase | 522 | ORIGIN_UNAVAILABLE | high | cloudflare_edge | none | 522 | **pass** |  |
+| `origin-530-1016` | origin-failure | cfprobe-h1-titlecase | 530 | ORIGIN_UNAVAILABLE | high | cloudflare_edge | none | 530 | **pass** |  |
+| `origin-1002` | origin-failure | cfprobe-h1-titlecase | 403 | ORIGIN_UNAVAILABLE | high | cloudflare_edge | none | 403 | **pass** |  |
 | `echo` | normal | curl | 200 | NORMAL_PAGE | high | origin | none | - | **pass** |  |
 | `echo-html` | normal | curl | 200 | NORMAL_PAGE | high | origin | none | - | **pass** |  |
 | `echo-compressed` | normal | curl | 200 | NORMAL_PAGE | high | origin | none | - | **pass** |  |
@@ -100,3 +106,6 @@ Matrix `experiments/test-results/P2/zone/matrix.json`, run 2026-11-24T16:32:05Z,
 | `many-headers` | http | curl | 200 | NORMAL_PAGE | high | origin | none | - | **observed** |  |
 | `slow-2s` | http | curl | 200 | NORMAL_PAGE | high | origin | none | - | **pass** |  |
 | `cut-body` | http | curl | 200 | NORMAL_PAGE | high | origin | none | - | **observed** |  |
+| `origin-522-deliberate` | origin-failure | curl | 522 | ORIGIN_UNAVAILABLE | high | cloudflare_edge | cloudflare_error_page | - | **pass** |  |
+| `origin-530-1016` | origin-failure | curl | 530 | ORIGIN_UNAVAILABLE | high | cloudflare_edge | cloudflare_error_page | - | **pass** |  |
+| `origin-1002` | origin-failure | curl | 403 | ORIGIN_UNAVAILABLE | high | cloudflare_edge | cloudflare_error_page | - | **pass** |  |

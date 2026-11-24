@@ -503,6 +503,51 @@
     "cfprobe",
     "cfprobe-h1-titlecase"
    ]
+  },
+  {
+   "id": "origin-522-deliberate",
+   "category": "origin-failure",
+   "description": "Proxied record to TEST-NET <removed>: Cloudflare cannot connect (one attempt; the edge waits ~19.5 s)",
+   "url": "https://p2-testnet.riddlelab.dev/",
+   "policy": {
+    "retry": {
+     "max_attempts": 1
+    }
+   },
+   "expect": {
+    "status": 522,
+    "verdict": "ORIGIN_UNAVAILABLE"
+   }
+  },
+  {
+   "id": "origin-530-1016",
+   "category": "origin-failure",
+   "description": "Proxied CNAME to a name that does not exist: error 1016",
+   "url": "https://p2-nxcname.riddlelab.dev/",
+   "policy": {
+    "retry": {
+     "max_attempts": 1
+    }
+   },
+   "expect": {
+    "status": 530,
+    "verdict": "ORIGIN_UNAVAILABLE"
+   }
+  },
+  {
+   "id": "origin-1002",
+   "category": "origin-failure",
+   "description": "Proxied record to reserved <removed>: error 1002",
+   "url": "https://p2-classe.riddlelab.dev/",
+   "policy": {
+    "retry": {
+     "max_attempts": 1
+    }
+   },
+   "expect": {
+    "status": 403,
+    "verdict": "ORIGIN_UNAVAILABLE"
+   }
   }
  ],
  "seed": 20261124,

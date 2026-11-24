@@ -6,8 +6,7 @@ What cfprobe (the engine the brief calls Chameleon-RS) does not do, does only pa
 
 | ID | Issue | Impact | Evidence |
 |---|---|---|---|
-| D10 | Response headers recorded grouped by name, not in wire order (`a, b, a` -> `a, a, b`) | Server header order cannot be studied from records | Probe; hyper's client exposes only a `HeaderMap` (wire order is behind its `ffi` feature) |
-| P1 | HTTP/1.1 throughput 14 to 19% below reqwest at concurrency 32 | Bulk HTTP/1.1 runs are slower; sequential and HTTP/2 are not | `PERFORMANCE.md`; not profiled |
+| none | D10 and P1 were fixed after the first Phase 2 commit (`REGRESSION_RESULTS.md`) | | |
 
 ## Unsupported capabilities
 
@@ -34,6 +33,7 @@ What cfprobe (the engine the brief calls Chameleon-RS) does not do, does only pa
 | Default ClientHello | No GREASE, no permutation unless configured; matches no browser | TrackMe |
 | HTTP/1.1 header case | Lowercase unless `h1.title_case_headers` | Test D13 |
 | 1xx responses | Recorded on HTTP/1.1 only | hyper source |
+| Response header wire order | HTTP/1.1: exact (`wire_header_order`). HTTP/2: not available; `headers` keeps arrival order except that a repeated name is grouped at its first position | Tests D10 |
 | HTTP/1.1 response header count | 100 unless `h1.max_response_headers`; over it the response is UNKNOWN | Zone `many-headers` |
 | Dialing | Addresses tried in order, not in parallel (no Happy Eyeballs); a blackholed first address costs the connect timeout | Source |
 | Dials per origin | Serialized (so concurrent first requests can share one HTTP/2 handshake); concurrent first HTTP/1.1 requests wait for each other's handshake | Design |
@@ -75,7 +75,7 @@ What cfprobe (the engine the brief calls Chameleon-RS) does not do, does only pa
 | Limit | Effect |
 |---|---|
 | Free plan zone | No Bot Management actions or scores |
-| Zone token without DNS:Edit | Deliberate 52x not set up; only chance 522s captured |
+| Origin failures needing a misbehaving origin | 520, 521, 524, 525, 526 not produced (no origin of our own reachable from Cloudflare); 522, 530+1016 and 1002 are |
 | One egress IPv4, no IPv6 | Clearance-to-IP binding at replay untested; IPv6 tested on loopback only |
 | Third-party sites | One ordinary GET per URL per run, robots.txt first; no repeats, concurrency, logins or challenge paths |
 | Timing statistics on real networks | One sample per case; loopback benchmarks only for latency distributions |

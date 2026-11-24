@@ -22,6 +22,11 @@ struct Cli {
     /// with neither, connections are direct and the run says so.
     #[arg(long, global = true)]
     proxy: Option<String>,
+    /// Route every connection through a local Tor SOCKS port: shorthand for
+    /// --proxy socks5h://127.0.0.1:9150 (address from CFPROBE_TOR_ADDR when set). Start Tor with
+    /// `scripts/tor.sh up`. Same rule as any proxy: nothing falls back to direct.
+    #[arg(long, global = true, conflicts_with = "proxy")]
+    tor: bool,
     #[command(subcommand)]
     cmd: Cmd,
 }
@@ -124,6 +129,9 @@ async fn main() -> ExitCode {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
             eprintln!("error: {e}");
+            if e.to_string().starts_with("proxy \"tor\": connect failed") {
+                eprintln!("hint: is Tor running? start it with scripts/tor.sh up");
+            }
             ExitCode::FAILURE
         }
     }
@@ -138,9 +146,14 @@ async fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
         let (hostport, addr) = parse_resolve(r).ok_or_else(|| format!("--resolve {r:?}: want HOST:PORT:ADDR, IPv6 in brackets"))?;
         config.resolve.insert(hostport.to_string(), addr);
     }
-    // A proxy from --proxy, else CFPROBE_PROXY, unless the config file already lists proxies.
+    // A proxy from --tor or --proxy, else CFPROBE_PROXY, unless the config file already lists proxies.
+    let tor_url = cli.tor.then(|| {
+        let addr = std::env::var("CFPROBE_TOR_ADDR").ok().filter(|v| !v.trim().is_empty()).unwrap_or_else(|| "127.0.0.1:9150".into());
+        format!("socks5h://{addr}")
+    });
     if config.proxy.proxies.is_empty() {
-        let spec = match (&cli.proxy, std::env::var("CFPROBE_PROXY").ok().filter(|v| !v.trim().is_empty())) {
+        let spec = match (tor_url.as_ref().or(cli.proxy.as_ref()), std::env::var("CFPROBE_PROXY").ok().filter(|v| !v.trim().is_empty())) {
+            (Some(url), _) if cli.tor => Some(("tor", url.clone())),
             (Some(url), _) => Some(("cli", url.clone())),
             (None, Some(_)) => Some(("env:CFPROBE_PROXY", "env:CFPROBE_PROXY".to_string())),
             (None, None) => None,
@@ -148,8 +161,8 @@ async fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
         if let Some((id, url)) = spec {
             config.proxy.proxies.push(cfprobe::proxy::ProxySpec { id: id.into(), url, username: None, password: None, ca_file: None });
         }
-    } else if cli.proxy.is_some() {
-        return Err("--proxy given but the config file already lists proxies: use its `select`".into());
+    } else if cli.proxy.is_some() || cli.tor {
+        return Err("--proxy/--tor given but the config file already lists proxies: use its `select`".into());
     }
     if needs_network(&cli.cmd) {
         // Announce the route before any connection: proxied, or direct because none is defined.
@@ -252,7 +265,13 @@ async fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
                         "direct_fallback_possible": matches!(engine.route(), cfprobe::proxy::Route::Direct),
                     }))
                 }
-                Err(e) => (false, serde_json::json!({ "route": engine.route().record(), "error": e.to_string(), "cloudflare": cloudflare::analyze_error(e) })),
+                Err(e) => {
+                    let tor_down = matches!(e, cfprobe::Error::Proxy { proxy, stage: cfprobe::proxy::ProxyStage::Connect, .. } if proxy == "tor");
+                    (false, serde_json::json!({
+                        "route": engine.route().record(), "error": e.to_string(), "cloudflare": cloudflare::analyze_error(e),
+                        "hint": tor_down.then_some("Tor is not listening: start it with scripts/tor.sh up"),
+                    }))
+                }
             };
             println!("{}", serde_json::to_string_pretty(&report)?);
             if !ok {

@@ -39,8 +39,29 @@ Reading:
 
 - Sequentially, cfprobe matches reqwest: faster on HTTP/1.1, 6% slower median on HTTP/2.
 - HTTP/2 at concurrency 32: cfprobe 8% ahead (one multiplexed connection, D12).
-- **HTTP/1.1 at concurrency 32: cfprobe 14% (TLS) and 19% (plain) behind**, with 3 to 4 us more CPU per request. **Not profiled.** Likely contributors: cfprobe builds a full measurement record per request (redacted header list, parsed cookies, a clone of the TLS observation with the certificate chain, timings) and goes through an async mutex for the pool on every request. This is the open item P1.
-- HTTP/2 sequential CPU is the highest per request (36 us): also not profiled.
+- **HTTP/1.1 at concurrency 32: cfprobe 14% (TLS) and 19% (plain) behind** in this first table. Profiled and fixed: see "P1" below; after the fix cfprobe is ahead.
+- HTTP/2 sequential CPU is the highest per request (36 us): not profiled.
+
+## P1: HTTP/1.1 under concurrency, profiled and fixed
+
+Tools: `perf` and `valgrind` are not installed and samply needs `perf_event_paranoid` at 1 or lower (it is 2, changing it needs sudo), so the benchmark samples itself with `pprof` (SIGPROF, 1 kHz; `bench load ... --profile out.txt`, dev-dependency only).
+
+| Finding | Evidence |
+|---|---|
+| Not TLS | The gap was the same over plain HTTP (88.6k vs 109.8k); syscall CPU similar (`__send` 11.6% vs reqwest's `writev` 10.6%) |
+| The measurement record costs CPU, but little latency | `header_list` 3.2%, dropping `Exchange` 2.3%, TLS observation clone 1.2%, `HeaderMap` clone 1.2%; 4.5 us extra CPU on a ~460 us request is about 1% |
+| **The pool lock** | An async `tokio::sync::Mutex` around the pool, taken twice per request by 32 tasks; each contended acquisition parks and wakes through the scheduler. Never held across an await, so a `std::sync::Mutex` is correct |
+
+A/B on the same host and server, TLS HTTP/1.1, concurrency 32, 100,000 requests, 5 alternating runs each (medians):
+
+| | Before | After | reqwest |
+|---|---|---|---|
+| req/s | 68,451 | **89,836** | 81,904 |
+| CPU per request | 20.5 us | 15 us | 16 us |
+
+After the fix, 3 alternating runs each: plain HTTP/1.1 concurrency 32 cfprobe 92,507 vs reqwest 82,404; TLS HTTP/2 concurrency 32 34,071 vs 32,901; TLS HTTP/2 sequential p50 115 vs 109 us. With the D10 head tap added later: TLS HTTP/1.1 concurrency 32 cfprobe 87,133 vs 85,867, 16 us CPU each.
+
+Run-to-run variance is large on this host (unprofiled runs of the same configuration ranged 59k to 69k; profiled runs read lower, 42.5k to 55k), so only alternating, repeated runs are compared.
 
 ## Long-running stability
 

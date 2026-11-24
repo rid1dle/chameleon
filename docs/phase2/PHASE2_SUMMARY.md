@@ -30,8 +30,8 @@ The engine the briefs call Chameleon-RS is `engine/` (`cfprobe`). Phase 2 tested
 | Comparison noise (D8), duplicate headers lost (D9), no multiplexing (D12), header case (D13), 1xx and header limits (D14), h2 headers misreported (D19) | Engine defaults and record-keeping |
 | Runner and resilience defects found on the zone: curl unpinned (D18), breaker counted retries (D21), unparseable responses retried (D22), `Retry-After: 0` meant hammering (D23) | Assumptions that only real Cloudflare behaviour exposed |
 | Cloudflare cookies ignored (D24) | Classifier saw only the redacted header list |
-| **Open:** header wire order (D10) | hyper exposes only a header map |
-| **Open:** HTTP/1.1 throughput 14 to 19% below reqwest at concurrency 32 (P1) | Not profiled |
+| Header wire order (D10, fixed for HTTP/1.1) | hyper exposes only a header map; now read from the connection |
+| HTTP/1.1 throughput 18% below reqwest (P1, fixed: now ahead) | Profiled: an async mutex around the connection pool |
 
 ### Which capabilities are missing
 
@@ -41,7 +41,7 @@ JavaScript execution, challenge solving (by design), TLS session resumption, HTT
 
 | Reliable | Less reliable |
 |---|---|
-| Status, headers, TLS version/cipher/ALPN, certificate chain, timings of each attempt | Response header **order** (grouped, D10) |
+| Status, headers, TLS version/cipher/ALPN, certificate chain, timings of each attempt | Response header **order** on HTTP/2 (repeated names grouped) |
 | Classification when `cf-mitigated`, a block page or an error number is present (high confidence) | Classification from status alone (medium/low, stated) |
 | Fingerprints measured at a receiver | Worker TLS hashes for GREASE clients (vary per connection) |
 | "Absent `cf-mitigated`" as a fact about this response | "Absent `cf-mitigated`" as proof of no mitigation (never claimed) |
@@ -52,26 +52,26 @@ Retry-After counts down to 0 while still limiting and a request at the end of th
 
 ### What improvements are necessary
 
-1. Profile HTTP/1.1 under concurrency (P1).
-2. Deliberate 52x scenarios once the zone token has DNS:Edit.
+1. Done after the first commit: P1 profiled and fixed, D10 fixed for HTTP/1.1, egress verified through Tor.
+2. Done: deliberate origin failures on the zone (522, 530 + 1016, 1002); 520/521/524/525/526 need an origin of our own.
 3. A Google Chrome and a Firefox capture for comparisons; IPv6 egress for network-level IPv6 tests.
 4. Pool limits and idle timeout for long runs over many origins.
 5. TLS session resumption if resumed-handshake fingerprints matter.
-6. Verify egress with a proxy on another host (`proxy-check --expect-egress-ip`): the local proxy proves routing, not a different egress.
+6. Egress through a proxy you own, once there is one (Tor proved the check works).
 
 ## Acceptance criteria (brief Part J 18)
 
 | Criterion | State |
 |---|---|
 | Original false positive fixed and regression-tested | Yes |
-| Meaningful coverage of major modules | 133 tests across every module; fuzzing; property tests |
+| Meaningful coverage of major modules | 137 tests across every module; fuzzing; property tests |
 | Real-world observations collected | 19 URLs, 6 sites, 2 runs |
 | Controlled Cloudflare scenarios evaluated | 34 cases, 3 clients, lifecycle; deliberate 52x open (token) |
 | TLS and HTTP independently validated | At TrackMe and the zone Worker (receiver-side), and against curl, reqwest, Chromium |
 | Randomized testing reproducible | Yes |
 | Fault handling verified | Yes (`FAULT_TOLERANCE.md`) |
 | No uncontrolled retry loops | Bounded and tested |
-| Major defects fixed or documented | 24 fixed, D10 and P1 documented |
+| Major defects fixed or documented | All 28 plus P1 fixed; HTTP/2 header order documented as unavailable |
 | Performance and reliability results | `PERFORMANCE.md` |
 | Reports separate evidence from inference | Each report marks inferences and open items |
 

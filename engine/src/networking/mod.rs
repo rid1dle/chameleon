@@ -45,7 +45,9 @@ pub struct CFProbe {
     /// Decided once, here: every dial uses it. There is no other way out of the engine.
     route: crate::proxy::Route,
     connector: SslConnector,
-    pool: Mutex<HashMap<PoolKey, Pooled>>,
+    /// A synchronous mutex: it is never held across an await, and an async one cost a scheduler
+    /// round-trip per contended take/release (profiled, P1).
+    pool: SyncMutex<HashMap<PoolKey, Pooled>>,
     /// One dial at a time per origin, so concurrent first requests can share an HTTP/2 connection.
     dialing: Mutex<HashMap<PoolKey, Arc<Mutex<()>>>>,
     next_conn_id: AtomicU64,
@@ -102,15 +104,17 @@ impl Conn {
 }
 
 enum Sender {
-    H1(http1::SendRequest<Full<Bytes>>),
+    H1(http1::SendRequest<Full<Bytes>>, HeadTap),
     H2(http2::SendRequest<Full<Bytes>>),
 }
 
 impl Sender {
     async fn send(&mut self, req: Request<Full<Bytes>>) -> std::result::Result<http::Response<Incoming>, hyper::Error> {
         match self {
-            Sender::H1(s) => {
+            Sender::H1(s, tap) => {
                 s.ready().await?;
+                // One request at a time on HTTP/1.1, so the next head read is this request's.
+                tap.arm();
                 s.send_request(req).await
             }
             Sender::H2(s) => {
@@ -122,7 +126,7 @@ impl Sender {
 
     fn is_closed(&self) -> bool {
         match self {
-            Sender::H1(s) => s.is_closed(),
+            Sender::H1(s, _) => s.is_closed(),
             Sender::H2(s) => s.is_closed(),
         }
     }
@@ -150,7 +154,7 @@ impl CFProbe {
             config,
             route,
             connector,
-            pool: Mutex::new(HashMap::new()),
+            pool: SyncMutex::new(HashMap::new()),
             dialing: Mutex::new(HashMap::new()),
             next_conn_id: AtomicU64::new(1),
         })
@@ -260,6 +264,10 @@ impl CFProbe {
                 http_version: version_str(parts.version),
                 informational: std::mem::take(&mut *informational.lock().unwrap()),
                 headers: header_list(&parts.headers),
+                wire_header_order: match &conn.sender {
+                    Sender::H1(_, tap) => tap.names(),
+                    Sender::H2(_) => None,
+                },
                 set_cookies: set_cookies(&parts.headers),
                 raw_set_cookies: parts
                     .headers
@@ -302,13 +310,13 @@ impl CFProbe {
         }
         let (conn, t) = self.dial(key).await?;
         if let Some(shared) = conn.share() {
-            self.pool.lock().await.entry(key.clone()).or_default().h2 = Some(shared);
+            self.pool.lock().unwrap().entry(key.clone()).or_default().h2 = Some(shared);
         }
         Ok((conn, Some(t)))
     }
 
     async fn take_pooled(&self, key: &PoolKey) -> Option<Conn> {
-        let mut pool = self.pool.lock().await;
+        let mut pool = self.pool.lock().unwrap();
         let p = pool.get_mut(key)?;
         if let Some(h2) = &p.h2 {
             if h2.sender.is_closed() {
@@ -330,14 +338,14 @@ impl CFProbe {
         if !self.config.reuse_connections || conn.sender.is_closed() {
             return;
         }
-        if let Sender::H1(_) = conn.sender {
-            self.pool.lock().await.entry(key).or_default().idle_h1.push(conn);
+        if let Sender::H1(..) = conn.sender {
+            self.pool.lock().unwrap().entry(key).or_default().idle_h1.push(conn);
         }
     }
 
     /// Drop a connection that failed, so no later request picks it up.
     async fn forget(&self, key: &PoolKey, id: u64) {
-        let mut pool = self.pool.lock().await;
+        let mut pool = self.pool.lock().unwrap();
         if let Some(p) = pool.get_mut(key) {
             if p.h2.as_ref().is_some_and(|c| c.id == id) {
                 p.h2 = None;
@@ -520,6 +528,99 @@ fn parse_method(target: &Target) -> Result<Method> {
     Method::from_bytes(target.method.as_bytes()).map_err(|e| Error::Target(format!("method {:?}: {e}", target.method)))
 }
 
+/// Copies the bytes of the next final response head read on an HTTP/1.1 connection (1xx heads
+/// skipped), so header names can be recorded in wire order and case. hyper exposes only a
+/// `HeaderMap`, which groups repeated names (D10). Stops copying at the end of the head: bodies are
+/// never kept. Over 256 KiB without a complete head, it gives up for that response.
+#[derive(Clone, Default)]
+struct HeadTap(Arc<SyncMutex<TapState>>);
+
+#[derive(Default)]
+struct TapState {
+    armed: bool,
+    buf: Vec<u8>,
+    head: Option<Vec<u8>>,
+}
+
+const TAP_LIMIT: usize = 256 * 1024;
+
+impl HeadTap {
+    fn arm(&self) {
+        let mut t = self.0.lock().unwrap();
+        t.armed = true;
+        t.buf.clear();
+        t.head = None;
+    }
+
+    fn feed(&self, bytes: &[u8]) {
+        let mut t = self.0.lock().unwrap();
+        if !t.armed {
+            return;
+        }
+        t.buf.extend_from_slice(bytes);
+        while let Some(end) = t.buf.windows(4).position(|w| w == b"\r\n\r\n") {
+            let status: u16 = t.buf[..end].split(|b| *b == b' ').nth(1).and_then(|c| std::str::from_utf8(c).ok()?.parse().ok()).unwrap_or(0);
+            if (100..200).contains(&status) && status != 101 {
+                t.buf.drain(..end + 4);
+                continue;
+            }
+            let head = t.buf[..end + 4].to_vec();
+            t.head = Some(head);
+            t.armed = false;
+            t.buf = Vec::new();
+            return;
+        }
+        if t.buf.len() > TAP_LIMIT {
+            t.armed = false;
+            t.buf = Vec::new();
+        }
+    }
+
+    /// Header names of the last captured head, as sent (original case, repeats kept, in order).
+    fn names(&self) -> Option<Vec<String>> {
+        let t = self.0.lock().unwrap();
+        let head = String::from_utf8_lossy(t.head.as_ref()?).into_owned();
+        Some(head.split("\r\n").skip(1).filter_map(|l| l.split_once(':').map(|(n, _)| n.trim().to_string())).filter(|n| !n.is_empty()).collect())
+    }
+}
+
+struct TapIo<IO> {
+    inner: IO,
+    tap: HeadTap,
+}
+
+impl<IO: AsyncRead + Unpin> AsyncRead for TapIo<IO> {
+    fn poll_read(mut self: std::pin::Pin<&mut Self>, cx: &mut std::task::Context<'_>, buf: &mut tokio::io::ReadBuf<'_>) -> std::task::Poll<std::io::Result<()>> {
+        let before = buf.filled().len();
+        let r = std::pin::Pin::new(&mut self.inner).poll_read(cx, buf);
+        if let std::task::Poll::Ready(Ok(())) = &r {
+            let new = &buf.filled()[before..];
+            if !new.is_empty() {
+                self.tap.feed(new);
+            }
+        }
+        r
+    }
+}
+
+impl<IO: AsyncWrite + Unpin> AsyncWrite for TapIo<IO> {
+    fn poll_write(mut self: std::pin::Pin<&mut Self>, cx: &mut std::task::Context<'_>, b: &[u8]) -> std::task::Poll<std::io::Result<usize>> {
+        std::pin::Pin::new(&mut self.inner).poll_write(cx, b)
+    }
+    fn poll_flush(mut self: std::pin::Pin<&mut Self>, cx: &mut std::task::Context<'_>) -> std::task::Poll<std::io::Result<()>> {
+        std::pin::Pin::new(&mut self.inner).poll_flush(cx)
+    }
+    fn poll_shutdown(mut self: std::pin::Pin<&mut Self>, cx: &mut std::task::Context<'_>) -> std::task::Poll<std::io::Result<()>> {
+        std::pin::Pin::new(&mut self.inner).poll_shutdown(cx)
+    }
+    fn poll_write_vectored(mut self: std::pin::Pin<&mut Self>, cx: &mut std::task::Context<'_>, bufs: &[std::io::IoSlice<'_>]) -> std::task::Poll<std::io::Result<usize>> {
+        std::pin::Pin::new(&mut self.inner).poll_write_vectored(cx, bufs)
+    }
+    fn is_write_vectored(&self) -> bool {
+        self.inner.is_write_vectored()
+    }
+}
+
 async fn handshake<IO>(io: IO, protocol: Protocol, h1: &H1Settings, h2: &H2Settings) -> Result<Sender>
 where
     IO: AsyncRead + AsyncWrite + Unpin + Send + 'static,
@@ -532,11 +633,12 @@ where
             if let Some(n) = h1.max_response_headers {
                 b.max_headers(n);
             }
-            let (sender, conn) = b.handshake(io).await?;
+            let tap = HeadTap::default();
+            let (sender, conn) = b.handshake(TokioIo::new(TapIo { inner: io.into_inner(), tap: tap.clone() })).await?;
             tokio::spawn(async move {
                 let _ = conn.await;
             });
-            Ok(Sender::H1(sender))
+            Ok(Sender::H1(sender, tap))
         }
         Protocol::Http2 => {
             let mut b = http2::Builder::new(TokioExecutor::new());

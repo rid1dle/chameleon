@@ -88,11 +88,24 @@ The Worker sent 1000 bytes and then errored its stream. Cloudflare closed the re
 
 About two minutes after the Custom Domain was created, four requests (HTTP/1.1 client and curl, 15:32:00 to 15:32:48Z) got `522`, plain text to cfprobe (`error code: 522`) and an HTML page to curl. A rerun minutes later had none. The likely cause is the Custom Domain not yet reaching every edge server (**[inference]**, not confirmed by Cloudflare). The classifier labelled all four ORIGIN_UNAVAILABLE; the HTML page led to D16. Both are fixtures now (`zone-522-html`, `zone-522-plain`).
 
+## Deliberate origin failures (DNS records, 2026-11-24)
+
+Created by `up.sh` and removed by `down.sh` from `lib.sh` `ORIGIN_RECORDS` (only reserved or non-existent targets, so Cloudflare's origin attempts reach no one's host). Matrix cases `origin-522-deliberate`, `origin-530-1016`, `origin-1002`; final run with them **105 results, 0 failed**.
+
+| Record | Answer | Notes |
+|---|---|---|
+| `p2-testnet` A `192.0.2.1` (TEST-NET) | **522**, after 19.4 to 19.8 s | Cloudflare's own connect timeout to the origin |
+| `p2-nxcname` CNAME `origin-does-not-exist.invalid` | **530 + 1016** (origin DNS error), 11 to 23 ms | |
+| `p2-classe` A `240.0.0.1` (class E) | **403 + 1002** (DNS points to a disallowed IP), 12 to 21 ms | |
+| A `10.255.255.1`, A `127.0.0.1` | Refused at creation: API `9003 Target ... is not allowed for a proxied record` | |
+
+Error pages come in two forms: 17 bytes of plain text (`error code: 1002`) to requests without `Accept-Encoding` (cfprobe's default), an 8 KB HTML page (title e.g. `DNS points to local or disallowed IP | <host> | Cloudflare`) to requests that offer compression (curl `--compressed`). Both are parsed (D28).
+
 ## Not done in the zone
 
 | Scenario | Why |
 |---|---|
-| Deliberate 52x (dead origin) | Needs DNS:Edit on the zone token (refused: `Authentication error`, last checked during this phase); only the chance 522s above |
+| 520, 521, 524, 525, 526 | Each needs a real origin that misbehaves in that way (closes, refuses, stalls 100 s, bad TLS); pointing a record at someone else's host to get one is not done |
 | Turnstile widget completion and real (non-test) sitekey behaviour | Needs a browser run and a real widget |
 | Bot score, JA4 at the edge, Super Bot Fight Mode | Free plan |
 | Clearance bound to IP at replay | One egress IP |
