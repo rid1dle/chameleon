@@ -1,0 +1,1339 @@
+<title>Project Chameleon</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a lab notebook. Sticky chapter rail on the left (desktop), one reading column, wide figures.
+   Color encodes meaning everywhere: teal = client, amber = receiver measured, violet = configured, orange = Cloudflare edge. */
+:root {
+  --bg: #f2f5f7; --surface: #ffffff; --sunk: #e8edf1; --ink: #142130; --muted: #566577; --line: #d3dbe3;
+  --edge: #c4531a; --client: #0b7a78; --receiver: #9a6400; --config: #5a49b5;
+  --good: #1d7a3a; --bad: #b3261e; --good-bg: #e3f3e8; --bad-bg: #fbe6e4; --hl: #fff1c2;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e141b; --surface: #151e28; --sunk: #1b2633; --ink: #e4ebf2; --muted: #93a2b3; --line: #2a3848;
+  --edge: #f08a4b; --client: #3cc4c0; --receiver: #e2aa3c; --config: #a597f2;
+  --good: #57c784; --bad: #f2776f; --good-bg: #16301f; --bad-bg: #3a1a18; --hl: #3a3313; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0e141b; --surface: #151e28; --sunk: #1b2633; --ink: #e4ebf2; --muted: #93a2b3; --line: #2a3848;
+  --edge: #f08a4b; --client: #3cc4c0; --receiver: #e2aa3c; --config: #a597f2;
+  --good: #57c784; --bad: #f2776f; --good-bg: #16301f; --bad-bg: #3a1a18; --hl: #3a3313; color-scheme: dark }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.6; }
+.shell { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 40px; max-width: 1180px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px 80px; }
+@media (max-width: 900px) { .shell { grid-template-columns: minmax(0, 1fr); gap: 0; } .rail { display: none; } }
+
+/* rail */
+.rail { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); align-self: start; max-height: calc(100vh - 32px); overflow: auto; font-size: 14px; }
+.rail .brand { font-family: var(--font-display); font-weight: 800; font-size: 20px; letter-spacing: -0.01em; margin-bottom: 4px; }
+.rail .sub { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+.rail ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; }
+.rail a { display: flex; gap: 10px; align-items: baseline; color: var(--muted); text-decoration: none; padding: 5px 8px; border-radius: 6px; }
+.rail a:hover, .rail a:focus-visible { color: var(--ink); background: var(--sunk); outline: none; }
+.rail a.on { color: var(--ink); background: var(--sunk); font-weight: 600; }
+.rail .n { font-family: var(--font-mono); font-size: 12px; min-width: 20px; }
+.meter { margin: 18px 0 8px; height: 8px; border-radius: 99px; background: var(--sunk); overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--client), var(--receiver)); transition: width .5s ease; }
+.meter-label { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.reset { margin-top: 8px; font: inherit; font-size: 12px; color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; cursor: pointer; }
+
+/* mobile progress bar */
+.mbar { display: none; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 8px; }
+@media (max-width: 900px) { .mbar { display: block; } }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+
+main { min-width: 0; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; letter-spacing: -0.015em; line-height: 1.15; }
+h1 { font-size: clamp(40px, 7vw, 68px); font-weight: 800; margin: 8px 0 12px; }
+h2 { font-size: clamp(26px, 4vw, 36px); font-weight: 800; margin: 0 0 6px; }
+h3 { font-size: 20px; font-weight: 700; margin: 28px 0 8px; }
+p, li { max-width: 68ch; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 19px; color: var(--muted); max-width: 60ch; }
+section.ch { padding-block: 56px 8px; border-top: 1px solid var(--line); scroll-margin-top: 20px; }
+section.ch:first-of-type { border-top: 0; padding-top: 8px; }
+code, .mono { font-family: var(--font-mono); font-size: .88em; }
+code { background: var(--sunk); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+a { color: var(--client); }
+strong { font-weight: 600; }
+.c-client { color: var(--client); } .c-recv { color: var(--receiver); } .c-conf { color: var(--config); } .c-edge { color: var(--edge); }
+.muted { color: var(--muted); }
+
+figure { margin: 22px 0; }
+figure svg { display: block; width: 100%; height: auto; }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; max-width: 72ch; }
+.scroll { overflow-x: auto; }
+
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+td.mono, td code { font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* exercise boxes */
+.ex { margin: 26px 0; border: 1.5px solid var(--line); border-radius: var(--r); background: var(--surface); }
+.ex > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.ex > header .t { font-family: var(--font-display); font-weight: 700; font-size: 17px; }
+.ex > header .tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.ex.done { border-color: var(--good); }
+.ex.done > header .tag { color: var(--good); }
+.ex .body { padding: 16px; display: grid; gap: 14px; min-width: 0; }
+.ex .body > * { min-width: 0; }
+.feedback { font-size: 14px; padding: 10px 12px; border-radius: 8px; }
+.feedback.ok { background: var(--good-bg); color: var(--good); }
+.feedback.no { background: var(--bad-bg); color: var(--bad); }
+.feedback:empty { display: none; }
+
+button.btn { font: inherit; font-size: 14px; font-weight: 600; border-radius: 8px; padding: 8px 14px; cursor: pointer;
+  border: 1.5px solid var(--ink); background: var(--ink); color: var(--bg); }
+button.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+button.btn:hover { filter: brightness(1.08); }
+button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2.5px solid var(--client); outline-offset: 2px; }
+button:disabled { opacity: .45; cursor: default; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 0; border: 1.5px solid var(--line); border-radius: 9px; overflow: hidden; }
+.seg button { font: inherit; font-size: 13px; padding: 7px 12px; border: 0; border-right: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+select, input[type=text], textarea { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; padding: 7px 9px; max-width: 100%; }
+input[type=text], textarea { font-family: var(--font-mono); font-size: 13px; width: 100%; }
+textarea { min-height: 90px; resize: vertical; }
+
+.callout { border-left: 4px solid var(--edge); background: var(--surface); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 18px 0; max-width: 72ch; }
+.callout.find { border-color: var(--receiver); }
+.callout b.k { font-family: var(--font-mono); font-size: 12px; letter-spacing: .05em; text-transform: uppercase; display: block; color: var(--muted); margin-bottom: 2px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-family: var(--font-mono); font-size: 12px; padding: 3px 8px; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); }
+.chip.ok { border-color: var(--good); color: var(--good); background: var(--good-bg); }
+.chip.no { border-color: var(--bad); color: var(--bad); background: var(--bad-bg); }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 640px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; min-width: 0; }
+.card h4 { margin: 0 0 4px; font-family: var(--font-display); font-size: 16px; }
+
+pre.code { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.55; background: var(--sunk); border-radius: 8px; padding: 12px 14px; overflow-x: auto; margin: 12px 0; }
+pre.code .cm { color: var(--muted); }
+pre.code .kw { color: var(--config); }
+
+details { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); padding: 0 14px; margin: 8px 0; }
+details summary { cursor: pointer; padding: 10px 0; font-weight: 600; }
+details[open] summary { border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+details > div { padding-bottom: 12px; }
+
+/* hero */
+.hero-fig { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+.sees { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; margin-top: 12px; }
+@media (max-width: 640px) { .sees { grid-template-columns: minmax(0, 1fr); } }
+.sees .col h4 { margin: 0 0 6px; font-size: 13px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .06em; }
+.kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 12px; font-size: 13px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere; }
+.kv dd.reveal { animation: pop .45s ease both; }
+@keyframes pop { from { opacity: .15; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.locked dd { color: var(--muted); font-style: italic; font-family: var(--font-body); }
+
+/* list items clickable */
+.pick { display: flex; flex-wrap: wrap; gap: 6px; }
+.pick button { font-family: var(--font-mono); font-size: 13px; padding: 6px 9px; border-radius: 7px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; transition: transform .15s; }
+.pick button[aria-pressed="true"] { border-color: var(--config); background: var(--sunk); }
+.pick button.right { border-color: var(--good); background: var(--good-bg); color: var(--good); }
+.pick button.wrong { border-color: var(--bad); background: var(--bad-bg); color: var(--bad); }
+.pick button.miss { border-style: dashed; border-color: var(--good); }
+
+.shuffle-list { display: flex; flex-wrap: wrap; gap: 5px; }
+.shuffle-list span { font-family: var(--font-mono); font-size: 12px; padding: 3px 7px; border-radius: 6px; background: var(--sunk); transition: transform .35s ease; }
+.shuffle-list span.g { background: var(--hl); }
+.hash { font-family: var(--font-mono); font-size: 13px; }
+.hash.flash { animation: flash .6s ease; }
+@keyframes flash { 0% { background: var(--hl); } 100% { background: transparent; } }
+
+.ja4 { font-family: var(--font-mono); font-size: clamp(14px, 2.6vw, 20px); display: flex; flex-wrap: wrap; gap: 0; }
+.ja4 span { padding: 4px 6px; border-radius: 6px; }
+.ja4 .a { background: color-mix(in srgb, var(--client) 18%, transparent); }
+.ja4 .b { background: color-mix(in srgb, var(--receiver) 22%, transparent); }
+.ja4 .c { background: color-mix(in srgb, var(--config) 20%, transparent); }
+.ja4 .u { color: var(--muted); padding: 4px 1px; }
+
+.stepper { display: grid; gap: 10px; }
+.step-text { min-height: 72px; font-size: 15px; }
+.step-text b { font-family: var(--font-mono); font-size: 12px; color: var(--muted); display: block; }
+
+.arms { display: grid; gap: 8px; }
+.arm { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.arm .id { font-family: var(--font-mono); font-weight: 600; }
+.arm .desc { font-size: 14px; }
+.arm .desc small { display: block; color: var(--muted); }
+.arm .res { font-family: var(--font-mono); font-size: 13px; min-width: 90px; text-align: right; }
+@media (max-width: 560px) { .arm { grid-template-columns: 36px minmax(0, 1fr); } .arm .ctl { grid-column: 2; } }
+
+.bars { display: grid; gap: 6px; }
+.bar { display: grid; grid-template-columns: 110px minmax(0, 1fr) 76px; gap: 10px; align-items: center; font-size: 13px; }
+.bar .track { height: 14px; background: var(--sunk); border-radius: 4px; position: relative; overflow: hidden; }
+.bar .fill { position: absolute; top: 0; bottom: 0; border-radius: 4px; background: var(--client); transform-origin: left; }
+.bar .val { font-family: var(--font-mono); text-align: right; font-variant-numeric: tabular-nums; }
+.bar.absent .val { color: var(--muted); font-style: italic; font-family: var(--font-body); }
+
+.sortq { display: grid; gap: 8px; }
+.sortq .item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
+.sortq .item code { font-size: 12.5px; }
+
+.quiz { display: grid; gap: 18px; }
+.q { display: grid; gap: 8px; }
+.q .opts { display: grid; gap: 6px; }
+.q .opts button { text-align: left; font: inherit; font-size: 14px; padding: 9px 12px; border-radius: 8px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.q .opts button.right { border-color: var(--good); background: var(--good-bg); }
+.q .opts button.wrong { border-color: var(--bad); background: var(--bad-bg); }
+.q .why { font-size: 14px; color: var(--muted); }
+
+.tree { font-family: var(--font-mono); font-size: 13.5px; display: grid; gap: 2px; }
+.tree button { font: inherit; text-align: left; background: none; border: 0; color: var(--ink); padding: 6px 8px; border-radius: 6px; cursor: pointer; display: grid; grid-template-columns: 170px minmax(0,1fr); gap: 10px; }
+.tree button:hover, .tree button[aria-expanded="true"] { background: var(--sunk); }
+.tree button .d { font-family: var(--font-body); color: var(--muted); font-size: 13.5px; }
+.tree .more { font-family: var(--font-body); font-size: 14px; padding: 4px 8px 10px 188px; }
+@media (max-width: 640px) { .tree button { grid-template-columns: minmax(0,1fr); } .tree .more { padding-left: 8px; } }
+
+.flowsvg text { font-family: var(--font-body); }
+.flowsvg .mono { font-family: var(--font-mono); }
+.node rect { transition: stroke .3s, fill .3s; }
+.node.hot rect { stroke: var(--edge); stroke-width: 2.5; }
+.edge-l { transition: stroke .3s, opacity .3s; }
+.edge-l.hot { stroke: var(--edge); stroke-width: 2.5; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="mbar"><div class="meter" style="margin:0"><i id="mbarFill"></i></div><div class="meter-label" id="mbarLabel">0 of 0 exercises</div></div>
+
+<div class="shell">
+<nav class="rail" aria-label="Chapters">
+  <div class="brand">Project Chameleon</div>
+  <div class="sub">A guided tour of the repo, with exercises</div>
+  <ol id="toc"></ol>
+  <div class="meter"><i id="meterFill"></i></div>
+  <div class="meter-label" id="meterLabel">0 of 0 exercises</div>
+  <button class="reset" id="resetProgress" type="button">Reset progress</button>
+</nav>
+
+<main>
+
+<!-- ============ 0. HERO ============ -->
+<section class="ch" id="start" data-title="The question">
+  <div class="eyebrow">rid1dle/project-chameleon · lab zone lab.riddlelab.dev · Free plan</div>
+  <h1>Project Chameleon</h1>
+  <p class="lede">Some programs pretend to be a browser so a website lets them in. This repo studies how they do it, what Cloudflare can see of the disguise, and which part of the disguise actually decides the outcome. Everything runs against a zone the researcher owns.</p>
+
+  <div class="hero-fig">
+    <div class="row" style="justify-content:space-between">
+      <div class="seg" role="group" aria-label="Pick a client" id="heroPick"></div>
+      <button class="btn" id="heroSend" type="button">Send request</button>
+    </div>
+    <figure style="margin:10px 0 0">
+      <svg viewBox="0 0 760 200" role="img" aria-label="A request leaves the client, reaches the Cloudflare edge where TLS ends and the WAF rule runs, then reaches the echo Worker, which reports what Cloudflare recorded" class="flowsvg" id="heroSvg">
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+        <g style="color:var(--muted)">
+          <line x1="180" y1="100" x2="292" y2="100" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+          <line x1="470" y1="100" x2="582" y2="100" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+          <text x="236" y="86" text-anchor="middle" font-size="11" fill="currentColor">TCP, ClientHello,</text>
+          <text x="236" y="122" text-anchor="middle" font-size="11" fill="currentColor">HTTP/2 frames, headers</text>
+          <text x="526" y="86" text-anchor="middle" font-size="11" fill="currentColor">request +</text>
+          <text x="526" y="122" text-anchor="middle" font-size="11" fill="currentColor">request.cf</text>
+        </g>
+        <g>
+          <rect x="20" y="58" width="160" height="84" rx="10" fill="var(--sunk)" stroke="var(--client)" stroke-width="2"/>
+          <text x="100" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="var(--client)" id="heroClientName">cfprobe</text>
+          <text x="100" y="114" text-anchor="middle" font-size="11" fill="var(--muted)">the client</text>
+        </g>
+        <g>
+          <rect x="300" y="40" width="170" height="120" rx="10" fill="var(--sunk)" stroke="var(--edge)" stroke-width="2"/>
+          <text x="385" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="var(--edge)">Cloudflare edge</text>
+          <text x="385" y="92" text-anchor="middle" font-size="11" fill="var(--muted)">TLS ends here</text>
+          <text x="385" y="110" text-anchor="middle" font-size="11" fill="var(--muted)">fingerprints computed</text>
+          <text x="385" y="128" text-anchor="middle" font-size="11" fill="var(--muted)">WAF rule on /c/*</text>
+        </g>
+        <g>
+          <rect x="590" y="58" width="150" height="84" rx="10" fill="var(--sunk)" stroke="var(--receiver)" stroke-width="2"/>
+          <text x="665" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="var(--receiver)">Echo Worker</text>
+          <text x="665" y="114" text-anchor="middle" font-size="11" fill="var(--muted)">/echo, reports back</text>
+        </g>
+        <g id="packet" opacity="0">
+          <rect x="-26" y="-12" width="52" height="24" rx="12" fill="var(--client)"/>
+          <text x="0" y="4" text-anchor="middle" font-size="11" font-weight="600" fill="var(--bg)" class="mono">GET</text>
+        </g>
+      </svg>
+      <figcaption>The client's disguise is checked at the edge, where Cloudflare terminates TLS. The echo Worker on <code>lab.riddlelab.dev/echo</code> returns what the edge recorded, so we can read the edge's view. Pick a client and send its real, recorded request.</figcaption>
+    </figure>
+    <div class="sees">
+      <div class="col"><h4 class="c-recv">What this Free zone recorded</h4><dl class="kv" id="heroFree"></dl></div>
+      <div class="col locked"><h4 class="c-edge">Only with Enterprise Bot Management</h4>
+        <dl class="kv"><dt>JA4</dt><dd>not exposed on Free</dd><dt>bot score</dt><dd>not exposed on Free</dd><dt>detection IDs</dt><dd>not exposed on Free</dd><dt>JS detection result</dt><dd>not exposed on Free</dd></dl>
+        <p class="muted" style="font-size:13px;margin:8px 0 0">That gap is why the repo also runs its own receiver (TrackMe) in a local lab: it shows the full fingerprint Cloudflare keeps to itself on this plan.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>How to use this page</h3>
+  <p>Read top to bottom. Each chapter builds on the last. Exercises are marked with a box; finishing one ticks it off in the progress bar, and your progress stays in this browser. Colors keep one meaning throughout:</p>
+  <div class="chips">
+    <span class="chip" style="border-color:var(--client);color:var(--client)">client: what a client sends or sees itself</span>
+    <span class="chip" style="border-color:var(--receiver);color:var(--receiver)">receiver: what the other end measured</span>
+    <span class="chip" style="border-color:var(--config);color:var(--config)">configured: what we asked for</span>
+    <span class="chip" style="border-color:var(--edge);color:var(--edge)">Cloudflare edge</span>
+  </div>
+</section>
+
+<!-- ============ 1. REPO MAP ============ -->
+<section class="ch" id="map" data-title="The repo map">
+  <div class="eyebrow">Chapter 1</div>
+  <h2>The repo map</h2>
+  <p>The repo has three kinds of content: <strong>notes</strong> (what the source code of each tool does), <strong>a lab</strong> (servers and clients you can run), and <strong>results</strong> (what the runs measured). <code>engine/</code> is the newest part: a Rust program that does the measuring itself. Click a folder.</p>
+  <div class="tree" id="tree"></div>
+
+  <h3>The evidence rule</h3>
+  <p>Every claim in the repo carries one tag that says how we know it. This is what lets you trust a sentence without rereading the source.</p>
+  <div class="scroll"><table>
+    <tr><th>Tag</th><th>Means</th><th>Example from the repo</th></tr>
+    <tr><td><code>[verified]</code></td><td>Read in source at a pinned commit, with file and line</td><td>FlareSolverr always reports <code>status: 200</code> (<code>flaresolverr_service.py:475</code>)</td></tr>
+    <tr><td><code>[documented]</code></td><td>Stated in Cloudflare or project docs, not read in code</td><td>Challenge Passage default is 30 minutes</td></tr>
+    <tr><td><code>[recall]</code></td><td>Prior knowledge, not rechecked. Must be promoted before use</td><td>Chrome started shuffling extensions in version 110</td></tr>
+    <tr><td><code>[unverified]</code></td><td>A claim with no source in hand</td><td>Why Suwayomi moved its browser out of process</td></tr>
+    <tr><td><code>[to measure]</code></td><td>Only a lab or zone run can settle it</td><td>Is <code>cf_clearance</code> bound to the TLS fingerprint? (became E1)</td></tr>
+  </table></div>
+
+  <div class="ex" data-ex="tags"><header><span class="t">Exercise: tag the claim</span><span class="tag">3 questions</span></header>
+    <div class="body" id="tagQuiz"></div></div>
+</section>
+
+<!-- ============ 2. LAYERS ============ -->
+<section class="ch" id="layers" data-title="Layers of a disguise">
+  <div class="eyebrow">Chapter 2</div>
+  <h2>Layers of a disguise</h2>
+  <p>A request is not one thing. It is a stack of messages, sent in order, and each layer is written by different code. A program that wants to look like Chrome has to get every layer right, because each one can give it away on its own.</p>
+
+  <figure>
+    <svg viewBox="0 0 760 330" role="img" aria-label="The layers of one HTTPS request in the order they are sent: TCP handshake, TLS ClientHello, HTTP/2 SETTINGS and WINDOW_UPDATE, HTTP/2 HEADERS, then the JavaScript environment and behaviour, which only exist if a challenge page runs" class="flowsvg">
+      <g font-size="12">
+        <g><rect x="10" y="10" width="740" height="44" rx="8" fill="var(--sunk)" stroke="var(--line)"/><text x="24" y="37" font-weight="700" fill="var(--ink)">1  TCP SYN</text><text x="230" y="37" fill="var(--muted)">TTL, window size, MSS, option order. Written by the operating system kernel</text></g>
+        <g><rect x="10" y="62" width="740" height="44" rx="8" fill="var(--sunk)" stroke="var(--client)"/><text x="24" y="89" font-weight="700" fill="var(--client)">2  TLS ClientHello</text><text x="230" y="89" fill="var(--muted)">ciphers, extensions, groups, signature algorithms, ALPN, GREASE. Written by the TLS library</text></g>
+        <g><rect x="10" y="114" width="740" height="44" rx="8" fill="var(--sunk)" stroke="var(--client)"/><text x="24" y="141" font-weight="700" fill="var(--client)">3  HTTP/2 preface</text><text x="230" y="141" fill="var(--muted)">SETTINGS values and order, WINDOW_UPDATE size, PRIORITY. Written by the HTTP/2 library</text></g>
+        <g><rect x="10" y="166" width="740" height="44" rx="8" fill="var(--sunk)" stroke="var(--client)"/><text x="24" y="193" font-weight="700" fill="var(--client)">4  HEADERS</text><text x="230" y="193" fill="var(--muted)">pseudo-header order (m,a,s,p), header names, order, values, User-Agent. Written by the app</text></g>
+        <g><rect x="10" y="218" width="740" height="44" rx="8" fill="var(--sunk)" stroke="var(--edge)" stroke-dasharray="5 4"/><text x="24" y="245" font-weight="700" fill="var(--edge)">5  JS environment</text><text x="230" y="245" fill="var(--muted)">navigator, screen, WebGL, focus. Only exists if a challenge page runs script</text></g>
+        <g><rect x="10" y="270" width="740" height="44" rx="8" fill="var(--sunk)" stroke="var(--edge)" stroke-dasharray="5 4"/><text x="24" y="297" font-weight="700" fill="var(--edge)">6  Behaviour</text><text x="230" y="297" fill="var(--muted)">mouse, keys, timing. How FlareSolverr's Tab, Tab, Space click looks</text></g>
+      </g>
+    </svg>
+    <figcaption>Layers 1 to 4 are sent by every client on every request, so Cloudflare can read them passively. Layers 5 and 6 (dashed) appear only when Cloudflare serves a challenge page, which runs JavaScript in the client.</figcaption>
+  </figure>
+
+  <p>Here are the real values, captured by the lab receiver (TrackMe) in experiment L1. Pick a client and compare it with headful Chromium, the baseline. Cells that differ from the baseline turn red.</p>
+  <div class="ex" data-ex="layers"><header><span class="t">Explore: one row per layer</span><span class="tag">look at all 5 clients</span></header>
+    <div class="body">
+      <div class="seg" role="group" aria-label="Pick a client" id="layerPick"></div>
+      <div class="scroll"><table id="layerTable"></table></div>
+      <div class="feedback" id="layerFb"></div>
+    </div></div>
+</section>
+
+<!-- ============ 3. TLS ============ -->
+<section class="ch" id="tls" data-title="The TLS ClientHello">
+  <div class="eyebrow">Chapter 3</div>
+  <h2>The TLS ClientHello</h2>
+  <p>The first thing a client says in HTTPS is the <strong>ClientHello</strong>: "here are the encryption methods I support, the extensions I understand, the key-exchange groups I can do, and the protocols I want next (ALPN, for example <code>h2</code>)." The server picks from these lists. The lists themselves, in their exact order, are what identify the client. Chrome, Firefox, curl and Java each ship a different TLS library, so each sends different lists.</p>
+
+  <h3>GREASE: deliberate noise</h3>
+  <p>Chrome inserts fake values into its lists on purpose, called <strong>GREASE</strong> (RFC 8701). They keep servers from breaking when new values appear. Every GREASE value has the same shape: two equal bytes, each ending in <code>a</code>, such as <code>0x0a0a</code>, <code>0x1a1a</code> ... <code>0xfafa</code>. Chrome picks a different one each connection, so any comparison must treat every GREASE value as the same thing. cfprobe's fingerprint code turns them all into the word <code>GREASE</code> for exactly this reason.</p>
+  <div class="ex" data-ex="grease"><header><span class="t">Exercise: spot the GREASE</span><span class="tag">select every GREASE value</span></header>
+    <div class="body">
+      <p style="margin:0">These codes are mixed from real Chrome 152 cipher, group and signature-algorithm lists. Select every GREASE value, then check.</p>
+      <div class="pick" id="greasePick"></div>
+      <div class="row"><button class="btn" id="greaseCheck" type="button">Check</button><span class="muted" style="font-size:13px">Rule: <code>(v &amp; 0x0f0f) == 0x0a0a</code> and both bytes equal</span></div>
+      <div class="feedback" id="greaseFb"></div>
+    </div></div>
+
+  <h3>JA3, JA4 and peetprint: three ways to summarise the ClientHello</h3>
+  <p>Nobody compares whole ClientHellos by eye. Fingerprints squash them into a short string. The three in this repo differ in one design choice each, and those choices explain several findings:</p>
+  <div class="scroll"><table>
+    <tr><th></th><th>JA3</th><th>JA4</th><th>peetprint</th></tr>
+    <tr><td>Extension order</td><td>part of the hash</td><td><strong>sorted first</strong>, order ignored</td><td>sorted</td></tr>
+    <tr><td>GREASE</td><td>dropped</td><td>dropped</td><td><strong>kept, as the word GREASE</strong></td></tr>
+    <tr><td>Who uses it</td><td>older detection</td><td>Cloudflare Enterprise, FoxIO spec</td><td>TrackMe (tls.peet.ws)</td></tr>
+    <tr><td>Effect on Chrome</td><td>changes every connection</td><td>stable per Chrome build</td><td>stable per Chrome build</td></tr>
+  </table></div>
+
+  <div class="ex" data-ex="shuffle"><header><span class="t">Demo: why JA3 broke</span><span class="tag">open 3 connections</span></header>
+    <div class="body">
+      <p style="margin:0">Since 2023 Chrome shuffles its TLS extensions on every connection, so servers cannot depend on one order. Below are Chrome 152's real extension codes. Each click opens a new connection. Watch the two hashes.</p>
+      <div class="shuffle-list" id="extList"></div>
+      <div class="grid2">
+        <div class="card"><h4>Hash of the wire order</h4><div class="muted" style="font-size:13px">what JA3 does (JA3 uses MD5; SHA-256 here)</div><div class="hash" id="hOrder">...</div></div>
+        <div class="card"><h4>Hash of the sorted list</h4><div class="muted" style="font-size:13px">what JA4 does</div><div class="hash" id="hSorted">...</div></div>
+      </div>
+      <div class="row"><button class="btn" id="newConn" type="button">New connection</button><span class="muted num" id="connCount" style="font-size:13px">connection 1</span></div>
+      <div class="feedback" id="shuffleFb"></div>
+    </div></div>
+
+  <h3>Reading a JA4</h3>
+  <p>A JA4 has three parts joined by <code>_</code>. Part <strong>a</strong> is readable. Parts <strong>b</strong> and <strong>c</strong> are the first 12 hex characters of a SHA-256 hash.</p>
+  <div class="ja4" aria-label="JA4 of headful Chromium 152"><span class="a">t13d1517h2</span><span class="u">_</span><span class="b">8daaf6152771</span><span class="u">_</span><span class="c">cb7bf5808d99</span></div>
+  <div class="scroll"><table>
+    <tr><th>Piece</th><th>Here</th><th>Meaning</th></tr>
+    <tr><td>protocol</td><td><code>t</code></td><td>TLS over TCP (<code>q</code> would be QUIC, HTTP/3)</td></tr>
+    <tr><td>version</td><td><code>13</code></td><td>highest TLS version offered: 1.3</td></tr>
+    <tr><td>SNI</td><td><code>d</code></td><td>a domain name was sent (<code>i</code> = connected to a bare IP)</td></tr>
+    <tr><td>cipher count</td><td><code>15</code></td><td>15 ciphers, GREASE not counted</td></tr>
+    <tr><td>extension count</td><td><code>17</code></td><td>17 extensions, GREASE not counted, SNI and ALPN counted</td></tr>
+    <tr><td>ALPN</td><td><code>h2</code></td><td>first and last character of the first ALPN value (<code>h2</code>)</td></tr>
+    <tr><td>b</td><td><code>8daaf6152771</code></td><td>SHA-256 of the cipher codes, <strong>sorted</strong>, comma-joined</td></tr>
+    <tr><td>c</td><td><code>cb7bf5808d99</code></td><td>SHA-256 of the extension codes, sorted, without SNI and ALPN, then <code>_</code>, then the signature algorithms <strong>in wire order</strong></td></tr>
+  </table></div>
+
+  <div class="ex" data-ex="ja4calc"><header><span class="t">Exercise: compute a real JA4 yourself</span><span class="tag">match the capture</span></header>
+    <div class="body">
+      <p style="margin:0">TrackMe saved each client's raw JA4 input (<code>ja4_r</code>): the readable prefix, then the sorted ciphers, sorted extensions and signature algorithms. Your browser will hash them with SHA-256. If you get the same string TrackMe reported, you have reproduced the fingerprint from first principles. Then try editing the cipher list and watch part b change.</p>
+      <div class="row"><label for="ja4Src" class="muted" style="font-size:13px">Capture</label><select id="ja4Src"></select></div>
+      <label class="muted" style="font-size:13px" for="ja4Ciph">ciphers (sorted, hex)</label><textarea id="ja4Ciph" spellcheck="false"></textarea>
+      <label class="muted" style="font-size:13px" for="ja4Ext">extensions (sorted, without SNI 0000 and ALPN 0010) _ signature algorithms (wire order)</label><textarea id="ja4Ext" spellcheck="false"></textarea>
+      <div class="row"><button class="btn" id="ja4Go" type="button">Hash it</button></div>
+      <div class="grid2">
+        <div class="card"><h4>You computed</h4><div class="ja4" id="ja4Out" style="font-size:15px">...</div></div>
+        <div class="card"><h4>TrackMe reported</h4><div class="ja4" id="ja4Want" style="font-size:15px">...</div></div>
+      </div>
+      <div class="feedback" id="ja4Fb"></div>
+    </div></div>
+
+  <div class="callout find"><b class="k">Finding L1-8, found by cfprobe</b>curl-impersonate's <code>chrome152</code> profile gets the same JA4 as real Chromium 152, which is why the first L1 write-up called them identical. But real Chrome 152 puts a random GREASE value at the head of its <code>signature_algorithms</code> list (<code>0x7a7a</code> in one capture, <code>0x1a1a</code> in another), and the fork sends none. JA4 drops GREASE, so it cannot see this. peetprint keeps GREASE positions: <code>fc97c1cd...</code> for both real captures, <code>1528e8ef...</code> for the fork.</div>
+  <div class="callout find"><b class="k">Finding L1-10, Chromium 124 vs 152</b>Across 28 Chrome versions the HTTP/2 layer and header order did not change. The TLS layer did: the post-quantum group <code>X25519Kyber768</code> became <code>X25519MLKEM768</code>, ALPS moved from codepoint 17513 to 17613, extension 51764 and three new signature algorithms appeared, and so did the signature-algorithm GREASE. So the missing GREASE in L1-8 means the fork lacks a Chrome 152 feature.</div>
+</section>
+
+<!-- ============ 4. HTTP/2 ============ -->
+<section class="ch" id="h2" data-title="The HTTP/2 fingerprint">
+  <div class="eyebrow">Chapter 4</div>
+  <h2>The HTTP/2 fingerprint</h2>
+  <p>After TLS, an HTTP/2 client opens with a <strong>connection preface</strong>: a SETTINGS frame (its preferences), usually a WINDOW_UPDATE (how much data it lets the server send), then a HEADERS frame for the first request. The spec leaves all of these choices to the client, so each HTTP/2 library chooses differently. Akamai's 2017 format writes them as one string with four <code>|</code>-separated fields.</p>
+  <figure>
+    <svg viewBox="0 0 760 170" role="img" aria-label="The HTTP/2 connection preface: the client sends SETTINGS, then WINDOW_UPDATE, then HEADERS; each frame becomes one field of the Akamai fingerprint" class="flowsvg" id="frameSvg">
+      <g font-size="12">
+        <text x="20" y="22" fill="var(--muted)">client</text><text x="740" y="22" text-anchor="end" fill="var(--muted)">server</text>
+        <line x1="20" y1="34" x2="740" y2="34" stroke="var(--line)"/>
+        <g class="frm" data-i="0"><rect x="30" y="48" width="200" height="40" rx="7" fill="var(--sunk)" stroke="var(--client)"/><text x="130" y="73" text-anchor="middle" font-weight="700" fill="var(--client)">SETTINGS</text></g>
+        <g class="frm" data-i="1"><rect x="250" y="48" width="200" height="40" rx="7" fill="var(--sunk)" stroke="var(--client)"/><text x="350" y="73" text-anchor="middle" font-weight="700" fill="var(--client)">WINDOW_UPDATE</text></g>
+        <g class="frm" data-i="2"><rect x="470" y="48" width="250" height="40" rx="7" fill="var(--sunk)" stroke="var(--client)"/><text x="595" y="73" text-anchor="middle" font-weight="700" fill="var(--client)">HEADERS (stream 1)</text></g>
+        <text x="130" y="112" text-anchor="middle" class="mono" fill="var(--ink)">1:65536;2:0;4:6291456;6:262144</text>
+        <text x="350" y="112" text-anchor="middle" class="mono" fill="var(--ink)">15663105</text>
+        <text x="595" y="112" text-anchor="middle" class="mono" fill="var(--ink)">:method :authority :scheme :path</text>
+        <text x="130" y="140" text-anchor="middle" fill="var(--muted)">field 1: S</text>
+        <text x="350" y="140" text-anchor="middle" fill="var(--muted)">field 2: WU</text>
+        <text x="520" y="140" text-anchor="middle" fill="var(--muted)">field 3: P (0)</text>
+        <text x="680" y="140" text-anchor="middle" fill="var(--muted)">field 4: m,a,s,p</text>
+      </g>
+    </svg>
+    <figcaption>Chromium 152's real preface. Its Akamai string is <code>1:65536;2:0;4:6291456;6:262144|15663105|0|m,a,s,p</code>. Click <em>Replay preface</em> to watch the frames go out in order.</figcaption>
+  </figure>
+  <div class="row"><button class="btn ghost" id="replayFrames" type="button">Replay preface</button></div>
+
+  <h3>SETTINGS IDs</h3>
+  <div class="scroll"><table>
+    <tr><th>ID</th><th>Name</th><th>Chrome 152</th><th>Firefox 155 (fork profile)</th><th>curl</th><th>OkHttp</th><th>cfprobe</th></tr>
+    <tr><td>1</td><td>HEADER_TABLE_SIZE</td><td class="num">65536</td><td class="num">65536</td><td></td><td></td><td></td></tr>
+    <tr><td>2</td><td>ENABLE_PUSH</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td></td><td class="num">0</td></tr>
+    <tr><td>3</td><td>MAX_CONCURRENT_STREAMS</td><td></td><td></td><td class="num">100</td><td></td><td></td></tr>
+    <tr><td>4</td><td>INITIAL_WINDOW_SIZE</td><td class="num">6291456</td><td class="num">131072</td><td class="num">65536</td><td class="num">16777216</td><td class="num">2097152</td></tr>
+    <tr><td>5</td><td>MAX_FRAME_SIZE</td><td></td><td class="num">16384</td><td></td><td></td><td class="num">16384</td></tr>
+    <tr><td>6</td><td>MAX_HEADER_LIST_SIZE</td><td class="num">262144</td><td></td><td></td><td></td><td class="num">16384</td></tr>
+  </table></div>
+  <p class="muted" style="font-size:14px">An empty cell means the client did not send that setting. Note curl sends <code>3, 4, 2</code>: not in ascending order. Order is part of the fingerprint.</p>
+
+  <div class="ex" data-ex="akamai"><header><span class="t">Exercise: whose HTTP/2 is this?</span><span class="tag">match 4 strings</span></header>
+    <div class="body" id="akamaiMatch"></div></div>
+
+  <div class="ex" data-ex="decoder"><header><span class="t">Tool: decode any Akamai string</span><span class="tag">decode one</span></header>
+    <div class="body">
+      <input type="text" id="akIn" value="4:16777216|16711681|0|m,p,a,s" aria-label="Akamai HTTP/2 fingerprint" spellcheck="false">
+      <div id="akOut"></div>
+    </div></div>
+</section>
+
+<!-- ============ 5. TOOLS ============ -->
+<section class="ch" id="tools" data-title="The three tools">
+  <div class="eyebrow">Chapter 5</div>
+  <h2>The three tools studied</h2>
+  <p>The repo reads three open-source projects at pinned commits. Together they form a common pipeline: a program that cannot pass a challenge asks a real browser to pass it, takes the reward (a cookie), and reuses it from its own, non-browser network stack.</p>
+  <div class="grid2">
+    <div class="card"><h4>Suwayomi-Server</h4><p style="margin:0;font-size:14px">Self-hosted manga server (Kotlin, JVM). All its extensions share one <strong>OkHttp</strong> client. Its <code>CloudflareInterceptor</code> spots a challenge (403/503 plus <code>Server: cloudflare</code>), asks FlareSolverr to solve it, then replays the original request from OkHttp with the browser's cookies and User-Agent.</p></div>
+    <div class="card"><h4>FlareSolverr 3.5.2</h4><p style="margin:0;font-size:14px">A proxy in Python. You POST a URL to <code>/v1</code>; it opens it in a real <strong>Chromium 152</strong> (new headless mode, driven by a modified undetected-chromedriver), waits out or clicks through the challenge, and returns the cookie jar plus the exact User-Agent.</p></div>
+    <div class="card"><h4>curl-impersonate (lexiforest fork)</h4><p style="margin:0;font-size:14px">A patched curl on BoringSSL with 48 browser profiles. It copies TLS, HTTP/2 and header order. It runs <strong>no JavaScript</strong>, so it cannot pass a challenge; its role is the replay client with a matching fingerprint.</p></div>
+    <div class="card"><h4>The survey (other-projects.md)</h4><p style="margin:0;font-size:14px">Twelve more projects in four classes by which layer they fake: A patched automation browsers, B engine forks (camoufox), C wire impersonators (curl_cffi, tls-client, uTLS), D solver services (FlareSolverr, Byparr).</p></div>
+  </div>
+
+  <h3>The pipeline, step by step</h3>
+  <div class="ex" data-ex="pipeline"><header><span class="t">Walk the Suwayomi + FlareSolverr pipeline</span><span class="tag">reach the last step</span></header>
+    <div class="body stepper">
+      <figure style="margin:0"><div class="scroll">
+        <svg viewBox="0 0 760 250" role="img" aria-label="Sequence: Suwayomi's OkHttp asks the Cloudflare zone, gets a challenge, asks FlareSolverr, whose Chromium solves the challenge and returns cf_clearance and the User-Agent, then OkHttp replays the request with them" class="flowsvg" id="pipeSvg" style="min-width:600px">
+          <defs><marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+          <g font-size="12" text-anchor="middle">
+            <g class="node" data-n="s"><rect x="20" y="10" width="140" height="36" rx="8" fill="var(--sunk)" stroke="var(--line)"/><text x="90" y="33" font-weight="700" fill="var(--ink)">Suwayomi (OkHttp)</text></g>
+            <g class="node" data-n="z"><rect x="230" y="10" width="140" height="36" rx="8" fill="var(--sunk)" stroke="var(--line)"/><text x="300" y="33" font-weight="700" fill="var(--ink)">Cloudflare zone</text></g>
+            <g class="node" data-n="f"><rect x="420" y="10" width="140" height="36" rx="8" fill="var(--sunk)" stroke="var(--line)"/><text x="490" y="33" font-weight="700" fill="var(--ink)">FlareSolverr</text></g>
+            <g class="node" data-n="c"><rect x="610" y="10" width="130" height="36" rx="8" fill="var(--sunk)" stroke="var(--line)"/><text x="675" y="33" font-weight="700" fill="var(--ink)">Chromium 152</text></g>
+          </g>
+          <g stroke="var(--line)" stroke-dasharray="3 4"><line x1="90" y1="46" x2="90" y2="245"/><line x1="300" y1="46" x2="300" y2="245"/><line x1="490" y1="46" x2="490" y2="245"/><line x1="675" y1="46" x2="675" y2="245"/></g>
+          <g font-size="11" style="color:var(--muted)" id="pipeEdges">
+            <g class="edge-l" data-s="0"><line x1="90" y1="66" x2="296" y2="66" stroke="currentColor" marker-end="url(#ap)"/><text x="195" y="61" text-anchor="middle" fill="currentColor">GET, JVM TLS, Android UA</text></g>
+            <g class="edge-l" data-s="1"><line x1="300" y1="90" x2="94" y2="90" stroke="currentColor" marker-end="url(#ap)"/><text x="195" y="85" text-anchor="middle" fill="currentColor">403 + Server: cloudflare</text></g>
+            <g class="edge-l" data-s="2"><line x1="90" y1="114" x2="486" y2="114" stroke="currentColor" marker-end="url(#ap)"/><text x="290" y="109" text-anchor="middle" fill="currentColor">POST /v1 request.get</text></g>
+            <g class="edge-l" data-s="3"><line x1="490" y1="138" x2="671" y2="138" stroke="currentColor" marker-end="url(#ap)"/><text x="582" y="133" text-anchor="middle" fill="currentColor">open URL</text></g>
+            <g class="edge-l" data-s="4"><line x1="675" y1="162" x2="304" y2="162" stroke="currentColor" marker-end="url(#ap)"/><text x="490" y="157" text-anchor="middle" fill="currentColor">challenge JS, then Tab Tab Space</text></g>
+            <g class="edge-l" data-s="5"><line x1="300" y1="186" x2="671" y2="186" stroke="currentColor" marker-end="url(#ap)"/><text x="490" y="181" text-anchor="middle" fill="currentColor">Set-Cookie: cf_clearance</text></g>
+            <g class="edge-l" data-s="6"><line x1="490" y1="210" x2="94" y2="210" stroke="currentColor" marker-end="url(#ap)"/><text x="290" y="205" text-anchor="middle" fill="currentColor">cookies + exact UA, status always 200</text></g>
+            <g class="edge-l" data-s="7"><line x1="90" y1="234" x2="296" y2="234" stroke="currentColor" marker-end="url(#ap)"/><text x="195" y="229" text-anchor="middle" fill="currentColor">replay: cookie + Chrome UA, JVM TLS</text></g>
+          </g>
+        </svg></div></figure>
+      <div class="step-text" id="pipeText" aria-live="polite"></div>
+      <div class="row"><button class="btn ghost" id="pipePrev" type="button">Back</button><button class="btn" id="pipeNext" type="button">Next step</button><span class="muted num" id="pipeCount" style="font-size:13px"></span></div>
+    </div></div>
+
+  <h3>Key findings from the source</h3>
+  <div class="scroll"><table>
+    <tr><th>#</th><th>Finding</th></tr>
+    <tr><td>S1</td><td>Suwayomi detects a challenge by status 403/503 plus <code>Server: cloudflare</code>. Cloudflare sets that header on every proxied response, so an origin's own 403 also triggers FlareSolverr. The documented signal is <code>cf-mitigated: challenge</code>.</td></tr>
+    <tr><td>S3</td><td>The cookie is minted in Chrome and replayed from OkHttp's Java TLS stack. Whether that works depends on what Cloudflare ties the cookie to. That question became experiment E1.</td></tr>
+    <tr><td>S4</td><td>The User-Agent switch is global: one challenged site changes the UA every extension sends to every site.</td></tr>
+    <tr><td>F2</td><td>FlareSolverr's JS cover-up patches never run by default: they only run when <code>navigator.webdriver</code> is true, and it is already false.</td></tr>
+    <tr><td>F3</td><td>Its checkbox click is Tab presses then Space, with no mouse movement at all.</td></tr>
+    <tr><td>F5</td><td>It always reports <code>status: 200</code> and empty headers, so clients cannot tell a block page from success.</td></tr>
+    <tr><td>F9</td><td>Default Docker deployments send <code>accept-language: C.UTF-8,C.UTF;q=0.9</code>, a value no real browser sends.</td></tr>
+    <tr><td>C3</td><td>curl-impersonate runs no JS, so on its own it never passes a challenge. It looks right on the wire and nothing more.</td></tr>
+  </table></div>
+</section>
+
+<!-- ============ 6. CHALLENGES ============ -->
+<section class="ch" id="challenge" data-title="Challenges and the cookie">
+  <div class="eyebrow">Chapter 6</div>
+  <h2>Challenges and <code>cf_clearance</code></h2>
+  <p>On the lab zone, one WAF custom rule says: any request to <code>lab.riddlelab.dev/c/*</code> gets a <strong>Managed Challenge</strong>. The only way past it is a valid <code>cf_clearance</code> cookie, which Cloudflare sets after a client passes the challenge. This is the exact mechanism FlareSolverr exists to defeat, so it is worth walking through state by state.</p>
+
+  <div class="ex" data-ex="statem"><header><span class="t">Step through a Managed Challenge</span><span class="tag">reach the origin</span></header>
+    <div class="body stepper">
+      <figure style="margin:0"><div class="scroll">
+        <svg viewBox="0 0 760 200" role="img" aria-label="Managed Challenge states: request without cookie, WAF rule matches, 403 challenge page, non-interactive check, interactive checkbox if needed, cookie set, original request replayed to the origin" class="flowsvg" id="smSvg" style="min-width:620px">
+          <defs><marker id="as" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+          <g font-size="11.5" text-anchor="middle" style="color:var(--muted)">
+            <g class="node" data-n="0"><rect x="10" y="20" width="110" height="46" rx="8" fill="var(--sunk)" stroke="var(--line)"/><text x="65" y="40" fill="var(--ink)" font-weight="700">GET /c/echo</text><text x="65" y="56" fill="currentColor">no cookie</text></g>
+            <g class="node" data-n="1"><rect x="160" y="20" width="110" height="46" rx="8" fill="var(--sunk)" stroke="var(--line)"/><text x="215" y="40" fill="var(--ink)" font-weight="700">WAF rule</text><text x="215" y="56" fill="currentColor">path /c/* matches</text></g>
+            <g class="node" data-n="2"><rect x="310" y="20" width="130" height="46" rx="8" fill="var(--sunk)" stroke="var(--line)"/><text x="375" y="40" fill="var(--ink)" font-weight="700">403 challenge</text><text x="375" y="56" fill="currentColor">cf-mitigated: challenge</text></g>
+            <g class="node" data-n="3"><rect x="480" y="20" width="130" height="46" rx="8" fill="var(--sunk)" stroke="var(--line)"/><text x="545" y="40" fill="var(--ink)" font-weight="700">silent checks</text><text x="545" y="56" fill="currentColor">JS probes the browser</text></g>
+            <g class="node" data-n="4"><rect x="480" y="120" width="130" height="46" rx="8" fill="var(--sunk)" stroke="var(--line)"/><text x="545" y="140" fill="var(--ink)" font-weight="700">checkbox</text><text x="545" y="156" fill="currentColor">if signals are weak</text></g>
+            <g class="node" data-n="5"><rect x="310" y="120" width="130" height="46" rx="8" fill="var(--sunk)" stroke="var(--line)"/><text x="375" y="140" fill="var(--ink)" font-weight="700">cf_clearance set</text><text x="375" y="156" fill="currentColor">form POST answered</text></g>
+            <g class="node" data-n="6"><rect x="160" y="120" width="110" height="46" rx="8" fill="var(--sunk)" stroke="var(--line)"/><text x="215" y="140" fill="var(--ink)" font-weight="700">replayed as GET</text><text x="215" y="156" fill="currentColor">rule bypassed</text></g>
+            <g class="node" data-n="7"><rect x="10" y="120" width="110" height="46" rx="8" fill="var(--sunk)" stroke="var(--line)"/><text x="65" y="140" fill="var(--ink)" font-weight="700">origin</text><text x="65" y="156" fill="currentColor">Worker answers 200</text></g>
+            <line x1="120" y1="43" x2="156" y2="43" stroke="currentColor" marker-end="url(#as)"/>
+            <line x1="270" y1="43" x2="306" y2="43" stroke="currentColor" marker-end="url(#as)"/>
+            <line x1="440" y1="43" x2="476" y2="43" stroke="currentColor" marker-end="url(#as)"/>
+            <line x1="545" y1="66" x2="545" y2="116" stroke="currentColor" marker-end="url(#as)"/><text x="590" y="96" fill="currentColor">fails</text>
+            <path d="M610 43 H650 V143 H614" fill="none" stroke="currentColor" marker-end="url(#as)" stroke-dasharray="4 3"/><text x="700" y="96" fill="currentColor">passes</text>
+            <line x1="480" y1="143" x2="444" y2="143" stroke="currentColor" marker-end="url(#as)"/>
+            <line x1="310" y1="143" x2="274" y2="143" stroke="currentColor" marker-end="url(#as)"/>
+            <line x1="160" y1="143" x2="124" y2="143" stroke="currentColor" marker-end="url(#as)"/>
+          </g>
+        </svg></div></figure>
+      <div class="step-text" id="smText" aria-live="polite"></div>
+      <div class="row"><button class="btn ghost" id="smPrev" type="button">Back</button><button class="btn" id="smNext" type="button">Next state</button><span class="muted num" id="smCount" style="font-size:13px"></span></div>
+    </div></div>
+
+  <h3>What the docs say the cookie is tied to</h3>
+  <p>Cloudflare's docs say the cookie is "securely tied to the specific visitor and device it was issued to" and never name the inputs: not IP, not User-Agent, not the TLS fingerprint. The research turned each candidate into an experiment arm. Chapter 8 shows the answer.</p>
+  <div class="scroll"><table>
+    <tr><th>Property</th><th>Documented value</th></tr>
+    <tr><td>Lifetime</td><td>Challenge Passage, default 30 minutes, set per zone</td></tr>
+    <tr><td>Levels</td><td>Interactive clears all three types; Managed clears Managed and Non-Interactive; Non-Interactive clears only itself</td></tr>
+    <tr><td>Size</td><td>at most 4096 bytes, encrypted, format unpublished</td></tr>
+    <tr><td>Attributes</td><td><code>SameSite=None; Secure; Partitioned</code></td></tr>
+    <tr><td>IP</td><td>must match between issuing and solving the challenge; nothing said about later use</td></tr>
+  </table></div>
+
+  <div class="ex" data-ex="levels"><header><span class="t">Exercise: does the cookie get through?</span><span class="tag">3 questions</span></header>
+    <div class="body" id="levelQuiz"></div></div>
+</section>
+
+<!-- ============ 7. LAB ============ -->
+<section class="ch" id="lab" data-title="The lab">
+  <div class="eyebrow">Chapter 7</div>
+  <h2>The lab: two receivers</h2>
+  <p>A client <strong>cannot see its own ClientHello</strong> the way the server sees it: the bytes are built inside the TLS library and leave the machine. To measure a fingerprint you need something on the other end that writes down what arrived. The repo uses two such receivers, and they answer different questions.</p>
+  <figure>
+    <svg viewBox="0 0 760 230" role="img" aria-label="Two receivers: in the local lab, clients connect over a private Docker network to TrackMe, which reports JA4, peetprint and every HTTP/2 frame; on the internet, clients connect through the Cloudflare edge to the echo Worker, which reports Cloudflare's request.cf view" class="flowsvg">
+      <defs><marker id="al" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+      <g font-size="12" style="color:var(--muted)">
+        <rect x="10" y="10" width="360" height="210" rx="12" fill="none" stroke="var(--line)" stroke-dasharray="5 4"/>
+        <text x="24" y="32" fill="currentColor">LOCAL LAB, Docker network cflab</text>
+        <rect x="400" y="10" width="350" height="210" rx="12" fill="none" stroke="var(--line)" stroke-dasharray="5 4"/>
+        <text x="414" y="32" fill="currentColor">INTERNET, zone riddlelab.dev</text>
+        <rect x="30" y="60" width="130" height="50" rx="8" fill="var(--sunk)" stroke="var(--client)"/><text x="95" y="90" text-anchor="middle" font-weight="700" fill="var(--client)">any client</text>
+        <rect x="220" y="60" width="130" height="50" rx="8" fill="var(--sunk)" stroke="var(--receiver)"/><text x="285" y="84" text-anchor="middle" font-weight="700" fill="var(--receiver)">TrackMe</text><text x="285" y="100" text-anchor="middle" fill="currentColor" font-size="11">fp.lab.test</text>
+        <line x1="160" y1="85" x2="216" y2="85" stroke="currentColor" marker-end="url(#al)"/>
+        <text x="190" y="140" text-anchor="middle" fill="var(--ink)">reports: JA4, JA4_r, JA3, peetprint,</text>
+        <text x="190" y="158" text-anchor="middle" fill="var(--ink)">every HTTP/2 frame, header order,</text>
+        <text x="190" y="176" text-anchor="middle" fill="var(--ink)">client random</text>
+        <text x="190" y="202" text-anchor="middle" fill="currentColor" font-size="11">full fingerprint, but not Cloudflare</text>
+        <rect x="420" y="60" width="90" height="50" rx="8" fill="var(--sunk)" stroke="var(--client)"/><text x="465" y="90" text-anchor="middle" font-weight="700" fill="var(--client)">client</text>
+        <rect x="540" y="60" width="90" height="50" rx="8" fill="var(--sunk)" stroke="var(--edge)"/><text x="585" y="90" text-anchor="middle" font-weight="700" fill="var(--edge)">edge</text>
+        <rect x="650" y="60" width="90" height="50" rx="8" fill="var(--sunk)" stroke="var(--receiver)"/><text x="695" y="84" text-anchor="middle" font-weight="700" fill="var(--receiver)">Worker</text><text x="695" y="100" text-anchor="middle" fill="currentColor" font-size="11">/echo</text>
+        <line x1="510" y1="85" x2="536" y2="85" stroke="currentColor" marker-end="url(#al)"/>
+        <line x1="630" y1="85" x2="646" y2="85" stroke="currentColor" marker-end="url(#al)"/>
+        <text x="580" y="140" text-anchor="middle" fill="var(--ink)">reports: TLS version, cipher, ClientHello</text>
+        <text x="580" y="158" text-anchor="middle" fill="var(--ink)">length, cipher and extension SHA-1s,</text>
+        <text x="580" y="176" text-anchor="middle" fill="var(--ink)">header names in wire order, client random</text>
+        <text x="580" y="202" text-anchor="middle" fill="currentColor" font-size="11">Cloudflare's own view, Free plan subset</text>
+      </g>
+    </svg>
+    <figcaption>TrackMe (the code behind tls.peet.ws) runs locally with QUIC off and a self-signed cert for <code>fp.lab.test</code>. The Worker dumps all of <code>request.cf</code> but never echoes cookie values. A challenged request never reaches the Worker, so challenge outcomes come from Cloudflare's firewall event log (GraphQL), read by <code>scripts/zone/fw_events.sh</code>.</figcaption>
+  </figure>
+
+  <h3>L2: the JavaScript layer</h3>
+  <p>Experiment L2 served a probe page (<code>lab/l2/probe.html</code>) that reads 32 properties a challenge script can see, and loaded it in FlareSolverr's Chrome and in headful Chromium. 26 matched. The 6 that differed are all FlareSolverr default settings, not the browser engine.</p>
+  <div class="ex" data-ex="tell"><header><span class="t">Exercise: spot the impossible value</span><span class="tag">find it</span></header>
+    <div class="body">
+      <p style="margin:0">This is FlareSolverr's real capture. One of these values cannot occur on any real screen. Click it.</p>
+      <div class="pick" id="tellPick"></div>
+      <div class="feedback" id="tellFb"></div>
+    </div></div>
+</section>
+
+<!-- ============ 8. EXPERIMENTS ============ -->
+<section class="ch" id="exp" data-title="Experiments E1 and E2">
+  <div class="eyebrow">Chapter 8</div>
+  <h2>Experiments E1 and E2</h2>
+  <p><strong>E2</strong> asked: can FlareSolverr 3.5.2 pass the zone's Managed Challenge at default settings? <strong>E1</strong> asked: once it has the cookie, which clients can reuse it? Both ran on 2026-11-24 against <code>/c/echo</code>, all from the same IPv4 address.</p>
+
+  <h3>E2: the solve, second by second</h3>
+  <div class="ex" data-ex="e2"><header><span class="t">Replay the E2 solve</span><span class="tag">play it</span></header>
+    <div class="body">
+      <div class="bars" id="e2Bars"></div>
+      <div class="row"><button class="btn" id="e2Play" type="button">Play</button><span class="muted" style="font-size:13px">Seconds after 12:57:35, from FlareSolverr's log and Cloudflare's firewall events</span></div>
+      <div class="feedback" id="e2Fb"></div>
+    </div></div>
+  <div class="callout find"><b class="k">Finding E2-1</b>FlareSolverr passed, but only through the <strong>interactive</strong> path. Cloudflare logged <code>managed_challenge_interactive_solved</code>: the silent check failed and the Tab+Space click did the work. Its log said nothing because the click is logged only at DEBUG level. The first write-up said "no interaction" and was corrected the same day, because Cloudflare's event log outranks the client's own log.</div>
+  <div class="callout find"><b class="k">Finding E2-2, plus a detail in the data</b><code>request.cf.requestHeaderNames</code> shows the visitor's wire request, not what the Worker receives. After the solve the Worker got a GET, but the names list the form POST's <code>content-length</code>, <code>origin</code>, <code>referer</code>. The same record shows <code>httpProtocol: HTTP/3</code>: FlareSolverr's Chrome finished the solve over QUIC, while every replay client used HTTP/2.</div>
+
+  <h3>E1: predict before you look</h3>
+  <p>The cookie was minted by FlareSolverr's Chrome on Linux. Each arm then sends one request to <code>/c/echo</code>. For each, predict: does Cloudflare let it through (200) or challenge it again (403)?</p>
+  <div class="ex" data-ex="e1"><header><span class="t">Exercise: predict all six E1 arms</span><span class="tag">predict, then reveal</span></header>
+    <div class="body">
+      <div class="arms" id="e1Arms"></div>
+      <div class="row"><button class="btn" id="e1Reveal" type="button">Reveal results</button></div>
+      <div class="feedback" id="e1Fb"></div>
+    </div></div>
+  <div class="scroll"><table>
+    <tr><th>#</th><th>Finding</th></tr>
+    <tr><td>E1-1</td><td><strong>On a Free zone the cookie is not tied to the TLS or HTTP/2 fingerprint.</strong> OkHttp, wrong at every wire layer, passes with a cookie Chrome minted. ClientHello lengths 1575 and 1568 against 1962 for the solver.</td></tr>
+    <tr><td>E1-2</td><td><strong>It is tied to the User-Agent.</strong> Changing only <code>X11; Linux x86_64</code> to <code>Windows NT 10.0; Win64; x64</code> brings the challenge back. That is why Suwayomi's replay works: it copies the UA along with the cookie.</td></tr>
+    <tr><td>E1-3</td><td>A failed replay does not cancel the cookie: a5 passes right after a4 failed.</td></tr>
+    <tr><td>E1-4</td><td><code>tlsClientCiphersSha1</code> changes per connection for Chrome-like clients (GREASE is hashed in), so it is not a stable fingerprint for them.</td></tr>
+  </table></div>
+  <p class="muted" style="font-size:14px">Every 200 was confirmed as <code>managed_challenge_bypassed</code> in Cloudflare's own event log. A 200 alone could also mean the rule simply did not match.</p>
+</section>
+
+<!-- ============ 9. ENGINE ============ -->
+<section class="ch" id="engine" data-title="The cfprobe engine">
+  <div class="eyebrow">Chapter 9</div>
+  <h2>The cfprobe engine</h2>
+  <p>Until now every measurement used other people's tools. <code>engine/</code> is a Rust program, <strong>cfprobe</strong>, that makes the requests itself and reports what happened. It has its own connection stack: Cloudflare's BoringSSL bindings (<code>boring</code> 5.6.0) for TLS and hyper 1.13 for HTTP/1.1 and HTTP/2. It has <strong>no browser profiles</strong> and <strong>does not solve challenges</strong>; its TLS and HTTP/2 settings exist to change one variable at a time in an experiment.</p>
+
+  <figure>
+    <div class="scroll"><svg viewBox="0 0 760 300" role="img" aria-label="cfprobe modules: the CLI calls CFProbe in networking, which uses core config, tls settings and http settings, and returns a plain-data Exchange; fingerprint parses receiver records from the Exchange body and from saved baselines; reporting renders tables" class="flowsvg" style="min-width:620px">
+      <defs><marker id="ae" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+      <g font-size="12" text-anchor="middle" style="color:var(--muted)">
+        <rect x="310" y="10" width="140" height="40" rx="8" fill="var(--sunk)" stroke="var(--ink)"/><text x="380" y="35" font-weight="700" fill="var(--ink)">cli (main.rs)</text>
+        <rect x="270" y="100" width="220" height="56" rx="8" fill="var(--sunk)" stroke="var(--client)" stroke-width="2"/><text x="380" y="123" font-weight="700" fill="var(--client)">networking: CFProbe</text><text x="380" y="141" fill="currentColor" font-size="11">DNS, TCP, TLS, h1/h2, pool</text>
+        <rect x="20" y="100" width="190" height="56" rx="8" fill="var(--sunk)" stroke="var(--config)"/><text x="115" y="123" font-weight="700" fill="var(--config)">core, tls, http</text><text x="115" y="141" fill="currentColor" font-size="11">Config, settings, errors</text>
+        <rect x="270" y="210" width="220" height="56" rx="8" fill="var(--sunk)" stroke="var(--ink)"/><text x="380" y="233" font-weight="700" fill="var(--ink)">Exchange (plain data)</text><text x="380" y="251" fill="currentColor" font-size="11">request, connection, tls, response, timings</text>
+        <rect x="550" y="100" width="190" height="56" rx="8" fill="var(--sunk)" stroke="var(--receiver)"/><text x="645" y="123" font-weight="700" fill="var(--receiver)">fingerprint</text><text x="645" y="141" fill="currentColor" font-size="11">TrackMe, Worker parsers, compare</text>
+        <rect x="550" y="210" width="190" height="56" rx="8" fill="var(--sunk)" stroke="var(--ink)"/><text x="645" y="233" font-weight="700" fill="var(--ink)">reporting</text><text x="645" y="251" fill="currentColor" font-size="11">markdown tables</text>
+        <line x1="380" y1="50" x2="380" y2="96" stroke="currentColor" marker-end="url(#ae)"/><text x="410" y="78" fill="currentColor" font-size="11">inspect(target)</text>
+        <line x1="210" y1="128" x2="266" y2="128" stroke="currentColor" marker-end="url(#ae)"/><text x="238" y="120" fill="currentColor" font-size="11">reads</text>
+        <line x1="380" y1="156" x2="380" y2="206" stroke="currentColor" marker-end="url(#ae)"/><text x="412" y="186" fill="currentColor" font-size="11">returns</text>
+        <path d="M490 238 H520 V140 H546" fill="none" stroke="currentColor" marker-end="url(#ae)"/><text x="530" y="196" fill="currentColor" font-size="11" text-anchor="start">body</text>
+        <line x1="645" y1="156" x2="645" y2="206" stroke="currentColor" marker-end="url(#ae)"/><text x="676" y="186" fill="currentColor" font-size="11">Comparison</text>
+        <text x="645" y="290" fill="currentColor" font-size="11">baselines read live from experiments/test-results/L1</text>
+      </g>
+    </svg></div>
+    <figcaption>One boundary around the network: everything leaves <code>networking</code> as a plain-data <code>Exchange</code>, so analysis and reporting never touch sockets, and the stack behind it can be swapped.</figcaption>
+  </figure>
+
+  <h3>One request, start to finish</h3>
+  <p>These are the real timings of two requests in one run from this machine to <code>lab.riddlelab.dev/echo</code>. Switch to the second one: the second request rides the same connection, so DNS, TCP and TLS <strong>did not happen</strong>. cfprobe reports those as absent, not as 0 ms, because "took no time" and "did not happen" are different facts.</p>
+  <div class="ex" data-ex="life"><header><span class="t">Run the request lifecycle</span><span class="tag">run both</span></header>
+    <div class="body">
+      <div class="seg" role="group" aria-label="Which request" id="lifePick"></div>
+      <div class="bars" id="lifeBars"></div>
+      <div class="feedback" id="lifeFb"></div>
+    </div></div>
+
+  <h3>Three kinds of value</h3>
+  <p>Every value in a cfprobe report belongs to exactly one kind, and the report keeps them apart:</p>
+  <div class="grid2">
+    <div class="card"><h4 class="c-conf">Configured</h4><p style="margin:0;font-size:14px"><code>configured_tls</code>, <code>configured_h2</code>: what we asked for. <code>None</code> means "library default", never a guess at what the default is.</p></div>
+    <div class="card"><h4 class="c-client">Measured by the client</h4><p style="margin:0;font-size:14px"><code>tls</code>: read from BoringSSL after the handshake (version, cipher, ALPN, session reuse, client random, certificate chain). Plus status, headers, timings.</p></div>
+    <div class="card"><h4 class="c-recv">Measured by a receiver</h4><p style="margin:0;font-size:14px"><code>fingerprint</code>: what TrackMe or the Worker saw: JA4, HTTP/2 frames, header order. The only honest source for wire fingerprints.</p></div>
+    <div class="card"><h4>How we know both sides saw one handshake</h4><p style="margin:0;font-size:14px">The 32-byte ClientHello random is chosen by the client and seen by the receiver. cfprobe compares them: <code>same_handshake_as_client: true</code> on both TrackMe and the Worker.</p></div>
+  </div>
+
+  <pre class="code"><span class="cm">// engine/src/tls/mod.rs: the client-side view, read after the handshake</span>
+<span class="kw">pub</span>(crate) <span class="kw">fn</span> observe(ssl: &amp;SslRef) -&gt; TlsObservation {
+    <span class="kw">let mut</span> random = [0u8; 32];
+    <span class="kw">let</span> n = ssl.client_random(&amp;<span class="kw">mut</span> random);
+    TlsObservation {
+        version: ssl.version_str().to_string(),          <span class="cm">// "TLSv1.3"</span>
+        cipher: ssl.current_cipher().map(...),            <span class="cm">// TLS_AES_128_GCM_SHA256</span>
+        alpn: ssl.selected_alpn_protocol().map(...),      <span class="cm">// "h2"</span>
+        session_reused: ssl.session_reused(),
+        client_random: hex(&amp;random[..n]),                 <span class="cm">// matched against the receiver</span>
+        ...
+    }
+}</pre>
+
+  <div class="ex" data-ex="prov"><header><span class="t">Exercise: which kind of value is it?</span><span class="tag">sort 8 fields</span></header>
+    <div class="body">
+      <div class="sortq" id="provQuiz"></div>
+      <div class="row"><button class="btn" id="provCheck" type="button">Check</button></div>
+      <div class="feedback" id="provFb"></div>
+    </div></div>
+
+  <h3>Settings change the wire, and the receiver proves it</h3>
+  <p>A config file set three HTTP/2 values and a cipher list. TrackMe then recorded the new fingerprint. Configured values on the left, receiver-measured on the right:</p>
+  <div class="scroll"><table>
+    <tr><th>Setting (configured)</th><th>On the wire (TrackMe)</th></tr>
+    <tr><td class="c-conf"><code>header_table_size: 65536</code></td><td class="c-recv"><code>1:65536</code> appears first in SETTINGS</td></tr>
+    <tr><td class="c-conf"><code>initial_stream_window_size: 6291456</code></td><td class="c-recv"><code>4:6291456</code></td></tr>
+    <tr><td class="c-conf"><code>max_header_list_size: 262144</code></td><td class="c-recv"><code>6:262144</code></td></tr>
+    <tr><td class="c-conf"><code>cipher_list: two TLS 1.2 suites</code></td><td class="c-recv">5 ciphers offered: the 2, plus 3 TLS 1.3 suites BoringSSL always sends</td></tr>
+    <tr><td class="c-conf"><code>curves: "X25519:P-256"</code></td><td class="c-recv">groups exactly <code>X25519, P-256</code></td></tr>
+  </table></div>
+
+  <h3>Design decisions and their limits</h3>
+  <div class="scroll"><table>
+    <tr><th>Decision</th><th>Why</th><th>Cost</th></tr>
+    <tr><td>Dropped wreq</td><td>Its <code>TlsInfo</code> gives only the peer certificate: no TLS version, cipher, ALPN or resumption flag</td><td>We wrote our own connector on <code>boring</code> + hyper</td></tr>
+    <tr><td>Cloudflare's <code>boring</code>, not the btls fork</td><td>Has every needed knob and readout; maintained by Cloudflare, not a single maintainer</td><td>Fewer mimicry knobs (deliberately)</td></tr>
+    <tr><td>hyper's <code>h2</code></td><td>Mainstream HTTP/2</td><td>SETTINGS order and pseudo-header order are fixed (<code>m,s,a,p</code>)</td></tr>
+    <tr><td>BoringSSL</td><td>Same library Chrome uses</td><td>TLS 1.3 suites cannot be changed; build needs cmake, clang, about 75 s</td></tr>
+  </table></div>
+  <p>Tests: 24 pass offline. 11 run a local BoringSSL server with a throwaway certificate (reuse counted by server accepts: 1 with reuse, 3 without), 9 parse the real L1/E1 captures, the rest are unit tests. One test checks that location and ISP fields never reach a report.</p>
+</section>
+
+<!-- ============ 10. DISCIPLINE ============ -->
+<section class="ch" id="rules" data-title="Rules that keep it honest">
+  <div class="eyebrow">Chapter 10</div>
+  <h2>Rules that keep it honest</h2>
+  <div class="grid2">
+    <div class="card"><h4>A 200 is "reached", never "bypassed"</h4><p style="margin:0;font-size:14px">A 200 can mean the cookie worked or that the rule never matched. Only Cloudflare's event <code>managed_challenge_bypassed</code> says which.</p></div>
+    <div class="card"><h4>The receiver outranks the client</h4><p style="margin:0;font-size:14px">E2's first write-up trusted FlareSolverr's log. Cloudflare's event log showed an interactive solve. The correction is kept in the file (E2-1a).</p></div>
+    <div class="card"><h4>Not captured is not zero</h4><p style="margin:0;font-size:14px">A field a receiver does not record prints as <code>not captured</code>; a skipped step is absent, not <code>0 ms</code>.</p></div>
+    <div class="card"><h4>Nothing private leaves the machine</h4><p style="margin:0;font-size:14px">Cookie values become their length; client IP, location and ISP become <code>&lt;removed&gt;</code>. Six captures were scrubbed before this repo went public.</p></div>
+  </div>
+</section>
+
+<!-- ============ 11. GAPS ============ -->
+<section class="ch" id="gaps" data-title="Gaps and what's next">
+  <div class="eyebrow">Chapter 11</div>
+  <h2>Gaps and what's next</h2>
+  <h3>Research gaps</h3>
+  <div class="scroll"><table>
+    <tr><th>Gap</th><th>What closes it</th></tr>
+    <tr><td>All Chrome captures are Chromium builds</td><td>A capture from a Google Chrome install</td></tr>
+    <tr><td>L1-3: does real Chrome on Windows send <code>cache-control: max-age=0</code>?</td><td>A Windows Chrome capture</td></tr>
+    <tr><td>L1-6: does real Firefox 155 offer the cipher set the fork does?</td><td>A Firefox Docker image captured at TrackMe</td></tr>
+    <tr><td>Version dependence rests on two Chromium versions, one capture each</td><td>More versions, headful, repeats</td></tr>
+    <tr><td>E1 second-IP arm: is the cookie tied to IP at reuse time?</td><td>A second internet connection</td></tr>
+    <tr><td>E3: bot score for wire-perfect clients</td><td>An Enterprise zone</td></tr>
+  </table></div>
+  <h3>Engine phases left</h3>
+  <div class="scroll"><table>
+    <tr><th>Phase</th><th>State</th></tr>
+    <tr><td>7 Cloudflare response analysis</td><td>Not started: classify reached, managed, interactive, blocked (1xxx), rate-limited</td></tr>
+    <tr><td>8 Reporting and CLI</td><td>Partly: tables done; reports for inspect and fingerprint, and run comparison left</td></tr>
+    <tr><td>9 Lab tests</td><td>Partly: offline suite done; opt-in live suite left</td></tr>
+    <tr><td>10 Benchmarks</td><td>Not started: cfprobe vs reqwest vs curl</td></tr>
+    <tr><td>Docs</td><td>Not started: 8 engine documents</td></tr>
+  </table></div>
+</section>
+
+<!-- ============ 12. FINAL QUIZ ============ -->
+<section class="ch" id="quiz" data-title="Final check">
+  <div class="eyebrow">Chapter 12</div>
+  <h2>Final check</h2>
+  <p>Eight questions across the whole repo. Each explains itself after you answer.</p>
+  <div class="ex" data-ex="final"><header><span class="t">Final quiz</span><span class="tag" id="finalScore">0 of 8</span></header>
+    <div class="body"><div class="quiz" id="finalQuiz"></div></div></div>
+
+  <h3>Glossary</h3>
+  <details><summary>ALPN</summary><div>Application-Layer Protocol Negotiation. A TLS extension where the client lists the protocols it wants next (<code>h2</code>, <code>http/1.1</code>) and the server picks one.</div></details>
+  <details><summary>ClientHello random</summary><div>32 random bytes the client puts in its ClientHello. Both ends see the same value, so it identifies one handshake. cfprobe uses it to prove the receiver saw the same connection.</div></details>
+  <details><summary>GREASE</summary><div>Reserved fake values (RFC 8701) clients insert so servers tolerate unknown values. Shape: two equal bytes ending in <code>a</code>.</div></details>
+  <details><summary>JA3, JA4, peetprint</summary><div>Summaries of a ClientHello. JA3 keeps extension order and drops GREASE. JA4 sorts extensions and drops GREASE. peetprint sorts and keeps GREASE.</div></details>
+  <details><summary>Akamai HTTP/2 fingerprint</summary><div><code>SETTINGS|WINDOW_UPDATE|PRIORITY|pseudo-header order</code>, from the first frames of an HTTP/2 connection.</div></details>
+  <details><summary>Managed Challenge</summary><div>A Cloudflare challenge that runs silent browser checks and shows a checkbox only when those are not convincing.</div></details>
+  <details><summary>cf_clearance</summary><div>The cookie Cloudflare sets after a passed challenge. Valid for the zone's Challenge Passage time (default 30 minutes). On this Free zone, tied to the User-Agent but not to the TLS fingerprint (E1).</div></details>
+  <details><summary>request.cf</summary><div>The object a Cloudflare Worker receives with Cloudflare's metadata about the request: TLS version, cipher, header names, location (scrubbed in this repo) and, on Enterprise, bot fields.</div></details>
+  <details><summary>TrackMe</summary><div>An open-source fingerprint echo server (the code behind tls.peet.ws), run locally in the lab.</div></details>
+</section>
+
+</main>
+</div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el = (tag, attrs = {}, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') e.className = v; else if (k === 'html') e.innerHTML = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v);
+  }
+  for (const k of kids) if (k != null) e.append(k);
+  return e;
+};
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+/* ---------- progress ---------- */
+const KEY = 'chameleon-progress-v1';
+let done = {};
+try { done = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (_) { done = {}; }
+const exIds = $$('.ex').map(x => x.dataset.ex);
+function save() { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (_) {} }
+function paint() {
+  const n = exIds.filter(id => done[id]).length, t = exIds.length;
+  $$('.ex').forEach(x => x.classList.toggle('done', !!done[x.dataset.ex]));
+  const pct = (100 * n / t) + '%';
+  ['meterFill', 'mbarFill'].forEach(id => { const f = $('#' + id); if (f) f.style.width = pct; });
+  ['meterLabel', 'mbarLabel'].forEach(id => { const f = $('#' + id); if (f) f.textContent = `${n} of ${t} exercises done`; });
+  $$('#toc a').forEach(a => {
+    const sec = $(a.getAttribute('href'));
+    const ids = sec ? $$('.ex', sec).map(x => x.dataset.ex) : [];
+    a.querySelector('.ok').textContent = ids.length && ids.every(i => done[i]) ? '✓' : '';
+  });
+}
+function complete(id) { if (!done[id]) { done[id] = true; save(); paint(); } }
+$('#resetProgress').addEventListener('click', () => { done = {}; save(); paint(); });
+
+/* ---------- TOC ---------- */
+const toc = $('#toc');
+$$('section.ch').forEach((s, i) => {
+  toc.append(el('li', {}, el('a', { href: '#' + s.id }, el('span', { class: 'n' }, String(i).padStart(2, '0')), el('span', {}, s.dataset.title), el('span', { class: 'ok c-client', style: 'margin-left:auto' }))));
+});
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) $$('#toc a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); });
+}, { rootMargin: '-30% 0px -60% 0px' });
+$$('section.ch').forEach(s => io.observe(s));
+
+/* ---------- small helpers ---------- */
+function segmented(container, items, onPick, initial = 0) {
+  items.forEach((it, i) => {
+    const b = el('button', { type: 'button', 'aria-pressed': String(i === initial) }, it.label);
+    b.addEventListener('click', () => { $$('button', container).forEach(x => x.setAttribute('aria-pressed', 'false')); b.setAttribute('aria-pressed', 'true'); onPick(it, i); });
+    container.append(b);
+  });
+}
+function feedback(node, ok, html) { node.className = 'feedback ' + (ok ? 'ok' : 'no'); node.innerHTML = html; }
+async function sha256hex(s) {
+  if (window.crypto && crypto.subtle) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  return sha256js(s);
+}
+// Fallback SHA-256 for frames without SubtleCrypto.
+function sha256js(ascii) {
+  const rr = (v, a) => (v >>> a) | (v << (32 - a));
+  const K = [], H = [];
+  let isC = {}, pc = 0;
+  for (let c = 2; pc < 64; c++) { if (!isC[c]) { for (let i = 0; i < 313; i += c) isC[i] = c; H[pc] = (Math.pow(c, .5) * 4294967296) | 0; K[pc++] = (Math.pow(c, 1 / 3) * 4294967296) | 0; } }
+  const bytes = Array.from(new TextEncoder().encode(ascii));
+  const bitLen = bytes.length * 8;
+  bytes.push(0x80); while (bytes.length % 64 !== 56) bytes.push(0);
+  for (let i = 7; i >= 0; i--) bytes.push(i >= 4 ? 0 : (bitLen >>> (i * 8)) & 255);
+  let h = H.slice(0, 8);
+  for (let j = 0; j < bytes.length; j += 64) {
+    const w = [];
+    for (let i = 0; i < 16; i++) w[i] = (bytes[j + 4 * i] << 24) | (bytes[j + 4 * i + 1] << 16) | (bytes[j + 4 * i + 2] << 8) | bytes[j + 4 * i + 3];
+    for (let i = 16; i < 64; i++) { const s0 = rr(w[i - 15], 7) ^ rr(w[i - 15], 18) ^ (w[i - 15] >>> 3), s1 = rr(w[i - 2], 17) ^ rr(w[i - 2], 19) ^ (w[i - 2] >>> 10); w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0; }
+    let [a, b, c, d, e, f, g, hh] = h;
+    for (let i = 0; i < 64; i++) {
+      const t1 = (hh + (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) + ((e & f) ^ (~e & g)) + K[i] + w[i]) | 0;
+      const t2 = ((rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) + ((a & b) ^ (a & c) ^ (b & c))) | 0;
+      hh = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+    }
+    h = [a, b, c, d, e, f, g, hh].map((v, i) => (v + h[i]) | 0);
+  }
+  return h.map(v => (v >>> 0).toString(16).padStart(8, '0')).join('');
+}
+
+/* ---------- data (all from the repo's captures) ---------- */
+const HERO = [
+  { label: 'cfprobe', name: 'cfprobe', proto: 'HTTP/2', ver: 'TLSv1.3', cipher: 'AEAD-AES128-GCM-SHA256', chlen: '1493', ua: 'cfprobe/0.1.0',
+    names: ':method :scheme :authority :path user-agent accept', src: 'live run of cfprobe inspect, 2026-11-24' },
+  { label: 'OkHttp', name: 'OkHttp (Suwayomi)', proto: 'HTTP/2', ver: 'TLSv1.3', cipher: 'AEAD-AES128-GCM-SHA256', chlen: '1575', ua: 'Chrome 152 Linux (FlareSolverr\'s)',
+    names: ':method :path :authority :scheme cookie user-agent accept-encoding', src: 'E1 arm a2' },
+  { label: 'curl-impersonate', name: 'curl-impersonate', proto: 'HTTP/2', ver: 'TLSv1.3', cipher: 'AEAD-AES128-GCM-SHA256', chlen: '1684', ua: 'Chrome 152 Linux (FlareSolverr\'s)',
+    names: ':method :authority :scheme :path sec-ch-ua sec-ch-ua-mobile sec-ch-ua-platform upgrade-insecure-requests user-agent accept sec-fetch-site sec-fetch-mode sec-fetch-user sec-fetch-dest accept-encoding accept-language priority cache-control cookie', src: 'E1 arm a1' },
+  { label: 'host curl', name: 'curl 8.22', proto: 'HTTP/2', ver: 'TLSv1.3', cipher: 'AEAD-AES256-GCM-SHA384', chlen: '1568', ua: 'Chrome 152 Linux (FlareSolverr\'s)',
+    names: ':method :scheme :authority :path accept user-agent cookie', src: 'E1 arm a3' },
+  { label: 'FlareSolverr Chrome', name: 'Chromium 152', proto: 'HTTP/3', ver: 'TLSv1.3', cipher: 'AEAD-AES128-GCM-SHA256', chlen: '1962', ua: 'Chrome 152 Linux',
+    names: ':method :authority :scheme :path content-length cache-control sec-ch-ua ... (29 names, from the challenge form POST)', src: 'E2, after the solve' },
+];
+
+const L1 = {
+  'chromium-headful': { label: 'Chromium 152', ja4: 't13d1517h2_8daaf6152771_cb7bf5808d99', akamai: '1:65536;2:0;4:6291456;6:262144|15663105|0|m,a,s,p', stream: '1', headers: 13, ua: 'Chrome/152 Linux', js: 'baseline' },
+  'flaresolverr-chrome': { label: 'FlareSolverr', ja4: 't13d1517h2_8daaf6152771_cb7bf5808d99', akamai: '1:65536;2:0;4:6291456;6:262144|15663105|0|m,a,s,p', stream: '1', headers: 13, ua: 'Chrome/152 Linux', js: '6 of 32 differ (L2)' },
+  'ci-chrome152': { label: 'curl-impersonate', ja4: 't13d1517h2_8daaf6152771_cb7bf5808d99', akamai: '1:65536;2:0;4:6291456;6:262144|15663105|0|m,a,s,p', stream: '1', headers: 14, ua: 'Chrome/152 Windows', js: 'none: runs no JS' },
+  'okhttp-suwayomi': { label: 'OkHttp', ja4: 't13d1114h2_5e2a75874763_89e9e4bb3419', akamai: '4:16777216|16711681|0|m,p,a,s', stream: '3', headers: 2, ua: 'Chrome/149 Android', js: 'none: runs no JS' },
+  'curl-host': { label: 'curl 8.22', ja4: 't13d3013h2_1d37bd780c83_8537cf56674e', akamai: '3:100;4:65536;2:0|1048510465|0|m,s,a,p', stream: '1', headers: 2, ua: 'curl/8.22.0', js: 'none: runs no JS' },
+  'cfprobe-default': { label: 'cfprobe', ja4: 't13d1711h2_5b57614c22b0_8af51f2a06eb', akamai: '2:0;4:2097152;5:16384;6:16384|5177345|0|m,s,a,p', stream: '1', headers: 2, ua: 'cfprobe/0.1.0', js: 'none: runs no JS' },
+};
+
+const JA4R = {
+  'chromium-headful': 't13d1517h2_002f,0035,009c,009d,1301,1302,1303,c013,c014,c02b,c02c,c02f,c030,cca8,cca9_0005,000a,000b,000d,0012,0017,001b,0023,002b,002d,0033,44cd,ca34,fe0d,ff01_0904,0905,0906,0403,0804,0401,0503,0805,0501,0806,0601',
+  'cfprobe-default': 't13d1711h2_002f,0035,009c,009d,1301,1302,1303,c009,c00a,c013,c014,c02b,c02c,c02f,c030,cca8,cca9_000a,000b,000d,0017,0023,002b,002d,0033,ff01_0904,0905,0906,0403,0804,0401,0503,0805,0501,0806,0601,0201',
+  'okhttp-suwayomi': 't13d1114h2_1301,1302,1303,c013,c014,c02b,c02c,c02f,c030,cca8,cca9_0005,000a,000b,000d,0011,0017,0023,002b,002d,0032,0033,ff01_0403,0503,0603,0807,0808,0804,0805,0806,0809,080a,080b,0401,0501,0601,0402,0303,0301,0302',
+  'ci-firefox155': 't13d1517h2_002f,0035,009c,009d,1301,1302,1303,c013,c014,c02b,c02c,c02f,c030,cca8,cca9_0005,000a,000b,000d,0012,0017,001b,001c,0022,0023,002b,002d,0033,fe0d,ff01_0403,0503,0603,0804,0805,0806,0401,0501,0601,0203,0201',
+};
+const JA4WANT = { 'chromium-headful': L1['chromium-headful'].ja4, 'cfprobe-default': L1['cfprobe-default'].ja4, 'okhttp-suwayomi': L1['okhttp-suwayomi'].ja4, 'ci-firefox155': 't13d1517h2_8daaf6152771_3cbfd9057e0d' };
+
+/* ---------- hero ---------- */
+(function hero() {
+  const dl = $('#heroFree');
+  let cur = HERO[0], busy = false;
+  function fill(c, animate) {
+    dl.innerHTML = '';
+    const rows = [['TLS version', c.ver], ['cipher', c.cipher], ['ClientHello length', c.chlen + ' bytes'], ['protocol', c.proto], ['header names, wire order', c.names], ['User-Agent', c.ua], ['source', c.src]];
+    rows.forEach(([k, v], i) => {
+      const dd = el('dd', {}, v);
+      if (animate && !reduce) { dd.classList.add('reveal'); dd.style.animationDelay = (i * 90) + 'ms'; }
+      dl.append(el('dt', {}, k), dd);
+    });
+  }
+  segmented($('#heroPick'), HERO, c => { cur = c; $('#heroClientName').textContent = c.name; fill(c, false); });
+  fill(cur, false);
+  $('#heroSend').addEventListener('click', () => {
+    if (busy) return;
+    const p = $('#packet');
+    if (reduce) { fill(cur, true); return; }
+    busy = true; p.setAttribute('opacity', '1');
+    const pts = [[180, 100], [385, 100], [385, 100], [590, 100]], dur = [700, 450, 700];
+    let seg = 0, t0 = null;
+    dl.innerHTML = '';
+    function frame(ts) {
+      if (t0 === null) t0 = ts;
+      const k = Math.min(1, (ts - t0) / dur[seg]);
+      const e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      const [x0, y0] = pts[seg], [x1, y1] = pts[seg + 1];
+      p.setAttribute('transform', `translate(${x0 + (x1 - x0) * e},${y0 + (y1 - y0) * e})`);
+      if (k >= 1) { seg++; t0 = null; }
+      if (seg < 3) requestAnimationFrame(frame); else { p.setAttribute('opacity', '0'); busy = false; fill(cur, true); }
+    }
+    requestAnimationFrame(frame);
+  });
+})();
+
+/* ---------- repo tree ---------- */
+(function tree() {
+  const T = [
+    ['projects/', 'what each tool does, read in source', 'suwayomi-tachidesk.md, flaresolverr.md, curl-impersonate.md: each tool read at a pinned commit, every claim with file and line. other-projects.md surveys 12 more tools by which layer they fake.'],
+    ['research/', 'how Cloudflare works, from its docs', 'bot-management-signals.md (scores, request.cf fields, what each plan exposes), challenges-and-clearance.md (challenge types, what cf_clearance is), tls-http-fingerprinting.md (JA3, JA4, Akamai HTTP/2).'],
+    ['lab/', 'servers and clients you can run', 'trackme/ (fingerprint echo server image), okhttp-client/ (Suwayomi\'s exact OkHttp 5.5.1 + JDK 25), l2/ (JS probe page), zone-worker/ (the echo Worker on lab.riddlelab.dev). bin/ holds the curl-impersonate release and is not committed.'],
+    ['scripts/', 'the glue', 'fingerprint-analysis/ (headful Chromium baseline launcher, the old Python table maker), zone/e1_replay.sh (runs the six E1 arms), zone/fw_events.sh (pulls Cloudflare\'s firewall events over GraphQL).'],
+    ['experiments/', 'measured results', 'test-results/L1 (wire fingerprints, 10 findings), L2 (JS environment), E0 (first contact), E1 (cookie reuse, 6 arms), E2 (FlareSolverr solve). Each has a summary.md with findings and limits; raw captures sit beside it, scrubbed.'],
+    ['engine/', 'cfprobe, the Rust engine', 'src/core (config, errors), src/tls (settings, handshake readout), src/http (HTTP/2 settings, headers, cookies), src/networking (the connection stack), src/fingerprint (receiver parsers, comparison), src/reporting (tables), src/main.rs (CLI). tests/ has 24 tests.'],
+    ['vendor/', 'pinned upstream source, not committed', 'Clones of the studied projects at the commits in the README. Treated as untrusted data: read, never built or run from inside vendor/.'],
+  ];
+  const box = $('#tree');
+  T.forEach(([name, d, more]) => {
+    const m = el('div', { class: 'more', hidden: '' }, more);
+    const b = el('button', { type: 'button', 'aria-expanded': 'false' }, el('span', {}, name), el('span', { class: 'd' }, d));
+    b.addEventListener('click', () => { const open = b.getAttribute('aria-expanded') === 'true'; b.setAttribute('aria-expanded', String(!open)); m.hidden = open; });
+    box.append(b, m);
+  });
+})();
+
+/* ---------- generic multiple-choice ---------- */
+function mcq(container, qs, onAllRight) {
+  const state = qs.map(() => null);
+  qs.forEach((q, qi) => {
+    const why = el('div', { class: 'why', hidden: '' }, q.why);
+    const opts = el('div', { class: 'opts' });
+    q.opts.forEach((o, oi) => {
+      const b = el('button', { type: 'button' }, o);
+      b.addEventListener('click', () => {
+        if (state[qi] === true) return;
+        const right = oi === q.a;
+        b.classList.add(right ? 'right' : 'wrong');
+        if (right) { state[qi] = true; why.hidden = false; $$('button', opts).forEach(x => x.disabled = x !== b); }
+        else state[qi] = false;
+        if (onAllRight) onAllRight(state.filter(Boolean).length, qs.length);
+      });
+      opts.append(b);
+    });
+    container.append(el('div', { class: 'q' }, el('div', { html: `<strong>${qi + 1}.</strong> ${q.q}` }), opts, why));
+  });
+}
+
+mcq($('#tagQuiz'), [
+  { q: '"FlareSolverr sends <code>accept-language: C.UTF-8</code>", seen in a TrackMe capture and traced to <code>src/utils.py:189-191</code>.', opts: ['[recall]', '[verified]', '[to measure]'], a: 1, why: 'It was read in source at a pinned line and confirmed by a capture, so it is verified.' },
+  { q: '"Chrome began shuffling extensions in version 110", remembered, not rechecked.', opts: ['[documented]', '[verified]', '[recall]'], a: 2, why: 'Prior knowledge with no source in hand is recall, and must be promoted before anything depends on it.' },
+  { q: '"Is cf_clearance tied to the TLS fingerprint?" before E1 ran.', opts: ['[to measure]', '[unverified]', '[documented]'], a: 0, why: 'Only a zone run could settle it. E1 then answered it: no, on a Free zone.' },
+], (n, t) => { if (n === t) complete('tags'); });
+
+/* ---------- layers table ---------- */
+(function layers() {
+  const keys = ['flaresolverr-chrome', 'ci-chrome152', 'okhttp-suwayomi', 'curl-host', 'cfprobe-default'];
+  const base = L1['chromium-headful'];
+  const seen = new Set();
+  const table = $('#layerTable');
+  function show(k) {
+    const c = L1[k]; seen.add(k);
+    const rows = [
+      ['2 TLS', 'JA4', base.ja4, c.ja4],
+      ['3 HTTP/2', 'Akamai string', base.akamai, c.akamai],
+      ['3 HTTP/2', 'first stream ID', base.stream, c.stream],
+      ['4 HEADERS', 'headers sent', base.headers, c.headers],
+      ['4 HEADERS', 'User-Agent claims', base.ua, c.ua],
+      ['5 JS', 'JS environment', base.js, c.js],
+    ];
+    table.innerHTML = '<tr><th>Layer</th><th>Field</th><th>Chromium 152 (baseline)</th><th>' + esc(c.label) + '</th></tr>' +
+      rows.map(([l, f, b, v]) => { const same = String(b) === String(v); return `<tr><td>${l}</td><td>${f}</td><td class="mono">${esc(b)}</td><td class="mono" style="color:${same ? 'var(--good)' : 'var(--bad)'}">${esc(v)}</td></tr>`; }).join('');
+    const fb = $('#layerFb');
+    const notes = {
+      'flaresolverr-chrome': 'The same Chromium binary, so layers 2 to 4 match exactly (L1-1). Only the JS layer and the C.UTF-8 language give it away.',
+      'ci-chrome152': 'TLS and HTTP/2 match Chromium (L1-3), apart from the signature-algorithm GREASE that JA4 cannot see (L1-8). It claims Windows on a Linux host and adds cache-control.',
+      'okhttp-suwayomi': 'Wrong at every layer it claims (L1-4): JVM ClientHello, one SETTINGS entry, m,p,a,s order, first request on stream 3, while the UA says Chrome on Android.',
+      'curl-host': 'Plain curl does not pretend. Its 30 ciphers alone separate it from any browser.',
+      'cfprobe-default': 'cfprobe pretends nothing either: its own BoringSSL and h2 defaults, matching no browser. That is by design.',
+    };
+    feedback(fb, true, notes[k] + (seen.size < keys.length ? ` <span class="muted">(${seen.size} of ${keys.length} clients viewed)</span>` : ' All five viewed.'));
+    if (seen.size === keys.length) complete('layers');
+  }
+  segmented($('#layerPick'), keys.map(k => ({ label: L1[k].label, k })), it => show(it.k));
+  show(keys[0]);
+})();
+
+/* ---------- GREASE spotter ---------- */
+(function grease() {
+  const vals = ['0x0a0a', '0x1301', '0x7a7a', '0xc02b', '0x11ec', '0x1a1a', '0x0403', '0x0904', '0xeaea', '0x001d', '0xcca9', '0x0a0b', '0x2a2a', '0x0804', '0xaabb', '0xdada'];
+  const isG = v => { const n = parseInt(v, 16); return (n & 0x0f0f) === 0x0a0a && (n >> 8) === (n & 0xff); };
+  const box = $('#greasePick');
+  vals.forEach(v => { const b = el('button', { type: 'button', 'aria-pressed': 'false' }, v); b.addEventListener('click', () => b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'))); box.append(b); });
+  $('#greaseCheck').addEventListener('click', () => {
+    let wrong = 0, miss = 0;
+    $$('button', box).forEach(b => {
+      b.classList.remove('right', 'wrong', 'miss');
+      const sel = b.getAttribute('aria-pressed') === 'true', g = isG(b.textContent);
+      if (sel && g) b.classList.add('right'); else if (sel && !g) { b.classList.add('wrong'); wrong++; } else if (!sel && g) { b.classList.add('miss'); miss++; }
+    });
+    if (!wrong && !miss) { feedback($('#greaseFb'), true, 'All six found. <code>0x0a0b</code> and <code>0xaabb</code> are traps: the first has unequal bytes, the second does not end in <code>a</code>. <code>0x11ec</code> is real: X25519MLKEM768, the post-quantum group Chrome 152 offers first.'); complete('grease'); }
+    else feedback($('#greaseFb'), false, `${wrong} wrong pick(s), ${miss} GREASE value(s) missed (dashed). Check each: both bytes equal, and each byte ends in <code>a</code>.`);
+  });
+})();
+
+/* ---------- shuffle demo ---------- */
+(function shuffle() {
+  const ext = ['0000', '0005', '000a', '000b', '000d', '0010', '0012', '0017', '001b', '0023', '002b', '002d', '0033', '44cd', 'ca34', 'fe0d', 'ff01'];
+  let order = ext.slice(), n = 1;
+  const seenOrder = new Set(), seenSorted = new Set();
+  const list = $('#extList');
+  async function render() {
+    list.innerHTML = '';
+    list.append(el('span', { class: 'g' }, 'GREASE'));
+    order.forEach(c => list.append(el('span', {}, c)));
+    list.append(el('span', { class: 'g' }, 'GREASE'));
+    const ho = (await sha256hex(order.join('-'))).slice(0, 12), hs = (await sha256hex(ext.slice().sort().join('-'))).slice(0, 12);
+    const a = $('#hOrder'), b = $('#hSorted');
+    if (a.textContent !== ho) { a.textContent = ho; a.classList.remove('flash'); void a.offsetWidth; a.classList.add('flash'); }
+    b.textContent = hs;
+    seenOrder.add(ho); seenSorted.add(hs);
+    $('#connCount').textContent = 'connection ' + n;
+    if (n >= 3) { feedback($('#shuffleFb'), true, `${n} connections: ${seenOrder.size} different wire-order hashes, ${seenSorted.size} sorted hash. That is why a stable JA3 next to a Chrome User-Agent is itself suspicious: real Chrome never repeats one.`); complete('shuffle'); }
+  }
+  $('#newConn').addEventListener('click', () => {
+    for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+    n++; render();
+  });
+  render();
+})();
+
+/* ---------- JA4 calculator ---------- */
+(function ja4() {
+  const sel = $('#ja4Src');
+  const names = { 'chromium-headful': 'Chromium 152 (headful)', 'cfprobe-default': 'cfprobe default', 'okhttp-suwayomi': 'OkHttp (Suwayomi)', 'ci-firefox155': 'curl-impersonate firefox155' };
+  Object.keys(JA4R).forEach(k => sel.append(el('option', { value: k }, names[k])));
+  function parts(s) { const p = s.split('_'); return { a: p[0], c: p[1], e: p.slice(2).join('_') }; }
+  function load() {
+    const p = parts(JA4R[sel.value]);
+    $('#ja4Ciph').value = p.c; $('#ja4Ext').value = p.e;
+    const w = JA4WANT[sel.value].split('_');
+    $('#ja4Want').innerHTML = `<span class="a">${w[0]}</span><span class="u">_</span><span class="b">${w[1]}</span><span class="u">_</span><span class="c">${w[2]}</span>`;
+    $('#ja4Out').textContent = '...'; $('#ja4Fb').className = 'feedback'; $('#ja4Fb').innerHTML = '';
+  }
+  sel.addEventListener('change', load); load();
+  $('#ja4Go').addEventListener('click', async () => {
+    const a = parts(JA4R[sel.value]).a;
+    const ciph = $('#ja4Ciph').value.replace(/\s+/g, ''), ext = $('#ja4Ext').value.replace(/\s+/g, '');
+    const nC = ciph ? ciph.split(',').length : 0;
+    const aNew = a.slice(0, 4) + String(nC).padStart(2, '0') + a.slice(6);
+    const b = (await sha256hex(ciph)).slice(0, 12), c = (await sha256hex(ext)).slice(0, 12);
+    const got = `${aNew}_${b}_${c}`, want = JA4WANT[sel.value];
+    const w = want.split('_');
+    $('#ja4Out').innerHTML = `<span class="a">${aNew}</span><span class="u">_</span><span class="b" style="${b === w[1] ? '' : 'outline:2px solid var(--bad)'}">${b}</span><span class="u">_</span><span class="c" style="${c === w[2] ? '' : 'outline:2px solid var(--bad)'}">${c}</span>`;
+    if (got === want) { feedback($('#ja4Fb'), true, 'Exact match. You recomputed the fingerprint Cloudflare Enterprise would log, from the raw ClientHello lists. Now delete one cipher from the list and hash again: the count in part a and all of part b change.'); complete('ja4calc'); }
+    else feedback($('#ja4Fb'), false, 'Different from the capture, which is expected if you edited the lists. Parts that changed are outlined. Pick the capture again to reset.');
+  });
+})();
+
+/* ---------- HTTP/2 frames replay ---------- */
+$('#replayFrames').addEventListener('click', () => {
+  const fs = $$('#frameSvg .frm');
+  if (reduce) return;
+  fs.forEach(f => { f.style.transition = 'none'; f.style.opacity = '0'; f.style.transform = 'translateX(-30px)'; });
+  void document.body.offsetWidth;
+  fs.forEach((f, i) => setTimeout(() => { f.style.transition = 'opacity .45s, transform .45s'; f.style.opacity = '1'; f.style.transform = 'none'; }, 150 + i * 450));
+});
+
+/* ---------- Akamai match ---------- */
+(function akMatch() {
+  const items = [
+    { s: '1:65536;2:0;4:6291456;6:262144|15663105|0|m,a,s,p', a: 'Chromium 152' },
+    { s: '1:65536;2:0;4:131072;5:16384|12517377|0|m,p,a,s', a: 'curl-impersonate firefox155' },
+    { s: '3:100;4:65536;2:0|1048510465|0|m,s,a,p', a: 'curl 8.22' },
+    { s: '4:16777216|16711681|0|m,p,a,s', a: 'OkHttp (Suwayomi)' },
+  ];
+  const choices = ['choose...', 'Chromium 152', 'curl-impersonate firefox155', 'curl 8.22', 'OkHttp (Suwayomi)'];
+  const box = $('#akamaiMatch');
+  const fb = el('div', { class: 'feedback' });
+  const sels = items.map((it, i) => {
+    const s = el('select', { id: 'akm' + i, 'aria-label': 'Client for fingerprint ' + (i + 1) });
+    choices.forEach(c => s.append(el('option', {}, c)));
+    box.append(el('div', { class: 'row', style: 'justify-content:space-between' }, el('code', { style: 'font-size:12.5px' }, it.s), s));
+    return s;
+  });
+  const btn = el('button', { class: 'btn', type: 'button' }, 'Check');
+  btn.addEventListener('click', () => {
+    let ok = 0; sels.forEach((s, i) => { const r = s.value === items[i].a; s.style.borderColor = r ? 'var(--good)' : 'var(--bad)'; if (r) ok++; });
+    if (ok === 4) { feedback(fb, true, 'All four. Clues: Chrome is the only one with 6:262144; Firefox sends 5:16384 and m,p,a,s; curl lists 3 first and sends a near-1 GB window; OkHttp sends a single setting.'); complete('akamai'); }
+    else feedback(fb, false, `${ok} of 4 right. Hint: the client that sends only one SETTINGS entry opens its first request on stream 3.`);
+  });
+  box.append(el('div', { class: 'row' }, btn), fb);
+})();
+
+/* ---------- Akamai decoder ---------- */
+(function akDecode() {
+  const NAMES = { 1: 'HEADER_TABLE_SIZE', 2: 'ENABLE_PUSH', 3: 'MAX_CONCURRENT_STREAMS', 4: 'INITIAL_WINDOW_SIZE', 5: 'MAX_FRAME_SIZE', 6: 'MAX_HEADER_LIST_SIZE', 8: 'ENABLE_CONNECT_PROTOCOL', 9: 'NO_RFC7540_PRIORITIES' };
+  const PS = { m: ':method', a: ':authority', s: ':scheme', p: ':path' };
+  const inp = $('#akIn'), out = $('#akOut');
+  let touched = false;
+  function go() {
+    const f = inp.value.trim().split('|');
+    if (f.length !== 4) { out.innerHTML = '<div class="feedback no">An Akamai string has exactly 4 fields separated by |. This one has ' + f.length + '.</div>'; return; }
+    const settings = f[0] ? f[0].split(';').map(kv => { const [k, v] = kv.split(':'); return `<tr><td class="mono">${esc(k)}</td><td>${NAMES[k] || 'unknown id'}</td><td class="mono num">${esc(v ?? '?')}</td></tr>`; }).join('') : '';
+    const ps = f[3].split(',').map(x => PS[x] || x).join(' then ');
+    out.innerHTML = `<div class="scroll"><table><tr><th>SETTINGS id</th><th>name</th><th>value</th></tr>${settings}</table></div>
+      <p style="margin:8px 0 0;font-size:14px"><strong>WINDOW_UPDATE:</strong> <code>${esc(f[1])}</code> extra bytes of connection window. <strong>PRIORITY frames:</strong> <code>${esc(f[2])}</code>${f[2] === '0' ? ' (none sent)' : ''}. <strong>Pseudo-headers:</strong> ${esc(ps)}.</p>`;
+    if (touched) complete('decoder');
+  }
+  inp.addEventListener('input', () => { touched = true; go(); });
+  go();
+})();
+
+/* ---------- pipeline stepper ---------- */
+function stepper(svgSel, textSel, prevSel, nextSel, countSel, steps, exId, kind) {
+  let i = 0;
+  function show() {
+    const s = steps[i];
+    $(textSel).innerHTML = `<b>step ${i + 1} of ${steps.length}</b>${s.t}`;
+    $(countSel).textContent = '';
+    if (kind === 'edge') {
+      $$(svgSel + ' .edge-l').forEach(e => { const k = +e.dataset.s; e.classList.toggle('hot', k === i); e.style.opacity = k <= i ? '1' : '.25'; });
+      $$(svgSel + ' .node').forEach(n => n.classList.toggle('hot', (s.nodes || []).includes(n.dataset.n)));
+    } else {
+      $$(svgSel + ' .node').forEach(n => n.classList.toggle('hot', n.dataset.n === String(s.n)));
+    }
+    $(prevSel).disabled = i === 0; $(nextSel).disabled = i === steps.length - 1;
+    if (i === steps.length - 1) complete(exId);
+  }
+  $(prevSel).addEventListener('click', () => { if (i > 0) { i--; show(); } });
+  $(nextSel).addEventListener('click', () => { if (i < steps.length - 1) { i++; show(); } });
+  show();
+}
+stepper('#pipeSvg', '#pipeText', '#pipePrev', '#pipeNext', '#pipeCount', [
+  { t: 'An extension asks for a page. OkHttp sends it with the JVM\'s TLS stack and the default User-Agent "Chrome 149 on Android". The TLS layer already contradicts the UA (L1-4).', nodes: ['s', 'z'] },
+  { t: 'Cloudflare answers 403. Suwayomi treats 403/503 plus <code>Server: cloudflare</code> as "challenged" (S1). It does not read <code>cf-mitigated</code>, the documented signal.', nodes: ['z', 's'] },
+  { t: 'Suwayomi POSTs <code>{cmd: "request.get", url}</code> to FlareSolverr. All calls go through one global lock, so only one solve runs at a time (S6).', nodes: ['s', 'f'] },
+  { t: 'FlareSolverr opens the URL in Chromium 152, new headless mode. On the wire it is identical to a desktop Chromium (L1-1).', nodes: ['f', 'c'] },
+  { t: 'The challenge page runs. On this zone the silent check failed, so FlareSolverr pressed Tab, Tab, Space to tick the checkbox, with no mouse movement (F3, E2-1).', nodes: ['c', 'z'] },
+  { t: 'Cloudflare accepts the solve and sets <code>cf_clearance</code> in the browser. The solve ran over HTTP/3.', nodes: ['z', 'c'] },
+  { t: 'FlareSolverr returns the cookie jar and the exact User-Agent. It reports <code>status: 200</code> whatever happened (F5).', nodes: ['f', 's'] },
+  { t: 'Suwayomi stores the cookie, switches its global UA to Chrome\'s (S4) and replays the request from OkHttp. E1 showed the zone accepts this, because the cookie checks the UA, not the TLS stack.', nodes: ['s', 'z'] },
+], 'pipeline', 'edge');
+
+stepper('#smSvg', '#smText', '#smPrev', '#smNext', '#smCount', [
+  { n: 0, t: 'A client asks for <code>/c/echo</code> with no cookie.' },
+  { n: 1, t: 'The WAF custom rule matches <code>http.host eq "lab.riddlelab.dev" and starts_with(path, "/c/")</code>. Action: Managed Challenge. Cloudflare logs <code>managed_challenge</code>.' },
+  { n: 2, t: 'Cloudflare answers <strong>403</strong> with <code>cf-mitigated: challenge</code> and an HTML page that loads <code>/cdn-cgi/challenge-platform/</code>. cfprobe saw exactly this: 403, 5372 bytes, markers <code>window._cf_chl_opt</code> and "Just a moment".' },
+  { n: 3, t: 'The page runs silent checks: proof of work, web API probes, browser quirks. A client without JavaScript (curl, OkHttp, cfprobe) stops here for good.' },
+  { n: 4, t: 'If the silent checks are not convincing, a checkbox appears. FlareSolverr reached this state on the lab zone.' },
+  { n: 5, t: 'The page POSTs its answer. Cloudflare sets <code>cf_clearance</code>, logs <code>managed_challenge_interactive_solved</code> (or <code>non_interactive_solved</code>).' },
+  { n: 6, t: 'Cloudflare replays the original request as a GET. Because the cookie is valid, the rule logs <code>managed_challenge_bypassed</code>.' },
+  { n: 7, t: 'The request reaches the origin, here the echo Worker, which answers 200. For the next 30 minutes (Challenge Passage) this cookie skips the challenge.' },
+], 'statem', 'node');
+
+mcq($('#levelQuiz'), [
+  { q: 'A cookie earned on an <strong>Interactive</strong> challenge meets a <strong>Managed</strong> Challenge rule.', opts: ['Passes', 'Challenged again'], a: 0, why: 'Interactive is the highest level and clears all three types.' },
+  { q: 'A cookie earned on a <strong>Non-Interactive</strong> (JS) challenge meets a <strong>Managed</strong> Challenge rule.', opts: ['Passes', 'Challenged again'], a: 1, why: 'Non-Interactive clears only Non-Interactive rules. That is why E1 used one rule at one level: mixed levels confuse the result.' },
+  { q: 'A valid Managed cookie, 45 minutes after it was set, zone on default settings, normal page load.', opts: ['Passes', 'Challenged again'], a: 1, why: 'Default Challenge Passage is 30 minutes, plus a few minutes of clock tolerance. (XmlHTTP requests get an extra hour.)' },
+], (n, t) => { if (n === t) complete('levels'); });
+
+/* ---------- L2 tell ---------- */
+(function tell() {
+  const props = [
+    ['navigator.webdriver', 'false', false], ['plugins', '5', false], ['window.chrome', 'app, csi, loadTimes', false],
+    ['screen', '800 x 600', false], ['outerWidth x outerHeight', '1920 x 1080', true], ['maxTouchPoints', '0', false],
+    ['languages', '["C.UTF-8"]', false], ['document.hasFocus()', 'false', false],
+  ];
+  const box = $('#tellPick');
+  props.forEach(([k, v, imp]) => {
+    const b = el('button', { type: 'button' }, `${k}: ${v}`);
+    b.addEventListener('click', () => {
+      if (imp) { b.classList.add('right'); feedback($('#tellFb'), true, 'Right. The window (1920 x 1080, from <code>--window-size</code>) is larger than the screen it sits on (800 x 600, the headless default). No real display allows that, so it is a one-line check. <code>languages: C.UTF-8</code> and no focus are also tells, but they are possible, just unusual.'); complete('tell'); }
+      else { b.classList.add('wrong'); feedback($('#tellFb'), false, `<code>${esc(k)}</code> is unusual or normal, but possible on a real machine. Look for two values that contradict each other.`); }
+    });
+    box.append(b);
+  });
+})();
+
+/* ---------- E2 timeline ---------- */
+(function e2() {
+  // Seconds after 12:57:35. Only logged timestamps; the click itself has none.
+  const ev = [
+    ['challenge served', 0, 'Cloudflare event managed_challenge at 12:57:35'],
+    ['challenge detected', 0, 'FlareSolverr log 12:57:35, page title "Just a moment..."'],
+    ['Tab, Tab, Space', null, 'happened between 0 and 8 s; the click is logged only at DEBUG level, so it has no timestamp'],
+    ['interactive_solved', 8, 'Cloudflare event at 12:57:43, ray a5f894bf0f602e85'],
+    ['bypassed, origin 200', 8, 'same ray, same second; the Worker saw HTTP/3'],
+    ['Challenge solved!', 10, 'FlareSolverr log 12:57:45; the whole API call took 11.3 s, cookie 432 chars'],
+  ];
+  const box = $('#e2Bars');
+  ev.forEach(([n, t, d]) => box.append(el('div', { class: 'bar' + (t == null ? ' absent' : '') }, el('span', {}, n),
+    el('div', { class: 'track', title: d }, t == null ? el('div', { class: 'fill', style: 'left:0;width:80%;opacity:.25;background:repeating-linear-gradient(90deg,var(--receiver) 0 6px,transparent 6px 12px)' }) : el('div', { class: 'fill', style: `left:${t / 10 * 96}%;width:4%;opacity:.25;background:var(--receiver)` })),
+    el('span', { class: 'val' }, t == null ? 'not logged' : '+' + t + ' s'))));
+  $('#e2Play').addEventListener('click', () => {
+    const fills = $$('#e2Bars .fill');
+    fills.forEach(f => f.style.opacity = '.25');
+    ev.forEach((e, i) => setTimeout(() => { fills[i].style.opacity = '1'; feedback($('#e2Fb'), true, `<strong>${e[1] == null ? 'time not logged' : '+' + e[1] + ' s'}:</strong> ${e[0]}. ${e[2]}.`); if (i === ev.length - 1) complete('e2'); }, reduce ? 0 : 300 + i * 700));
+  });
+})();
+
+/* ---------- E1 game ---------- */
+(function e1() {
+  const arms = [
+    ['a0', 'curl-impersonate chrome152, FlareSolverr\'s UA', 'no cookie', 403],
+    ['a1', 'curl-impersonate chrome152, FlareSolverr\'s UA', 'with cookie. JA4 matches the solver', 200],
+    ['a2', 'OkHttp 5.5.1 (Suwayomi), FlareSolverr\'s UA', 'with cookie. Every wire layer differs', 200],
+    ['a3', 'host curl 8.22.0, FlareSolverr\'s UA', 'with cookie. Plain curl', 200],
+    ['a4', 'curl-impersonate chrome152, UA changed Linux to Windows', 'with cookie. Only the UA platform differs', 403],
+    ['a5', 'repeat of a1, right after a4', 'with cookie', 200],
+  ];
+  const box = $('#e1Arms');
+  const sels = arms.map(([id, d, s]) => {
+    const sel = el('select', { id: 'e1' + id, 'aria-label': 'Prediction for ' + id }, el('option', { value: '' }, 'predict'), el('option', { value: '200' }, '200 reached'), el('option', { value: '403' }, '403 challenged'));
+    const res = el('span', { class: 'res' }, '');
+    box.append(el('div', { class: 'arm' }, el('span', { class: 'id' }, id), el('div', { class: 'desc', html: `${esc(d)}<small>${esc(s)}</small>` }), el('div', { class: 'ctl row' }, sel, res)));
+    return [sel, res];
+  });
+  $('#e1Reveal').addEventListener('click', () => {
+    if (sels.some(([s]) => !s.value)) { feedback($('#e1Fb'), false, 'Make a prediction for every arm first. Guessing is the point.'); return; }
+    let right = 0;
+    arms.forEach((a, i) => setTimeout(() => {
+      const [s, r] = sels[i]; const ok = +s.value === a[3]; if (ok) right++;
+      r.innerHTML = `<span style="color:${a[3] === 200 ? 'var(--good)' : 'var(--bad)'}">${a[3]}</span> ${ok ? '✓' : '✗'}`;
+      if (i === arms.length - 1) {
+        feedback($('#e1Fb'), right >= 5, `${right} of 6. The surprise for most people is a2: OkHttp, wrong at TLS, HTTP/2 and headers, still gets in. And a4: a perfect Chrome fingerprint gets stopped by one changed word in the UA. On this Free zone the cookie checks the User-Agent, not the TLS stack.`);
+        complete('e1');
+      }
+    }, reduce ? 0 : i * 350));
+  });
+})();
+
+/* ---------- lifecycle ---------- */
+(function life() {
+  // One run of `cfprobe inspect https://lab.riddlelab.dev/echo --repeat 2`, 2026-11-24.
+  const full = [['DNS', 1.37], ['TCP connect', 2.29], ['TLS handshake', 11.11], ['HTTP/2 setup, request, response head', 30.11], ['body', 0.04]];
+  const reused = [['DNS', null], ['TCP connect', null], ['TLS handshake', null], ['request, response head', 8.82], ['body', 0.06]];
+  const seen = new Set();
+  const box = $('#lifeBars');
+  function draw(rows, key) {
+    seen.add(key);
+    box.innerHTML = '';
+    let start = 0; const total = 44.92;
+    rows.forEach(([n, v], i) => {
+      const fill = el('div', { class: 'fill', style: `left:${start / total * 100}%;width:0` });
+      const row = el('div', { class: 'bar' + (v == null ? ' absent' : '') }, el('span', {}, n), el('div', { class: 'track' }, fill), el('span', { class: 'val' }, v == null ? 'absent' : v.toFixed(2) + ' ms'));
+      box.append(row);
+      if (v != null) { const w = v / total * 100; setTimeout(() => { fill.style.transition = reduce ? 'none' : 'width .5s ease'; fill.style.width = Math.max(w, 0.6) + '%'; }, reduce ? 0 : 120 + i * 260); start += v; }
+    });
+    const msg = key === 'full'
+      ? 'Request 1: 44.92 ms in total. Every step ran: DNS, TCP, a full TLS 1.3 handshake (11.11 ms), then the HTTP/2 preface and the request itself.'
+      : 'Request 2 on the same connection: 8.88 ms in total, five times faster. DNS, TCP and TLS did not happen, so the report leaves them absent (null in JSON), not 0. In the offline tests the server counts TCP accepts: 1 for three requests with reuse on, 3 with it off.';
+    feedback($('#lifeFb'), true, msg);
+    if (seen.size === 2) complete('life');
+  }
+  segmented($('#lifePick'), [{ label: 'Request 1: new connection', k: 'full' }, { label: 'Request 2: reused', k: 'reused' }], it => draw(it.k === 'full' ? full : reused, it.k));
+  draw(full, 'full');
+})();
+
+/* ---------- provenance sort ---------- */
+(function prov() {
+  const items = [
+    ['configured_h2.initial_stream_window_size = 6291456', 'conf'],
+    ['tls.client_random = 4c3b7ab4...', 'client'],
+    ['fingerprint.tls.ja4 = t13d1711h2_...', 'recv'],
+    ['tls.cipher = TLS_AES_128_GCM_SHA256', 'client'],
+    ['fingerprint.http.pseudo_order = m,s,a,p', 'recv'],
+    ['configured_tls.cipher_list = None', 'conf'],
+    ['timings.tls_ms = 10.22', 'client'],
+    ['fingerprint.tls.client_hello_len = 1493', 'recv'],
+  ];
+  const box = $('#provQuiz');
+  const sels = items.map(([t], i) => {
+    const s = el('select', { id: 'prov' + i, 'aria-label': 'Kind of value for ' + t }, el('option', { value: '' }, 'choose...'), el('option', { value: 'conf' }, 'configured'), el('option', { value: 'client' }, 'measured by client'), el('option', { value: 'recv' }, 'measured by receiver'));
+    box.append(el('div', { class: 'item' }, el('code', {}, t), s));
+    return s;
+  });
+  $('#provCheck').addEventListener('click', () => {
+    let ok = 0; sels.forEach((s, i) => { const r = s.value === items[i][1]; s.style.borderColor = r ? 'var(--good)' : 'var(--bad)'; if (r) ok++; });
+    if (ok === items.length) { feedback($('#provFb'), true, 'All eight. The tell: anything about how the ClientHello or HTTP/2 frames looked on the wire can only come from a receiver, because the client never sees its own bytes the way the server does. <code>None</code> in a configured field means "library default", which is still a configured value.'); complete('prov'); }
+    else feedback($('#provFb'), false, `${ok} of 8. Ask of each: did we choose it, did our own TLS stack read it after the handshake, or did the other end write it down?`);
+  });
+})();
+
+/* ---------- final quiz ---------- */
+mcq($('#finalQuiz'), [
+  { q: 'Why can JA4 not tell curl-impersonate <code>chrome152</code> from real Chrome 152?', opts: ['JA4 ignores the cipher list', 'JA4 drops GREASE, and the difference is a GREASE value in signature_algorithms', 'They are byte-identical'], a: 1, why: 'L1-8. peetprint, which keeps GREASE positions, separates them.' },
+  { q: 'On this Free zone, what is cf_clearance tied to?', opts: ['TLS fingerprint', 'HTTP/2 fingerprint', 'User-Agent'], a: 2, why: 'E1-2: changing only the UA platform re-challenged; OkHttp with every wire layer wrong passed.' },
+  { q: 'A replay returns 200. What else do you need before writing "the cookie was accepted"?', opts: ['Nothing', 'A managed_challenge_bypassed event in Cloudflare\'s log', 'A second 200'], a: 1, why: 'A 200 could also mean the rule did not match. The event log is the authority.' },
+  { q: 'Why does cfprobe need TrackMe or the Worker to know its own JA4?', opts: ['BoringSSL hides it for security', 'The ClientHello is built inside the TLS library; only the receiver sees it as sent', 'JA4 is computed with a secret key'], a: 1, why: 'The client can read negotiated results (version, cipher) but the fingerprint of what it sent is measured at the other end.' },
+  { q: 'What proves the Worker\'s record and cfprobe\'s own view describe the same handshake?', opts: ['Same timestamp', 'Same 32-byte ClientHello random', 'Same IP'], a: 1, why: 'Both ends see the client random. They matched byte for byte.' },
+  { q: 'What changed between Chromium 124 and 152?', opts: ['The HTTP/2 SETTINGS', 'The header order', 'The TLS layer: groups, ALPS codepoint, signature algorithms'], a: 2, why: 'L1-10: HTTP/2 and header order stayed identical across 28 versions.' },
+  { q: 'Which FlareSolverr default creates a value no real screen can have?', opts: ['--window-size=1920,1080 on an 800 x 600 headless screen', 'navigator.webdriver = false', 'Five plugins'], a: 0, why: 'L2-3: the window is larger than the screen.' },
+  { q: 'cfprobe reports <code>dns_ms: null</code> on a reused connection instead of 0. Why?', opts: ['A bug', 'DNS did not happen; 0 would claim it happened instantly', 'To save space'], a: 1, why: 'Zero and "not stated" are different answers. The same rule makes a missing receiver field print as "not captured".' },
+], (n, t) => { $('#finalScore').textContent = `${n} of ${t}`; if (n === t) complete('final'); });
+
+paint();
+})();
+</script>
