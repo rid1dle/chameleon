@@ -1,0 +1,71 @@
+{
+ "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+ "webdriver": false,
+ "webdriverInNavigator": true,
+ "webdriverDescriptorOnProto": {
+  "hasGetter": true,
+  "getterSrc": "function get webdriver() { [native code] }"
+ },
+ "navigatorIsInstance": true,
+ "navigatorProtoIsNavigatorProto": true,
+ "navigatorToString": "[object Navigator]",
+ "ownPropsOnWindowNavigator": {
+  "hasValue": false,
+  "hasGetter": true,
+  "configurable": true
+ },
+ "maxTouchPoints": 0,
+ "languages": [
+  "C.UTF-8"
+ ],
+ "language": "C.UTF-8",
+ "platform": "Linux x86_64",
+ "hardwareConcurrency": 12,
+ "deviceMemory": 8,
+ "pluginsLength": 5,
+ "mimeTypesLength": 2,
+ "pdfViewerEnabled": true,
+ "connectionRtt": 100,
+ "uaDataBrands": [
+  {
+   "brand": "Not?A_Brand",
+   "version": "24"
+  },
+  {
+   "brand": "Chromium",
+   "version": "152"
+  }
+ ],
+ "uaDataPlatform": "Linux",
+ "windowChromeKeys": [
+  "app",
+  "csi",
+  "loadTimes"
+ ],
+ "chromeRuntimeType": "undefined",
+ "chromeLoadTimesSrc": "function () { [native code] }",
+ "notificationPermission": "default",
+ "permissionsNotifications": "prompt",
+ "screen": {
+  "w": 800,
+  "h": 600,
+  "availW": 800,
+  "availH": 600,
+  "depth": 24
+ },
+ "window": {
+  "outerW": 1920,
+  "outerH": 1080,
+  "innerW": 1920,
+  "innerH": 993,
+  "dpr": 1
+ },
+ "timezone": "UTC",
+ "intlLocale": "en-US",
+ "webgl": {
+  "vendor": "Google Inc. (Google)",
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+ },
+ "visibilityState": "visible",
+ "hasFocus": false
+}

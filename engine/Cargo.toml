@@ -1,0 +1,36 @@
+[package]
+name = "cfprobe"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "Native Rust engine for measuring HTTP/TLS client characteristics and Cloudflare responses on a zone you own"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "cfprobe"
+path = "src/main.rs"
+
+[dependencies]
+# TLS: Cloudflare's BoringSSL bindings. Pinned exactly because the ClientHello is part of what we measure.
+boring = "=5.6.0"
+tokio-boring = "=5.6.0"
+# HTTP: hyper's low-level client connections, so the engine owns connection lifecycle and reuse.
+hyper = { version = "1.13", features = ["client", "http1", "http2"] }
+hyper-util = { version = "0.1", features = ["tokio"] }
+http = "1"
+http-body-util = "0.1"
+bytes = "1"
+tokio = { version = "1.54", features = ["rt-multi-thread", "macros", "net", "time", "sync"] }
+url = { version = "2", features = ["serde"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+clap = { version = "4", features = ["derive"] }
+base64 = "0.23"
+
+[dev-dependencies]
+hyper = { version = "1.13", features = ["server", "http1", "http2"] }
+tempfile = "3"

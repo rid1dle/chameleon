@@ -1,0 +1,244 @@
+{
+  "donate": "Please consider donating to keep this API running. Visit https://tls.peet.ws",
+  "ip": "172.23.0.1:42238",
+  "http_version": "h2",
+  "method": "GET",
+  "user_agent": "curl/8.22.0",
+  "tls": {
+    "ciphers": [
+      "TLS_AES_256_GCM_SHA384",
+      "TLS_CHACHA20_POLY1305_SHA256",
+      "TLS_AES_128_GCM_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+      "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+      "TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA"
+    ],
+    "extensions": [
+      {
+        "name": "extensionRenegotiationInfo (boringssl) (65281)",
+        "data": "00"
+      },
+      {
+        "name": "server_name (0)",
+        "server_name": "fp.lab.test"
+      },
+      {
+        "name": "ec_point_formats (11)",
+        "elliptic_curves_point_formats": [
+          "0x00"
+        ]
+      },
+      {
+        "name": "supported_groups (10)",
+        "supported_groups": [
+          "X25519MLKEM768 (4588)",
+          "X25519 (29)",
+          "P-256 (23)",
+          "X448 (30)",
+          "P-384 (24)",
+          "P-521 (25)",
+          "ffdhe2048 (256)",
+          "ffdhe3072 (257)"
+        ]
+      },
+      {
+        "name": "application_layer_protocol_negotiation (16)",
+        "protocols": [
+          "h2",
+          "http/1.1"
+        ]
+      },
+      {
+        "name": "encrypt_then_mac (22)",
+        "data": ""
+      },
+      {
+        "name": "extended_master_secret (23)",
+        "master_secret_data": "",
+        "extended_master_secret_data": ""
+      },
+      {
+        "name": "post_handshake_auth (49)",
+        "data": ""
+      },
+      {
+        "name": "signature_algorithms (13)",
+        "signature_algorithms": [
+          "0x905",
+          "0x906",
+          "0x904",
+          "ecdsa_secp256r1_sha256",
+          "ecdsa_secp384r1_sha384",
+          "ecdsa_secp521r1_sha512",
+          "ed25519",
+          "ed25519",
+          "ecdsa_brainpoolP256r1tls13_sha256",
+          "ecdsa_brainpoolP384r1tls13_sha384",
+          "ecdsa_brainpoolP512r1tls13_sha512",
+          "rsa_pss_pss_sha256",
+          "rsa_pss_pss_sha384",
+          "rsa_pss_pss_sha512",
+          "rsa_pss_rsae_sha256",
+          "rsa_pss_rsae_sha384",
+          "rsa_pss_rsae_sha512",
+          "rsa_pkcs1_sha256",
+          "rsa_pkcs1_sha384",
+          "rsa_pkcs1_sha512",
+          "0x303",
+          "0x301",
+          "0x302",
+          "0x402",
+          "0x502",
+          "0x602"
+        ]
+      },
+      {
+        "name": "supported_versions (43)",
+        "versions": [
+          "TLS 1.3",
+          "TLS 1.2"
+        ]
+      },
+      {
+        "name": "psk_key_exchange_modes (45)",
+        "PSK_Key_Exchange_Mode": "PSK with (EC)DHE key establishment (psk_dhe_ke) (1)"
+      },
+      {
+        "name": "key_share (51)",
+        "shared_keys": [
+          {
+            "X25519MLKEM768 (4588)": "46041b74d6c82b2b86809621c8a09c19f51955f36c3a4c4776c89f9549147c3518a3775740a8531ed9c12a78623882855bd6b0ab2a19e1a1b374f05ee4ac2259dc78040a216c12bd387052261b184d27a2341abbebd598afb55082f10237f40fdce5b6ff536a8af000073210e11ac2622a92d23c0cf3d1b7e9446589c2cfefa6499f183d2631afd2f00c508427d15837b4834538bc4b02c46340da1190aab0ebe30c09076e5696b3a3f01424177ec74763bb2473f2e7073bcb1ac7ecb2e67590c43aa6457895d4c5b04efac24078667fda0e2a377bb7d52dc7c188df091691a253ff63531f8856f0717b06b2c77e1c6732232b2580883ae363ea44a905e9433893bc814a5b71b613be6909c9b867f7d9059a14925c5a086e36c95144020a356786957324f57de1e540bb6c2f2f993911f1639066a059578d75dc02be87c6ba77a79bc8214c320ce2c1cb80298bead3c8c605a9fb9c2c00c679b39b1b2cba8b95396edf6b9866c219b8604445ec2fb0bb9588fbaecd6c5c5cb73cc38b9e79448c3cf45fa9e94af669840522922303b664b798025697cc17c448d6485645ad342814356c4553e6c28388b2dca3b054482e6d6b9c6bc8b3b34c2cccfa99c113cca7bcae79b866edbc6797b40c8d998d7993c12f34a5c25a7dd9b4b421426442372f27b1501b1156ae0211dec929e5099ef7e3a7aad8423db158e2076385c2c6e33530ca632da41271bfcc74210ac3af847205d22fdfc98c2a639817942c80417fa914c298612a387b89dee03753d9b30feb16ec2507bbcb04b3a8c4c1468863319945434fbff13132000d7c069a0762a8f5ea5e7ba1c06a2265d7cc151250c560a767bc9880b48b77fabac00c3967d5975acf4547ee9c3f9ab9b6f35362166b2a5ef07a83a25dfe670b25e2757ad1b29ff47529c07236c339b58959ccb999ad147cc38a9d08188e0f4574f1e782347c3fa2614956781390878c2c54a47aea628db38f4f655fcf7b0fdc22cf9c4415fbd14fab98b0fef51540356cd9882c15d47f6912bc8153997ee67b30526756e36cbdcc6264f7568214c75f37b6ee2aa4c1746636c6c141330a4ad59c40e241f396af2c637d8001abb8059499970b631073801960c5fb6a38b64683b03d07485557776e9e0a52a9a03e552245fc44311e5a923916ce0a569e15fb443d627e296c5c99557e5da43c2bd28aa3e0b7928406ee01118cc55678fab02b8cc411c4673a02a48be88651d032d719036996957e17360eb6c7d8aa62291a72d512637309238ba56b869bbe92106ac364648aa2c08bb57d1a965457794a91c56799b594cb67048e550f8f411b20fb5cfc879e49f15d6ce0b76553b68b630bd14a97d1a1177f1a11267359ca5c0aa617ad13087a0a088c32f614e6a3b4420a40b211a534ea2544f0605ea22fd8535899cb4cc6f88825954378683fff096668700d0770c41f7bbffdf4aeefb52e6ca41b47f67358e0ad81193bf405c2d562578db4c3abca01b6a30a03851c5143a531a90c57aa26513a0576d49c9c27cd9c880b754217c9656fef1824f2a01fc493c9609ab14d2981a8757c34780ed5abada884569d3c0437d2770fe98bfe9b2d3ec90aae54984316c4eff239ecfc68b04fe51a45ef81f6f1bad5928559c8f5048ca26eac1d4dcec710897fdc18208c57194d2503dc4d3d6e8754033d2f38c6827a163b6ad464a50077276742"
+          },
+          {
+            "X25519 (29)": "28453194788d9fe04e5bf05cdda65e11c8bff57ec62789de27c922e2a7d22242"
+          }
+        ]
+      },
+      {
+        "name": "compress_certificate (27)",
+        "algorithms": [
+          "brotli (2)",
+          "zlib (1)",
+          "zstd (3)"
+        ]
+      }
+    ],
+    "tls_version_record": "771",
+    "tls_version_negotiated": "772",
+    "ja3": "771,4866-4867-4865-49196-49200-159-52393-52392-52394-49195-49199-158-49188-49192-107-49187-49191-103-49162-49172-57-49161-49171-51-157-156-61-60-53-47,65281-0-11-10-16-22-23-49-13-43-45-51-27,4588-29-23-30-24-25-256-257,0",
+    "ja3_hash": "7a73fb0bdeaa2a79fadf356c34e7577e",
+    "ja4": "t13d3013h2_1d37bd780c83_8537cf56674e",
+    "ja4_r": "t13d3013h2_002f,0033,0035,0039,003c,003d,0067,006b,009c,009d,009e,009f,1301,1302,1303,c009,c00a,c013,c014,c023,c024,c027,c028,c02b,c02c,c02f,c030,cca8,cca9,ccaa_000a,000b,000d,0016,0017,001b,002b,002d,0031,0033,ff01_0905,0906,0904,0403,0503,0603,0807,0808,081a,081b,081c,0809,080a,080b,0804,0805,0806,0401,0501,0601,0303,0301,0302,0402,0502,0602",
+    "peetprint": "772-771|2-1.1|4588-29-23-30-24-25-256-257|2309-2310-2308-1027-1283-1539-2055-2056-2074-2075-2076-2057-2058-2059-2052-2053-2054-1025-1281-1537-771-769-770-1026-1282-1538|1|2-1-3|4866-4867-4865-49196-49200-159-52393-52392-52394-49195-49199-158-49188-49192-107-49187-49191-103-49162-49172-57-49161-49171-51-157-156-61-60-53-47|0-10-11-13-16-22-23-27-43-45-49-51-65281",
+    "peetprint_hash": "3fecfbb77e004e22933cc405c7c8d47b",
+    "client_random": "b21967701a2b3876627566fd5b73944fac7e6b24cb0a4d39bf4552e382509ab7",
+    "session_id": "857e1e0dd40c0ae4ccb60654f7c7683355f55135e3b351297bf9259ed5a54976"
+  },
+  "http2": {
+    "akamai_fingerprint": "3:100;4:65536;2:0|1048510465|0|m,s,a,p",
+    "akamai_fingerprint_hash": "55cb2bd667724e6d46cc3c8dd15d50de",
+    "sent_frames": [
+      {
+        "frame_type": "SETTINGS",
+        "length": 18,
+        "settings": [
+          "MAX_CONCURRENT_STREAMS = 100",
+          "INITIAL_WINDOW_SIZE = 65536",
+          "ENABLE_PUSH = 0"
+        ]
+      },
+      {
+        "frame_type": "WINDOW_UPDATE",
+        "length": 4,
+        "increment": 1048510465
+      },
+      {
+        "frame_type": "HEADERS",
+        "stream_id": 1,
+        "length": 39,
+        "headers": [
+          ":method: GET",
+          ":scheme: https",
+          ":authority: fp.lab.test:8443",
+          ":path: /api/all",
+          "user-agent: curl/8.22.0",
+          "accept: */*"
+        ],
+        "flags": [
+          "EndStream (0x1)",
+          "EndHeaders (0x4)"
+        ]
+      }
+    ]
+  },
+  "tcpip": {
+    "cap_length": 66,
+    "dst_port": 443,
+    "src_port": 42238,
+    "ip": {
+      "id": 62394,
+      "ttl": 64,
+      "ip_version": 4,
+      "dst_ip": "172.23.0.2",
+      "src_ip": "172.23.0.1"
+    },
+    "tcp": {
+      "ack": 3491105398,
+      "checksum": 22616,
+      "seq": 3279904679,
+      "window": 63
+    },
+    "tcp_syn": {
+      "ip_version": 4,
+      "src_ip": "172.23.0.1",
+      "dst_ip": "172.23.0.2",
+      "src_port": 42238,
+      "dst_port": 443,
+      "ttl": 64,
+      "ip_id": 62390,
+      "df": true,
+      "ecn": false,
+      "window": 64240,
+      "mss": 1460,
+      "window_scale": 10,
+      "sack_permitted": true,
+      "timestamps": true,
+      "options": [
+        "mss",
+        "sackOK",
+        "timestamp",
+        "nop",
+        "wscale"
+      ],
+      "options_raw": "020405b40402080a576079b5000000000103030a",
+      "option_order": "mss,sackOK,timestamp,nop,wscale",
+      "payload_len": 0,
+      "packet_len": 60
+    },
+    "p0f": "4:64+?:0:1460:64240,10:mss,sok,ts,nop,ws:df,id+:0"
+  }
+}

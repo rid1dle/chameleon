@@ -1,0 +1,15 @@
+2026-11-24 12:57:33 INFO     FlareSolverr 3.5.2
+2026-11-24 12:57:33 INFO     Testing web browser installation...
+2026-11-24 12:57:33 INFO     Platform: Linux-7.2.9-arch1-1-x86_64-with-glibc2.36
+2026-11-24 12:57:33 INFO     Chrome / Chromium path: /usr/bin/chromium
+2026-11-24 12:57:33 INFO     Chrome / Chromium major version: 152
+2026-11-24 12:57:33 INFO     Launching web browser...
+2026-11-24 12:57:34 INFO     FlareSolverr User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24 12:57:34 INFO     Test successful!
+2026-11-24 12:57:34 INFO     Serving on http://0.0.0.0:8191
+2026-11-24 12:57:34 INFO     172.17.0.1 GET http://127.0.0.1:8191/ 200 OK
+2026-11-24 12:57:34 INFO     Incoming request => POST /v1 body: {'cmd': 'request.get', 'url': 'https://lab.riddlelab.dev/c/echo', 'maxTimeout': 90000}
+2026-11-24 12:57:35 INFO     Challenge detected. Title found: Just a moment...
+2026-11-24 12:57:45 INFO     Challenge solved!
+2026-11-24 12:57:46 INFO     Response in 11.341 s
+2026-11-24 12:57:46 INFO     172.17.0.1 POST http://127.0.0.1:8191/v1 200 OK

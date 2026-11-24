@@ -1,0 +1,14 @@
+{
+  "tls_port": "443",
+  "http_port": "80",
+  "cert_file": "certs/chain.pem",
+  "key_file": "certs/key.pem",
+  "host": "0.0.0.0",
+  "http_redirect": "https://fp.lab.test",
+  "device": "eth0",
+  "cors_key": "X-CORS",
+  "enable_quic": false,
+  "log_to_parquet": false,
+  "parquet_dir": "data",
+  "parquet_log_ips": false
+}

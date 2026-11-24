@@ -1,0 +1,9 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>lab</groupId><artifactId>okhttp-client</artifactId><version>1</version>
+  <properties><maven.compiler.release>21</maven.compiler.release></properties>
+  <dependencies>
+    <!-- Same version as Suwayomi-Server 4081b05, gradle/libs.versions.toml:6 -->
+    <dependency><groupId>com.squareup.okhttp3</groupId><artifactId>okhttp-jvm</artifactId><version>5.5.1</version></dependency>
+  </dependencies>
+</project>

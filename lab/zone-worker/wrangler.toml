@@ -1,0 +1,7 @@
+name = "cflab-echo"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+# Custom Domain: the zone has no DNS records, so Cloudflare creates the proxied record and the
+# Worker is the origin. Account ID comes from CLOUDFLARE_ACCOUNT_ID in .env, not this file.
+routes = [{ pattern = "lab.riddlelab.dev", custom_domain = true }]
+workers_dev = false

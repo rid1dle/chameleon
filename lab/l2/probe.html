@@ -1,0 +1,60 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>L2 probe</title></head>
+<body><pre id="out">running</pre>
+<script>
+// L2: records the JS environment a challenge script can read. Local lab only; sends nothing anywhere.
+(async () => {
+  const r = {};
+  const safe = (k, f) => { try { r[k] = f(); } catch (e) { r[k] = "error: " + e.message; } };
+  const nativeSrc = (fn) => { try { return Function.prototype.toString.call(fn); } catch (e) { return "error: " + e.message; } };
+
+  safe("userAgent", () => navigator.userAgent);
+  safe("webdriver", () => navigator.webdriver);
+  safe("webdriverInNavigator", () => "webdriver" in navigator);
+  safe("webdriverDescriptorOnProto", () => {
+    const d = Object.getOwnPropertyDescriptor(Navigator.prototype, "webdriver");
+    return d ? { hasGetter: !!d.get, getterSrc: d.get && nativeSrc(d.get) } : null;
+  });
+  safe("navigatorIsInstance", () => navigator instanceof Navigator);
+  safe("navigatorProtoIsNavigatorProto", () => Object.getPrototypeOf(navigator) === Navigator.prototype);
+  safe("navigatorToString", () => Object.prototype.toString.call(navigator));
+  safe("ownPropsOnWindowNavigator", () => {
+    const d = Object.getOwnPropertyDescriptor(window, "navigator");
+    return d ? { hasValue: "value" in d, hasGetter: !!d.get, configurable: d.configurable } : null;
+  });
+  safe("maxTouchPoints", () => navigator.maxTouchPoints);
+  safe("languages", () => navigator.languages);
+  safe("language", () => navigator.language);
+  safe("platform", () => navigator.platform);
+  safe("hardwareConcurrency", () => navigator.hardwareConcurrency);
+  safe("deviceMemory", () => navigator.deviceMemory);
+  safe("pluginsLength", () => navigator.plugins.length);
+  safe("mimeTypesLength", () => navigator.mimeTypes.length);
+  safe("pdfViewerEnabled", () => navigator.pdfViewerEnabled);
+  safe("connectionRtt", () => navigator.connection && navigator.connection.rtt);
+  safe("uaDataBrands", () => navigator.userAgentData && navigator.userAgentData.brands);
+  safe("uaDataPlatform", () => navigator.userAgentData && navigator.userAgentData.platform);
+  safe("windowChromeKeys", () => window.chrome ? Object.keys(window.chrome).sort() : null);
+  safe("chromeRuntimeType", () => window.chrome && typeof window.chrome.runtime);
+  safe("chromeLoadTimesSrc", () => window.chrome && window.chrome.loadTimes && nativeSrc(window.chrome.loadTimes).slice(0, 60));
+  safe("notificationPermission", () => typeof Notification !== "undefined" ? Notification.permission : null);
+  try {
+    const p = await navigator.permissions.query({ name: "notifications" });
+    r.permissionsNotifications = p.state;
+  } catch (e) { r.permissionsNotifications = "error: " + e.message; }
+  safe("screen", () => ({ w: screen.width, h: screen.height, availW: screen.availWidth, availH: screen.availHeight, depth: screen.colorDepth }));
+  safe("window", () => ({ outerW: outerWidth, outerH: outerHeight, innerW: innerWidth, innerH: innerHeight, dpr: devicePixelRatio }));
+  safe("timezone", () => Intl.DateTimeFormat().resolvedOptions().timeZone);
+  safe("intlLocale", () => Intl.DateTimeFormat().resolvedOptions().locale);
+  safe("webgl", () => {
+    const gl = document.createElement("canvas").getContext("webgl");
+    if (!gl) return null;
+    const ext = gl.getExtension("WEBGL_debug_renderer_info");
+    return ext ? { vendor: gl.getParameter(ext.UNMASKED_VENDOR_WEBGL), renderer: gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) } : "no debug ext";
+  });
+  safe("visibilityState", () => document.visibilityState);
+  safe("hasFocus", () => document.hasFocus());
+  document.getElementById("out").textContent = JSON.stringify(r, null, 1);
+  document.title = "L2 done";
+})();
+</script></body></html>

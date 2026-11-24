@@ -1,0 +1,19 @@
+2026-11-24T12:57:17Z	managed_challenge	firewallCustom	GET	/c/echo	a5f8941abdfc2e90	curl/8.22.0
+2026-11-24T12:57:35Z	managed_challenge	firewallCustom	GET	/c/echo	a5f8948b0ba498fe	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T12:57:35Z	managed_challenge	firewallCustom	GET	/c/echo	a5f8948aeb4598fe	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T12:57:43Z	managed_challenge_interactive_solved	firewallCustom	GET	/c/echo	a5f894bf0f602e85	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T12:57:43Z	managed_challenge_bypassed	firewallCustom	GET	/c/echo	a5f894bf0f602e85	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T12:58:51Z	managed_challenge_bypassed	firewallCustom	GET	/c/echo	a5f896652c8098fe	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T12:58:51Z	managed_challenge_bypassed	firewallCustom	GET	/c/echo	a5f896684e56b089	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T12:59:54Z	managed_challenge	firewallCustom	GET	/c/echo	a5f897efeb532e9d	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T12:59:54Z	managed_challenge_bypassed	firewallCustom	GET	/c/echo	a5f897f19fb998fe	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T12:59:55Z	managed_challenge_bypassed	firewallCustom	GET	/c/echo	a5f897f5ac7e98fe	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T12:59:55Z	managed_challenge_bypassed	firewallCustom	GET	/c/echo	a5f897f8bad45ef9	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T12:59:55Z	managed_challenge	firewallCustom	GET	/c/echo	a5f897f9baccb0aa	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T12:59:56Z	managed_challenge_bypassed	firewallCustom	GET	/c/echo	a5f897fb685e2b45	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T13:00:14Z	managed_challenge_bypassed	firewallCustom	GET	/c/echo	a5f8987079a62e97	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T13:00:14Z	managed_challenge	firewallCustom	GET	/c/echo	a5f8986eb8c92e8d	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T13:00:15Z	managed_challenge_bypassed	firewallCustom	GET	/c/echo	a5f898745a8698fe	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T13:00:15Z	managed_challenge_bypassed	firewallCustom	GET	/c/echo	a5f898776a6a5801	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T13:00:16Z	managed_challenge	firewallCustom	GET	/c/echo	a5f89878898ed11e	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+2026-11-24T13:00:16Z	managed_challenge_bypassed	firewallCustom	GET	/c/echo	a5f8987a49952e96	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
