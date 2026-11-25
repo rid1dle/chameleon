@@ -1,4 +1,4 @@
-# Cloudflare anti-bot resilience research
+# Chameleon: Cloudflare anti-bot resilience research
 
 Source-level study of public automated clients, and how each one meets Cloudflare's bot defences. Testing targets only a zone the researcher owns (`riddlelab.dev`, Free plan, Worker on `lab.riddlelab.dev`) and local lab servers. The plan was written for Enterprise Bot Management; on Free there is no bot score, JA3/JA4 or detection IDs.
 

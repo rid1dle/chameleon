@@ -1,4 +1,4 @@
-<title>Project Chameleon</title>
+<title>Chameleon</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -213,7 +213,7 @@ details > div { padding-bottom: 12px; }
 
 <div class="shell">
 <nav class="rail" aria-label="Chapters">
-  <div class="brand">Project Chameleon</div>
+  <div class="brand">Chameleon</div>
   <div class="sub">A guided tour of the repo, with exercises</div>
   <ol id="toc"></ol>
   <div class="meter"><i id="meterFill"></i></div>
@@ -225,8 +225,8 @@ details > div { padding-bottom: 12px; }
 
 <!-- ============ 0. HERO ============ -->
 <section class="ch" id="start" data-title="The question">
-  <div class="eyebrow">rid1dle/project-chameleon · lab zone lab.riddlelab.dev · Free plan</div>
-  <h1>Project Chameleon</h1>
+  <div class="eyebrow">rid1dle/chameleon · lab zone lab.riddlelab.dev · Free plan</div>
+  <h1>Chameleon</h1>
   <p class="lede">Some programs pretend to be a browser so a website lets them in. This repo studies how they do it, what Cloudflare can see of the disguise, and which part of the disguise actually decides the outcome. Everything runs against a zone the researcher owns.</p>
 
   <div class="hero-fig">
@@ -724,24 +724,129 @@ details > div { padding-bottom: 12px; }
     <tr><td>hyper's <code>h2</code></td><td>Mainstream HTTP/2</td><td>SETTINGS order and pseudo-header order are fixed (<code>m,s,a,p</code>)</td></tr>
     <tr><td>BoringSSL</td><td>Same library Chrome uses</td><td>TLS 1.3 suites cannot be changed; build needs cmake, clang, about 75 s</td></tr>
   </table></div>
-  <p>Tests: 24 pass offline. 11 run a local BoringSSL server with a throwaway certificate (reuse counted by server accepts: 1 with reuse, 3 without), 9 parse the real L1/E1 captures, the rest are unit tests. One test checks that location and ISP fields never reach a report.</p>
+  <h3>What Phase 2 added</h3>
+  <p>The first version measured and stopped there. Phase 2 tested it hard, fixed what broke, and added five modules. The engine is now 13 modules and <strong>137 tests</strong>, all hermetic (loopback servers, saved captures), clippy clean.</p>
+  <div class="scroll"><table>
+    <tr><th>Module</th><th>Does</th></tr>
+    <tr><td><code>cloudflare</code></td><td>Reads one response and returns one of 10 verdicts, with confidence, who issued it, indicators, evidence and caveats (next chapter)</td></tr>
+    <tr><td><code>resilience</code></td><td>A <code>Session</code>: bounded retries with seeded jitter, Retry-After with a floor and a cap, a per-host circuit breaker, redirects with loop detection, a cookie jar, cancellation. Never retries a challenge or a denial, never relaxes TLS</td></tr>
+    <tr><td><code>random</code></td><td>Seeded scenario generator and a loopback mock server (plain and TLS HTTP/1.1, TLS HTTP/2). <code>cfprobe fuzz --seed N</code>: the same seed replays the same run</td></tr>
+    <tr><td><code>runner</code></td><td><code>cfprobe run</code>: a JSON matrix of cases, seeded shuffle and pauses, curl as a comparison client; writes <code>run.json</code> and <code>results.md</code></td></tr>
+    <tr><td><code>proxy</code></td><td>Routes every connection through HTTP, HTTPS or SOCKS5, or goes direct and says so (chapter 11)</td></tr>
+  </table></div>
+  <p class="muted" style="font-size:14px">The original 24 tests are still there: 11 run a local BoringSSL server with a throwaway certificate (reuse counted by server accepts: 1 with reuse, 3 without), 9 parse the real L1/E1 captures. One test checks that location and ISP fields never reach a report.</p>
+</section>
+
+<!-- ============ 10. PHASE 2 ============ -->
+<section class="ch" id="verdicts" data-title="Reading Cloudflare's answer">
+  <div class="eyebrow">Chapter 10</div>
+  <h2>Reading Cloudflare's answer</h2>
+  <p>Phase 2 started from a bug report: a detector called three normal pages "challenges". Before fixing it, the pages were fetched again, once each, and the strings counted. All three hits were the same line:</p>
+  <pre class="code">var u='<span class="kw">/cdn-cgi/challenge-platform/</span>scripts/jsd/main.js?ray=...'</pre>
+  <p>That is Cloudflare <strong>JavaScript Detections</strong>: a background script that scores the visit for later requests. It does not block the page it sits on. A real challenge page loads a different script from the same folder (<code>/h/b/orchestrate/</code>), defines <code>window._cf_chl_opt</code>, and comes with the header <code>cf-mitigated: challenge</code>. The old rule matched the folder name, so it matched both.</p>
+  <div class="scroll"><table>
+    <tr><th>Page</th><th>Status</th><th><code>cf-mitigated</code></th><th>challenge-platform</th><th><code>_cf_chl_opt</code></th><th>Really</th></tr>
+    <tr><td>asurascans.com, bookmyshow, discord.com</td><td class="num">200</td><td>absent</td><td class="num">1 (jsd script)</td><td class="num">0</td><td class="c-client">normal page</td></tr>
+    <tr><td>www.cloudflare.com</td><td class="num">200</td><td>absent</td><td class="num">0</td><td class="num">0</td><td class="c-client">normal page ("Turnstile" in its menu)</td></tr>
+    <tr><td>zone <code>/c/echo</code></td><td class="num">403</td><td><code>challenge</code></td><td class="num">1</td><td class="num">7</td><td class="c-edge">real Managed Challenge</td></tr>
+  </table></div>
+  <div class="callout find"><b class="k">The fix (D17)</b>No single string decides a verdict any more. Markers are structural: a header, a script URL, a page-defining object, a class attribute. <code>cf-mitigated: challenge</code> plus a challenge page in the body is a confirmed challenge (high). The page markers without the header give only CHALLENGE_INDICATOR, at medium or low confidence. A 200 is a normal page, never "bypassed".</div>
+
+  <h3>Ten verdicts</h3>
+  <p>Every response, and every request that got no response, gets exactly one:</p>
+  <div class="chips">
+    <span class="chip">NORMAL_PAGE</span><span class="chip">REDIRECT</span><span class="chip">CHALLENGE_INDICATOR</span><span class="chip">CONFIRMED_CHALLENGE_RESPONSE</span><span class="chip">RATE_LIMITED</span><span class="chip">ACCESS_DENIED</span><span class="chip">ORIGIN_UNAVAILABLE</span><span class="chip">TLS_FAILURE</span><span class="chip">CONNECTION_FAILURE</span><span class="chip">UNKNOWN</span>
+  </div>
+  <p>Error numbers in a body (<code>error code: 1015</code>) count only when the response came through Cloudflare (<code>cf-ray</code> or <code>server: cloudflare</code>): an origin that prints that text is not Cloudflare's rate limiter. And every NORMAL_PAGE through Cloudflare carries a caveat: an absent <code>cf-mitigated</code> does not prove no challenge was applied.</p>
+
+  <div class="ex" data-ex="verdict"><header><span class="t">Exercise: classify real responses</span><span class="tag">6 responses</span></header>
+    <div class="body">
+      <p style="margin:0">Each row is a real response from the lab zone or a public site. Pick the verdict cfprobe should give.</p>
+      <div class="sortq" id="verdictQuiz"></div>
+      <div class="row"><button class="btn" id="verdictCheck" type="button">Check</button></div>
+      <div class="feedback" id="verdictFb"></div>
+    </div></div>
+
+  <h3>On the zone: 105 results, 0 failed</h3>
+  <p>The lab zone grew a set of scenarios (<code>/p2/</code> on the echo Worker): a Turnstile page, 401, origin 403, redirects and a loop, origin 503/429/502, a Worker that throws, cookies, 120 headers, a slow response, a body cut mid-stream. 34 cases ran with three clients: cfprobe over HTTP/2, cfprobe over HTTP/1.1 with Title-Case headers, and curl 8.22. Then three DNS records pointed at addresses nobody owns, to get real origin failures:</p>
+  <div class="scroll"><table>
+    <tr><th>Record points at</th><th>Cloudflare answered</th><th>Verdict</th></tr>
+    <tr><td><code>192.0.2.1</code> (TEST-NET)</td><td><strong>522</strong> after 19.4 to 19.8 s (its connect timeout)</td><td>ORIGIN_UNAVAILABLE, high</td></tr>
+    <tr><td>CNAME to <code>origin-does-not-exist.invalid</code></td><td><strong>530 + 1016</strong> (origin DNS error), 11 to 23 ms</td><td>ORIGIN_UNAVAILABLE, high</td></tr>
+    <tr><td><code>240.0.0.1</code> (class E)</td><td><strong>403 + 1002</strong> (DNS points to a disallowed IP)</td><td>ORIGIN_UNAVAILABLE, high, despite the 403</td></tr>
+    <tr><td><code>10.255.255.1</code>, <code>127.0.0.1</code></td><td>Refused when creating the record (API error 9003)</td><td></td></tr>
+  </table></div>
+  <p class="muted" style="font-size:14px">Cloudflare sends these error pages in two forms: 17 bytes of plain text (<code>error code: 1002</code>) to requests without <code>Accept-Encoding</code>, an 8 KB HTML page to requests that offer compression. The classifier reads both (D28).</p>
+
+  <h3>Four things Cloudflare was measured doing</h3>
+  <div class="grid2">
+    <div class="card"><h4>Retry-After counts down to 0 while still limiting</h4><p style="margin:0;font-size:14px">The rate limiter sent <code>Retry-After: 0</code> on a 429. Honouring it literally made three requests within 12 ms (D23). Now a 0 is floored at the normal backoff and a long value is capped.</p></div>
+    <div class="card"><h4>The clearance is bound to the User-Agent, again</h4><p style="margin:0;font-size:14px">FlareSolverr solved <code>/c/echo</code>; cfprobe replayed the cookie. Solver's UA: 200, on HTTP/2 and on HTTP/1.1. cfprobe's own UA: 403. A third client stack reproduces E1.</p></div>
+    <div class="card"><h4>A body cut mid-stream arrives complete</h4><p style="margin:0;font-size:14px">The Worker sent 1000 bytes, then errored. cfprobe and curl both got 200 with 1000 bytes and no error. Behind Cloudflare, no client can see that the origin died.</p></div>
+    <div class="card"><h4>Brief 522s on a new Custom Domain</h4><p style="margin:0;font-size:14px">Four requests in the first two minutes got 522; a rerun minutes later had none. Likely propagation to edge servers (an inference, not confirmed by Cloudflare).</p></div>
+  </div>
+
+  <h3>28 defects, all fixed with a regression test</h3>
+  <p>Some came from loopback tests, some only from real Cloudflare behaviour. A few that show the range:</p>
+  <div class="scroll"><table>
+    <tr><th>#</th><th>Defect</th><th>Why it happened</th></tr>
+    <tr><td>D1</td><td>49 of 100 requests failed on reused connections</td><td>No retry when the server had closed an idle pooled connection</td></tr>
+    <tr><td>D15</td><td><code>error code: 522</code> read as "reached"</td><td>The parser accepted only 4-digit numbers</td></tr>
+    <tr><td>D21</td><td>Circuit breaker opened too early</td><td>It counted every retry attempt, not each request</td></tr>
+    <tr><td>D25</td><td>curl response bodies in committed results</td><td>One path skipped redaction; caught by the scrub check</td></tr>
+    <tr><td>D27</td><td>Proxy password in debug output</td><td>A derived <code>Debug</code>; now hand-written and redacted</td></tr>
+    <tr><td>D10</td><td>Response headers grouped by name, not wire order</td><td>hyper gives only a map. Now read from the connection for HTTP/1.1; HTTP/2 cannot give it</td></tr>
+  </table></div>
+
+  <h3>Performance, profiled</h3>
+  <p>Loopback, release builds, 32 concurrent requests over TLS HTTP/1.1. The first benchmark had cfprobe behind reqwest. A sampling profile found the cause: an async <code>tokio::sync::Mutex</code> around the connection pool, taken twice per request, so each contended lock parked and woke through the scheduler. It is never held across an await, so a plain <code>std::sync::Mutex</code> is correct.</p>
+  <div class="bars" id="perfBars"></div>
+  <p class="muted" style="font-size:14px">Medians of 5 alternating runs, 100,000 requests each. Memory stayed flat across 1,000,000 requests on both protocols (15.1 MB and 17.7 MB peak). 10,000 fuzzed responses over 20 seeds: 0 failures, no panics.</p>
+</section>
+
+<!-- ============ 11. PROXY ============ -->
+<section class="ch" id="proxy" data-title="Proxy routing and Tor">
+  <div class="eyebrow">Chapter 11</div>
+  <h2>Proxy routing and Tor</h2>
+  <p>cfprobe can send every connection through a proxy: <code>--proxy URL</code>, the <code>CFPROBE_PROXY</code> variable, or a config entry. HTTP <code>CONNECT</code>, HTTPS (TLS to the proxy, then CONNECT) and SOCKS5 are supported. The rule has three cases, and the second one is the point:</p>
+  <div class="scroll"><table>
+    <tr><th>Situation</th><th>What happens</th></tr>
+    <tr><td><strong>No proxy defined</strong></td><td>Direct connections, as before proxies existed, and the run says so: <code>cfprobe: no proxy defined: running in no-proxy mode (direct connections)</code>. Each record carries <code>"route": {"kind": "direct"}</code></td></tr>
+    <tr><td><strong>A proxy defined</strong></td><td>Every connection goes through it. If it fails, the request fails with the stage (unreachable, TLS, auth, refused tunnel). <strong>There is no direct path in this mode, so nothing can fall back to one</strong></td></tr>
+    <tr><td><strong>A proxy defined but invalid</strong></td><td>A configuration error. It never turns into direct mode</td></tr>
+  </table></div>
+  <p>One function, <code>networking::dial</code>, opens every connection, and a test scans the source and fails if anything else calls <code>TcpStream::connect</code> or <code>lookup_host</code>. With a proxy, the destination name goes to the proxy and is never looked up locally; <code>socks5://</code> is treated as <code>socks5h://</code> for that reason (curl does the opposite). Credentials never reach logs or records.</p>
+
+  <h3>Tor, in one flag</h3>
+  <pre class="code"><span class="cm"># start a local Tor SOCKS proxy (Docker, pinned image) and wait for it to bootstrap</span>
+scripts/tor.sh up
+<span class="cm"># one command through Tor</span>
+cfprobe --tor proxy-check https://lab.riddlelab.dev/echo
+<span class="cm"># or every tool in this shell: cfprobe, zone scripts, FlareSolverr solves</span>
+eval "$(scripts/tor.sh env)"</pre>
+  <p><code>--tor</code> is shorthand for <code>--proxy socks5h://127.0.0.1:9150</code>, with the same rule: if Tor is down, the request fails. There is deliberately no "new identity" command: changing exits to get past a block would be circumvention. Tor also settled an open question: through it, the destination saw a different client address than direct, and <code>proxy-check --expect-egress-ip</code> fails on a mismatch, so the routing is proven, not assumed.</p>
+
+  <div class="ex" data-ex="proxyq"><header><span class="t">Exercise: what does cfprobe do?</span><span class="tag">3 questions</span></header>
+    <div class="body" id="proxyQuiz"></div></div>
 </section>
 
 <!-- ============ 10. DISCIPLINE ============ -->
 <section class="ch" id="rules" data-title="Rules that keep it honest">
-  <div class="eyebrow">Chapter 10</div>
+  <div class="eyebrow">Chapter 12</div>
   <h2>Rules that keep it honest</h2>
   <div class="grid2">
     <div class="card"><h4>A 200 is "reached", never "bypassed"</h4><p style="margin:0;font-size:14px">A 200 can mean the cookie worked or that the rule never matched. Only Cloudflare's event <code>managed_challenge_bypassed</code> says which.</p></div>
     <div class="card"><h4>The receiver outranks the client</h4><p style="margin:0;font-size:14px">E2's first write-up trusted FlareSolverr's log. Cloudflare's event log showed an interactive solve. The correction is kept in the file (E2-1a).</p></div>
     <div class="card"><h4>Not captured is not zero</h4><p style="margin:0;font-size:14px">A field a receiver does not record prints as <code>not captured</code>; a skipped step is absent, not <code>0 ms</code>.</p></div>
-    <div class="card"><h4>Nothing private leaves the machine</h4><p style="margin:0;font-size:14px">Cookie values become their length; client IP, location and ISP become <code>&lt;removed&gt;</code>. Six captures were scrubbed before this repo went public.</p></div>
+    <div class="card"><h4>Nothing private leaves the machine</h4><p style="margin:0;font-size:14px">Cookie values become their length; client IP, location and ISP become <code>&lt;removed&gt;</code>. Six captures were scrubbed before this repo went public. <code>scrub.py --check</code> now runs before every commit and caught real leaks (D25).</p></div>
+    <div class="card"><h4>No silent fallback</h4><p style="margin:0;font-size:14px">A defined proxy that fails stops the request; it never quietly goes direct. No proxy at all is a stated mode, printed on every run.</p></div>
+    <div class="card"><h4>Reproduce before fixing</h4><p style="margin:0;font-size:14px">The false positive was fetched again and counted before any rule changed. Every one of the 28 defects has a test that failed before its fix.</p></div>
   </div>
 </section>
 
 <!-- ============ 11. GAPS ============ -->
 <section class="ch" id="gaps" data-title="Gaps and what's next">
-  <div class="eyebrow">Chapter 11</div>
+  <div class="eyebrow">Chapter 13</div>
   <h2>Gaps and what's next</h2>
   <h3>Research gaps</h3>
   <div class="scroll"><table>
@@ -752,24 +857,26 @@ details > div { padding-bottom: 12px; }
     <tr><td>Version dependence rests on two Chromium versions, one capture each</td><td>More versions, headful, repeats</td></tr>
     <tr><td>E1 second-IP arm: is the cookie tied to IP at reuse time?</td><td>A second internet connection</td></tr>
     <tr><td>E3: bot score for wire-perfect clients</td><td>An Enterprise zone</td></tr>
+    <tr><td>520, 521, 524, 525, 526 on the zone</td><td>An origin of our own that misbehaves each way (never someone else's host)</td></tr>
   </table></div>
-  <h3>Engine phases left</h3>
+  <h3>Engine: done and left</h3>
   <div class="scroll"><table>
-    <tr><th>Phase</th><th>State</th></tr>
-    <tr><td>7 Cloudflare response analysis</td><td>Not started: classify reached, managed, interactive, blocked (1xxx), rate-limited</td></tr>
-    <tr><td>8 Reporting and CLI</td><td>Partly: tables done; reports for inspect and fingerprint, and run comparison left</td></tr>
-    <tr><td>9 Lab tests</td><td>Partly: offline suite done; opt-in live suite left</td></tr>
-    <tr><td>10 Benchmarks</td><td>Not started: cfprobe vs reqwest vs curl</td></tr>
-    <tr><td>Docs</td><td>Not started: 8 engine documents</td></tr>
+    <tr><th>Area</th><th>State</th></tr>
+    <tr><td>Response analysis, lab tests, benchmarks</td><td><span class="chip ok">done</span> in Phase 2 (chapters 9 to 11)</td></tr>
+    <tr><td>Reporting</td><td>Partly: markdown for <code>fingerprint</code> and comparison across runs left</td></tr>
+    <tr><td>Connection pool</td><td>No size limit or idle timeout; matters for long runs over many origins</td></tr>
+    <tr><td>TLS session resumption, HTTP/3</td><td>Not supported; only needed if resumed-handshake or QUIC fingerprints matter</td></tr>
+    <tr><td>HTTP/2 response header order</td><td>Not available from the <code>h2</code> crate; HTTP/1.1 order is exact</td></tr>
+    <tr><td>Egress through a proxy of our own</td><td>Tor proved the check works; a proxy we run is still to come</td></tr>
   </table></div>
 </section>
 
 <!-- ============ 12. FINAL QUIZ ============ -->
 <section class="ch" id="quiz" data-title="Final check">
-  <div class="eyebrow">Chapter 12</div>
+  <div class="eyebrow">Chapter 14</div>
   <h2>Final check</h2>
-  <p>Eight questions across the whole repo. Each explains itself after you answer.</p>
-  <div class="ex" data-ex="final"><header><span class="t">Final quiz</span><span class="tag" id="finalScore">0 of 8</span></header>
+  <p>Eleven questions across the whole repo. Each explains itself after you answer.</p>
+  <div class="ex" data-ex="final"><header><span class="t">Final quiz</span><span class="tag" id="finalScore">0 of 11</span></header>
     <div class="body"><div class="quiz" id="finalQuiz"></div></div></div>
 
   <h3>Glossary</h3>
@@ -950,9 +1057,10 @@ const JA4WANT = { 'chromium-headful': L1['chromium-headful'].ja4, 'cfprobe-defau
     ['projects/', 'what each tool does, read in source', 'suwayomi-tachidesk.md, flaresolverr.md, curl-impersonate.md: each tool read at a pinned commit, every claim with file and line. other-projects.md surveys 12 more tools by which layer they fake.'],
     ['research/', 'how Cloudflare works, from its docs', 'bot-management-signals.md (scores, request.cf fields, what each plan exposes), challenges-and-clearance.md (challenge types, what cf_clearance is), tls-http-fingerprinting.md (JA3, JA4, Akamai HTTP/2).'],
     ['lab/', 'servers and clients you can run', 'trackme/ (fingerprint echo server image), okhttp-client/ (Suwayomi\'s exact OkHttp 5.5.1 + JDK 25), l2/ (JS probe page), zone-worker/ (the echo Worker on lab.riddlelab.dev). bin/ holds the curl-impersonate release and is not committed.'],
-    ['scripts/', 'the glue', 'fingerprint-analysis/ (headful Chromium baseline launcher, the old Python table maker), zone/e1_replay.sh (runs the six E1 arms), zone/fw_events.sh (pulls Cloudflare\'s firewall events over GraphQL).'],
-    ['experiments/', 'measured results', 'test-results/L1 (wire fingerprints, 10 findings), L2 (JS environment), E0 (first contact), E1 (cookie reuse, 6 arms), E2 (FlareSolverr solve). Each has a summary.md with findings and limits; raw captures sit beside it, scrubbed.'],
-    ['engine/', 'cfprobe, the Rust engine', 'src/core (config, errors), src/tls (settings, handshake readout), src/http (HTTP/2 settings, headers, cookies), src/networking (the connection stack), src/fingerprint (receiver parsers, comparison), src/reporting (tables), src/main.rs (CLI). tests/ has 24 tests.'],
+    ['scripts/', 'the glue', 'zone/up.sh and zone/down.sh (bring the whole zone lab up and tear it down), zone/e1_replay.sh (the six E1 arms), zone/fw_events.sh (Cloudflare\'s firewall events over GraphQL), phase2/ (zone matrix run, clearance lifecycle, FlareSolverr solve, scrub.py), tor.sh (a local Tor SOCKS proxy in Docker).'],
+    ['experiments/', 'measured results', 'test-results/L1 (wire fingerprints, 10 findings), L2 (JS environment), E0 (first contact), E1 (cookie reuse, 6 arms), E2 (FlareSolverr solve), P2 (Phase 2: fixtures, matrices, zone runs, lifecycle, fuzz, performance, public sites). Raw bodies stay local; everything committed is scrubbed and checked.'],
+    ['engine/', 'cfprobe, the Rust engine', 'src/core, tls, http, networking (the connection stack), fingerprint, reporting, plus Phase 2: cloudflare (the response classifier), resilience (retries, breaker, redirects, cookies), random (seeded fuzzing and a mock server), runner (test matrices), proxy (routing). tests/ and the src unit tests: 137 tests.'],
+    ['docs/', 'reports', 'phase2/: 17 reports, starting with PHASE2_SUMMARY.md. Detection accuracy, zone results, fault tolerance, performance, proxy routing, every defect and its regression test. This page is docs/explainer.html.'],
     ['vendor/', 'pinned upstream source, not committed', 'Clones of the studied projects at the commits in the README. Treated as untrusted data: read, never built or run from inside vendor/.'],
   ];
   const box = $('#tree');
@@ -1322,6 +1430,50 @@ mcq($('#levelQuiz'), [
   });
 })();
 
+/* ---------- verdict classifier ---------- */
+(function verdicts() {
+  const V = ['NORMAL_PAGE', 'CONFIRMED_CHALLENGE_RESPONSE', 'CHALLENGE_INDICATOR', 'RATE_LIMITED', 'ACCESS_DENIED', 'ORIGIN_UNAVAILABLE', 'TLS_FAILURE'];
+  // Real responses: zone matrix (experiments/test-results/P2/zone) and the public-site fetches.
+  const items = [
+    ['200, no cf-mitigated, body loads /cdn-cgi/challenge-platform/scripts/jsd/main.js (discord.com)', 'NORMAL_PAGE', 'JavaScript Detections, the original false positive. It scores the visit; it does not block it.'],
+    ['403, cf-mitigated: challenge, body defines window._cf_chl_opt (zone /c/echo)', 'CONFIRMED_CHALLENGE_RESPONSE', 'Header plus page: high confidence.'],
+    ['429, cf-ray present, body "error code: 1015" (zone /r/echo)', 'RATE_LIMITED', '1015 is Cloudflare\'s rate limit, trusted because the response came through Cloudflare.'],
+    ['403, cf-ray present, body "error code: 1002" (record pointing at 240.0.0.1)', 'ORIGIN_UNAVAILABLE', 'The trap: a 403 that is not a denial. 1002 means the DNS record points at a disallowed address, so no origin can answer.'],
+    ['403 from the Worker itself, no Cloudflare error page (zone /p2/forbidden)', 'ACCESS_DENIED', 'Issued by the origin, medium confidence. Not blamed on Cloudflare.'],
+    ['No response: the TLS handshake to the destination failed', 'TLS_FAILURE', 'Requests that got no response are classified too. A failed handshake to a proxy would be CONNECTION_FAILURE instead.'],
+  ];
+  const box = $('#verdictQuiz');
+  const sels = items.map(([t]) => {
+    const s = el('select', { 'aria-label': 'Verdict for: ' + t }, el('option', { value: '' }, 'choose...'), ...V.map(v => el('option', { value: v }, v)));
+    box.append(el('div', { class: 'item' }, el('span', { style: 'font-size:14px' }, t), s));
+    return s;
+  });
+  $('#verdictCheck').addEventListener('click', () => {
+    let ok = 0; const notes = [];
+    sels.forEach((s, i) => { const r = s.value === items[i][1]; s.style.borderColor = r ? 'var(--good)' : 'var(--bad)'; if (r) ok++; else if (s.value) notes.push(items[i][2]); });
+    if (ok === items.length) { feedback($('#verdictFb'), true, 'All six. The status code alone would have got two wrong: the 200 with a challenge-platform script, and the 403 that is an origin failure.'); complete('verdict'); }
+    else feedback($('#verdictFb'), false, `${ok} of 6. ` + (notes.length ? esc(notes[0]) : 'Pick a verdict for every row.'));
+  });
+})();
+
+/* ---------- performance bars ---------- */
+(function perf() {
+  // docs/phase2/PERFORMANCE.md, P1 A/B: TLS HTTP/1.1, concurrency 32, medians of 5 runs.
+  const rows = [['cfprobe before', 68451], ['reqwest', 81904], ['cfprobe after', 89836]];
+  const max = 95000, box = $('#perfBars');
+  rows.forEach(([n, v], i) => {
+    const fill = el('div', { class: 'fill', style: `left:0;width:0;${i === 0 ? 'background:var(--muted)' : i === 1 ? 'background:var(--receiver)' : ''}` });
+    box.append(el('div', { class: 'bar' }, el('span', {}, n), el('div', { class: 'track' }, fill), el('span', { class: 'val' }, (v / 1000).toFixed(1) + 'k/s')));
+    setTimeout(() => { fill.style.transition = reduce ? 'none' : 'width .6s ease'; fill.style.width = (v / max * 100) + '%'; }, reduce ? 0 : 200 + i * 200);
+  });
+})();
+
+mcq($('#proxyQuiz'), [
+  { q: 'No <code>--proxy</code>, no <code>CFPROBE_PROXY</code>, nothing in the config. You run <code>cfprobe inspect</code>.', opts: ['It refuses to run', 'It connects directly and prints that it is in no-proxy mode', 'It looks for a system proxy'], a: 1, why: 'No proxy is a stated mode, not an error. Ambient proxy variables are ignored, so the route is always the one you chose.' },
+  { q: '<code>cfprobe --tor run matrix.json</code>, but the Tor container is not running.', opts: ['The campaign stops at the preflight, before any request', 'It runs the campaign directly instead', 'It retries until Tor comes up'], a: 0, why: 'The runner opens one tunnel first; if that fails, nothing is sent. A defined proxy has no direct path to fall back to.' },
+  { q: 'With <code>--proxy socks5://...</code>, who resolves the destination\'s name?', opts: ['This machine, then sends the address', 'The proxy'], a: 1, why: 'cfprobe treats socks5:// as socks5h://, so the name never touches the local resolver. curl would resolve it locally.' },
+], (n, t) => { if (n === t) complete('proxyq'); });
+
 /* ---------- final quiz ---------- */
 mcq($('#finalQuiz'), [
   { q: 'Why can JA4 not tell curl-impersonate <code>chrome152</code> from real Chrome 152?', opts: ['JA4 ignores the cipher list', 'JA4 drops GREASE, and the difference is a GREASE value in signature_algorithms', 'They are byte-identical'], a: 1, why: 'L1-8. peetprint, which keeps GREASE positions, separates them.' },
@@ -1332,6 +1484,9 @@ mcq($('#finalQuiz'), [
   { q: 'What changed between Chromium 124 and 152?', opts: ['The HTTP/2 SETTINGS', 'The header order', 'The TLS layer: groups, ALPS codepoint, signature algorithms'], a: 2, why: 'L1-10: HTTP/2 and header order stayed identical across 28 versions.' },
   { q: 'Which FlareSolverr default creates a value no real screen can have?', opts: ['--window-size=1920,1080 on an 800 x 600 headless screen', 'navigator.webdriver = false', 'Five plugins'], a: 0, why: 'L2-3: the window is larger than the screen.' },
   { q: 'cfprobe reports <code>dns_ms: null</code> on a reused connection instead of 0. Why?', opts: ['A bug', 'DNS did not happen; 0 would claim it happened instantly', 'To save space'], a: 1, why: 'Zero and "not stated" are different answers. The same rule makes a missing receiver field print as "not captured".' },
+  { q: 'Why were discord.com and bookmyshow called "challenged" by the old detector?', opts: ['They really were challenged', 'Their pages load the JavaScript Detections script from /cdn-cgi/challenge-platform/', 'They returned 403'], a: 1, why: 'D17. The script scores visits in the background; the page itself is normal. Only cf-mitigated plus a challenge page confirms a challenge.' },
+  { q: 'Cloudflare\'s rate limiter sends <code>Retry-After: 0</code> on a 429. What does cfprobe do?', opts: ['Retries at once', 'Waits at least its normal backoff', 'Gives up'], a: 1, why: 'D23. Taken literally, 0 produced three requests within 12 ms while still limited.' },
+  { q: 'What made cfprobe slower than reqwest at 32 concurrent HTTP/1.1 requests?', opts: ['BoringSSL', 'Recording the Exchange', 'An async mutex around the connection pool'], a: 2, why: 'P1, found with a sampling profile. A std mutex took it from 68.5k to 89.8k requests per second, ahead of reqwest.' },
 ], (n, t) => { $('#finalScore').textContent = `${n} of ${t}`; if (n === t) complete('final'); });
 
 paint();
